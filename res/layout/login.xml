@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:paddingTop="20dip"
+              android:paddingLeft="40dp"
+              android:paddingRight="40dp"
+        >
+
+    <ImageView
+            android:id="@+id/my_shows_logo"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/my_shows_logo_dark"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="20dip"
+
+            />
+
+    <TextView
+            android:id="@+id/slogan"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="сериалы, которые я смотрю"
+            android:textSize="18sp"
+            android:gravity="top|center_horizontal"
+            />
+
+    <LinearLayout android:orientation="vertical"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:paddingTop="30dp"
+            >
+
+
+        <EditText
+                android:id="@+id/login_field"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:hint="@string/username"
+
+                android:singleLine="true"
+                android:background="@drawable/textfield_t"
+                />
+        <EditText
+                android:id="@+id/password_field"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:hint="@string/password"
+
+                android:password="true"
+                android:singleLine="true"
+                android:background="@drawable/textfield_t"
+                />
+    </LinearLayout>
+
+    <LinearLayout android:orientation="horizontal"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+            >
+
+        <Button
+                android:id="@+id/login_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_login_title"
+                android:background="@drawable/red_button"
+                android:textColor="@color/white"
+                android:layout_weight="0.5"
+
+                />
+        <Button
+                android:id="@+id/register_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/register_action"
+                android:background="@drawable/red_button"
+                android:textColor="@color/white"
+                android:layout_weight="0.5"
+                android:layout_marginLeft="5dp"
+
+                />
+    </LinearLayout>
+
+</LinearLayout>
+

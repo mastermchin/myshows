@@ -1,0 +1,51 @@
+package ru.myshows.util;
+
+import ru.myshows.domain.Episode;
+
+import java.util.Comparator;
+
+/**
+ * Created by IntelliJ IDEA.
+ * User: GGobozov
+ * Date: 13.07.2011
+ * Time: 18:58:47
+ * To change this template use File | Settings | File Templates.
+ */
+public class EpisodeComparator implements Comparator {
+
+    private String sortBy = "season";
+
+    public EpisodeComparator(String sortBy) {
+        this.sortBy = sortBy;
+    }
+
+    public EpisodeComparator() {
+    }
+
+    @Override
+    public int compare(Object o1, Object o2) {
+        Episode e1 = (Episode) o1;
+        Episode e2 = (Episode) o2;
+
+        if (sortBy.equals("season")) {
+            if (e1.getSeasonNumber() > e2.getSeasonNumber())
+                return 1;
+            else if (e1.getSeasonNumber() < e2.getSeasonNumber())
+                return -1;
+            else return 0;
+
+        } else if (sortBy.equals("episode")) {
+             if (e1.getEpisodeNumber() > e2.getEpisodeNumber())
+                return 1;
+            else if (e1.getEpisodeNumber() < e2.getEpisodeNumber())
+                return -1;
+            else return 0;
+        }  else if (sortBy.equals("shortName")){
+            e1.setShortName("s" + String.format("%1$02d" ,e1.getSeasonNumber()) + "e" + String.format("%1$02d" ,e1.getEpisodeNumber()));
+            e2.setShortName("s" + String.format("%1$02d" ,e2.getSeasonNumber()) + "e" + String.format("%1$02d" ,e2.getEpisodeNumber()));
+            return e1.getShortName().compareToIgnoreCase(e2.getShortName());
+        }
+        return 0;
+
+    }
+}

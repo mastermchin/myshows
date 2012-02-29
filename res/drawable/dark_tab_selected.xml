@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+
+	<!-- draw tab background -->
+	<item android:left="@dimen/tab_space" android:right="@dimen/tab_space" >
+		<shape android:shape="rectangle">
+
+			<corners android:bottomLeftRadius="0.1dp"
+				android:bottomRightRadius="0.1dp" 
+				android:topLeftRadius="@dimen/corner_radius"
+				android:topRightRadius="@dimen/corner_radius"
+				/>
+
+            <gradient android:angle="90" android:startColor="@color/light_gray"
+                      android:centerColor="@color/light_gray"
+				android:endColor="@color/gray"
+                    />
+			<stroke android:width="1px" android:color="#898989" />
+		</shape>
+	</item>
+	
+    <!-- draw bottom line to fill the spaces between tabs -->
+	<item android:top="60dp">
+		<shape android:shape="rectangle">
+			<solid  android:color="@color/light_gray" />
+		</shape>
+	</item>
+</layer-list>

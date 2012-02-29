@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <style name="DarkTheme" parent="@android:style/Theme.Black">">
+
+        <item name="android:windowBackground">@color/black</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:tabWidgetStyle">@style/DarkTabWidget</item>
+        <item name="tabWidget">@style/DarkTabWidget</item>
+        <item name="listBackground">@android:color/black</item>
+        <item name="ratingBar">@style/DarkRatingBar</item>
+        <item name="bigRatingBar">@style/bigDarkRatingBar</item>
+        <item name="statusButtonsTextAppearance">@style/DarkStatusButtonsTextAppearance</item>
+        <item name="labelsTextAppearance">@style/DarkLabelsTextAppearance</item>
+        <item name="labelsValuesTextAppearance">@style/DarkLabelsValuesTextAppearance</item>
+        <item name="labelsValuesTextAppearanceBold">@style/DarkLabelsValuesTextAppearanceBold</item>
+        <item name="titleTextAppearance">@style/DarkTitleTextAppearance</item>
+        <item name="userNameTextAppearance">@style/DarkUserNameTextAppearance</item>
+        <item name="showTextAppearance">@style/DarkShowTextAppearance</item>
+        <item name="statusButtonActive">@style/DarkStatusButtonActive</item>
+        <item name="statusButtonInactive">@style/DarkStatusButtonInactive</item>
+        <item name="statusButtonInactiveTextColor">@color/white</item>
+        <item name="checkbox">@style/DarkCheckbox</item>
+        <item name="check">@style/DarkCheck</item>
+        <item name="listDivider">@android:drawable/divider_horizontal_dim_dark</item>
+        <item name="headerBackground">@drawable/dark_header</item>
+        <item name="headerTextColor">@color/gray</item>
+        <item name="showTitleTextColor">@drawable/dark_tab_text_color</item>
+        <item name="unwatchedTextColor">@color/very_light_blue_2</item>
+        <item name="tabIndicator">@drawable/dark_tab_indicator</item>
+
+        <item name="buttonTextColor">@color/white</item>
+        <item name="buttonBackground">@drawable/red_button</item>
+        <item name="logoImage">@drawable/my_shows_logo_dark</item>
+        <item name="ratingImage">@drawable/ic_rating</item>
+        <item name="catalogImage">@drawable/ic_catalog</item>
+
+        <item name="tabShows">@drawable/dark_tab_shows</item>
+        <item name="tabNews">@drawable/dark_tab_news</item>
+        <item name="tabProfile">@drawable/dark_tab_profile</item>
+        <item name="tabSearch">@drawable/dark_tab_search</item>
+        <item name="tabLogin">@drawable/dark_tab_login</item>
+
+    </style>
+
+</resources>

@@ -174,7 +174,7 @@ public class ImageLoader {
                     if (Thread.interrupted())
                         break;
                 }
-            } catch (InterruptedException e) {
+            }  catch (InterruptedException e) {
                 //allow thread to exit
             }
         }

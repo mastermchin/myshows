@@ -136,7 +136,7 @@ public class MainActivity extends TabActivity {
     private void addTab(int labelId, int drawableId, Class activitClass, Class defaultStackClass, Integer tab) {
         Intent intent = new Intent(this, activitClass);
         if (defaultStackClass != null) {
-            intent.putExtra("defaultStackClass", defaultStackClass);
+             intent.putExtra("defaultStackClass", defaultStackClass);
         }
 
         TabHost.TabSpec spec = tabHost.newTabSpec("tab" + labelId);

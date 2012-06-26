@@ -128,7 +128,7 @@ public class MainActivity extends TabActivity {
             switchTab(TAB_SHOWS);
 
         } else {
-            initTabs();
+             initTabs();
         }
 
     }

@@ -31,7 +31,7 @@ import java.util.List;
  * Time: 15:19:35
  * To change this template use File | Settings | File Templates.
  */
-public class ShowsActivity extends ListFragment {
+public class ShowsFragment extends ListFragment {
 
     public static final int ACTION_SEARCH_SHOWS = 1;
     public static final int ACTION_GET_TOP_SHOWS = 2;
@@ -45,7 +45,7 @@ public class ShowsActivity extends ListFragment {
     MyShows app;
     private LayoutInflater inflater;
 
-    public ShowsActivity(String search) {
+    public ShowsFragment(String search) {
         this.search = search;
     }
 

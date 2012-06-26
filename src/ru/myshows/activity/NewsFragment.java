@@ -1,22 +1,16 @@
 package ru.myshows.activity;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.view.*;
 import android.widget.*;
-import ru.myshows.api.MyShowsApi;
 import ru.myshows.client.MyShowsClient;
-import ru.myshows.domain.IShow;
 import ru.myshows.domain.UserNews;
-import ru.myshows.domain.UserShow;
-import ru.myshows.util.MyShowsUtil;
 import ru.myshows.util.NewsComparator;
 
 import java.text.DateFormat;
@@ -30,20 +24,19 @@ import java.util.*;
  * Time: 15:19:10
  * To change this template use File | Settings | File Templates.
  */
-public class NewsActivity extends ListActivity {
+public class NewsFragment extends ListFragment {
 
     MyShowsClient client = MyShowsClient.getInstance();
     DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
 
+    private LayoutInflater inflater;
     private SectionedAdapter adapter;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.news);
-        getListView().setDivider(null);
-        getListView().setDividerHeight(0);
-        new GetNewsTask(getParent()).execute();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.inflater = inflater;
+        new GetNewsTask(getActivity()).execute();
+        return  inflater.inflate(R.layout.news, container, false);
     }
 
 
@@ -67,7 +60,7 @@ public class NewsActivity extends ListActivity {
             final int pos = position;
             final ViewHolder holder;
             if (convertView == null) {
-                LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                LayoutInflater vi = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = vi.inflate(R.layout.news_item, null);
                 holder = new ViewHolder();
                 holder.login = (TextView) convertView.findViewById(R.id.news_login);
@@ -92,7 +85,7 @@ public class NewsActivity extends ListActivity {
                     if (login != null && login.trim().length() > 0) {
                         Intent intent = new Intent();
                         intent.putExtra("login", login);
-                        intent.setClass(NewsActivity.this, MainActivity.class);
+                        intent.setClass(getActivity(), MainActivity.class);
                         startActivity(intent);
                     }
                 }
@@ -106,7 +99,7 @@ public class NewsActivity extends ListActivity {
                     if (showId != null) {
                         Intent intent = new Intent();
                         intent.putExtra("showId", showId);
-                        intent.setClass(NewsActivity.this, MainActivity.class);
+                        intent.setClass(getActivity(), MainActivity.class);
                         startActivity(intent);
                     }
 
@@ -171,9 +164,9 @@ public class NewsActivity extends ListActivity {
         protected void onPostExecute(Object result) {
             if (this.dialog.isShowing()) this.dialog.dismiss();
             if (result != null) {
-                adapter = new SectionedAdapter(getLayoutInflater());
+                adapter = new SectionedAdapter(inflater);
                 populateAdapter(result);
-                NewsActivity.this.setListAdapter(adapter);
+                NewsFragment.this.setListAdapter(adapter);
             }
 
         }
@@ -188,7 +181,7 @@ public class NewsActivity extends ListActivity {
             String key = entry.getKey();
             List<UserNews> value = entry.getValue();
 
-            adapter.addSection(key, new NewsAdapter(this, R.layout.news_item, value, key));
+            adapter.addSection(key, new NewsAdapter(getActivity(), R.layout.news_item, value, key));
 
         }
 

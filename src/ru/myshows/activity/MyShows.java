@@ -1,6 +1,8 @@
 package ru.myshows.activity;
 
 import android.app.Application;
+import android.content.Context;
+import ru.myshows.client.MyShowsClient;
 import ru.myshows.domain.UserShow;
 
 import java.util.ArrayList;
@@ -15,18 +17,26 @@ import java.util.List;
  */
 public class MyShows extends Application {
 
+
+    private static Context context;
+    private static MyShowsClient client;
+
     private List<UserShow> userShows = null;
     private boolean isUserShowsChanged = false;
-    private boolean isLoggedIn =false;
 
 
-    public boolean isLoggedIn() {
-        return isLoggedIn;
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        context = this;
+        client = MyShowsClient.getInstance();
     }
 
-    public void setLoggedIn(boolean loggedIn) {
-        isLoggedIn = loggedIn;
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
     }
+
 
     public boolean isUserShowsChanged() {
         return isUserShowsChanged;
@@ -34,16 +44,6 @@ public class MyShows extends Application {
 
     public void setUserShowsChanged(boolean userShowsChanged) {
         isUserShowsChanged = userShowsChanged;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-    }
-
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
     }
 
     public List<UserShow> getUserShows() {
@@ -98,4 +98,11 @@ public class MyShows extends Application {
         }
     }
 
+    public static Context getContext() {
+        return context;
+    }
+
+    public static MyShowsClient getClient() {
+        return client;
+    }
 }

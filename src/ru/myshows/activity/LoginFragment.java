@@ -1,23 +1,17 @@
 package ru.myshows.activity;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import ru.myshows.client.MyShowsClient;
-import ru.myshows.components.RegisterDialog;
-import ru.myshows.prefs.Prefs;
-import ru.myshows.util.MyShowsUtil;
+import ru.myshows.prefs.Settings;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,7 +20,7 @@ import ru.myshows.util.MyShowsUtil;
  * Time: 2:09:00
  * To change this template use File | Settings | File Templates.
  */
-public class LoginActivity extends Fragment {
+public class LoginFragment extends Fragment {
 
     private Button loginButton;
     private Button registesButton;
@@ -36,62 +30,61 @@ public class LoginActivity extends Fragment {
     MyShows app;
     private LayoutInflater inflater;
 
-    public LoginActivity() {
+    public LoginFragment() {
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.inflater = inflater;
-        return inflater.inflate(R.layout.login, container, false);
-//        LinearLayout layout = (LinearLayout)inflater.inflate(R.layout.login, container, false);
-//        loginButton = (Button) layout.findViewById(R.id.login_button);
-//        registesButton = (Button) layout.findViewById(R.id.register_button);
-//        loginField = (EditText) layout.findViewById(R.id.login_field);
-//        passwordField = (EditText) layout.findViewById(R.id.password_field);
-//
-//
-//        loginButton.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View view) {
-//                loginButton.setEnabled(false);
-//                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-//                imm.hideSoftInputFromWindow(loginField.getWindowToken(), 0);
-//                imm.hideSoftInputFromWindow(passwordField.getWindowToken(), 0);
-//                String login = loginField.getText().toString().trim();
-//                String password = passwordField.getText().toString().trim();
-//                new LoginTask(getActivity()).execute(login, password);
-//                loginButton.setEnabled(true);
-//            }
-//        });
-//
-//
-//        registesButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                registesButton.setEnabled(false);
-//                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://myshows.ru/registration"));
-//                startActivity(i);
-//                registesButton.setEnabled(true);
-//
-//            }
-//        });
-//
-//        return layout;
+       // return inflater.inflate(R.layout.login, container, false);
+        LinearLayout layout = (LinearLayout)inflater.inflate(R.layout.login, container, false);
+        loginButton = (Button) layout.findViewById(R.id.login_button);
+        registesButton = (Button) layout.findViewById(R.id.register_button);
+        loginField = (EditText) layout.findViewById(R.id.login_field);
+        passwordField = (EditText) layout.findViewById(R.id.password_field);
+
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                loginButton.setEnabled(false);
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(loginField.getWindowToken(), 0);
+                imm.hideSoftInputFromWindow(passwordField.getWindowToken(), 0);
+                String login = loginField.getText().toString().trim();
+                String password = passwordField.getText().toString().trim();
+                new LoginTask(getActivity()).execute(login, password);
+                loginButton.setEnabled(true);
+            }
+        });
+
+
+        registesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                registesButton.setEnabled(false);
+                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://myshows.ru/registration"));
+                startActivity(i);
+                registesButton.setEnabled(true);
+
+            }
+        });
+
+        return layout;
 
     }
 
 
     private void loginResult(Boolean result, String login, String password) {
         if (result) {
-            Prefs.setStringPrefs(getActivity(), Prefs.KEY_LOGIN, login);
-            Prefs.setStringPrefs(getActivity(), Prefs.KEY_PASSWORD, password);
-            app.setLoggedIn(result);
+            Settings.setString(Settings.KEY_LOGIN, login);
+            Settings.setString(Settings.KEY_PASSWORD, password);
+            Settings.setBoolean(Settings.KEY_PASSWORD, true);
             startActivity(new Intent(getActivity(), MainActivity.class));
         } else {
             showError();
-            app.setLoggedIn(result);
         }
     }
 

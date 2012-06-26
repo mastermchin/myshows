@@ -13,7 +13,7 @@ import ru.myshows.api.MyShowsApi;
 import ru.myshows.client.MyShowsClient;
 import ru.myshows.domain.IShow;
 import ru.myshows.domain.UserShow;
-import ru.myshows.prefs.Prefs;
+import ru.myshows.prefs.Settings;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -132,9 +132,6 @@ public class MyShowsUtil {
     }
 
 
-    public static boolean isServerAvailable() {
-        return true;
-    }
 
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -159,42 +156,10 @@ public class MyShowsUtil {
         }
     }
 
-    private static String mark = "-_.!~*'()\"/:?=";
-
-    public static String encodeURI(String argString) {
-        StringBuilder uri = new StringBuilder(); // Encoded URL
-        // thanks Marco!
-
-        char[] chars = argString.toCharArray();
-        for (int i = 0; i < chars.length; i++) {
-            char c = chars[i];
-            if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') ||
-                    (c >= 'A' && c <= 'Z') || mark.indexOf(c) != -1) {
-                uri.append(c);
-            } else {
-                uri.append("%");
-                uri.append(Integer.toHexString((int) c));
-            }
-        }
-        System.out.println("URL = " + uri.toString());
-        return uri.toString();
-    }
 
 
-    public static void applyTheme(Activity activity) {
-        int theme = Prefs.getIntPrefs(activity, Prefs.KEY_CURRENT_THEME, Prefs.VALUE_DARK_THEME);
-        activity.setTheme(theme);
-    }
 
-    public static void changeTheme(Activity activity) {
-        int currentTheme = Prefs.getIntPrefs(activity, Prefs.KEY_CURRENT_THEME, Prefs.VALUE_DARK_THEME);
 
-        if (currentTheme == Prefs.VALUE_DARK_THEME) {
-            Prefs.setIntPrefs(activity, Prefs.KEY_CURRENT_THEME, Prefs.VALUE_DARK_THEME);
-        }
-        activity.finish();
-        activity.startActivity(new Intent(activity, MainActivity.class));
-    }
 
 
 }

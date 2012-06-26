@@ -1,7 +1,6 @@
 package ru.myshows.activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -18,7 +17,7 @@ import ru.myshows.api.MyShowsApi;
 import ru.myshows.client.MyShowsClient;
 import ru.myshows.components.RatingDialog;
 import ru.myshows.domain.*;
-import ru.myshows.prefs.Prefs;
+import ru.myshows.prefs.Settings;
 import ru.myshows.util.EpisodeComparator;
 import ru.myshows.util.ImageLoader;
 
@@ -204,7 +203,8 @@ public class ShowActivity extends Activity {
 
 
         //status buttons show if client is logged in otherwise remove view
-        if (isLoggedIn()) {
+       // if (isLoggedIn()) {
+        if (Settings.getBoolean(Settings.IS_LOGGED_IN)) {
 
             statusButtonsLayoyt.setVisibility(View.VISIBLE);
 
@@ -377,20 +377,20 @@ public class ShowActivity extends Activity {
     }
 
 
-    private boolean isLoggedIn() {
-        if (app.isLoggedIn()) {
-            return true;
-        } else if (Prefs.getStringPrefs(this, Prefs.KEY_LOGIN) != null && Prefs.getStringPrefs(this, Prefs.KEY_PASSWORD) != null) {
-            loginResult(client.login(Prefs.getStringPrefs(this, Prefs.KEY_LOGIN), Prefs.getStringPrefs(this, Prefs.KEY_PASSWORD)));
-            return app.isLoggedIn();
-        } else {
-            return false;
-        }
-    }
-
-    private void loginResult(Boolean result) {
-        app.setLoggedIn(result);
-    }
+//    private boolean isLoggedIn() {
+//        if (app.isLoggedIn()) {
+//            return true;
+//        } else if (Settings.getString(Settings.KEY_LOGIN) != null && Settings.getString(Settings.KEY_PASSWORD) != null) {
+//            loginResult(client.login(Settings.getString( Settings.KEY_LOGIN), Settings.getString(Settings.KEY_PASSWORD)));
+//            return app.isLoggedIn();
+//        } else {
+//            return false;
+//        }
+//    }
+//
+//    private void loginResult(Boolean result) {
+//        app.setLoggedIn(result);
+//    }
 
 
     private void changeButtonStyleToActive(Button button) {

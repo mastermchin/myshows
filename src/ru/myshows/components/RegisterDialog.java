@@ -10,7 +10,7 @@ import ru.myshows.activity.MainActivity;
 import ru.myshows.activity.R;
 import ru.myshows.api.MyShowsApi;
 import ru.myshows.client.MyShowsClient;
-import ru.myshows.prefs.Prefs;
+import ru.myshows.prefs.Settings;
 
 /**
  * Created by IntelliJ IDEA.
@@ -62,8 +62,8 @@ public class RegisterDialog extends Dialog {
                 if (registerResult) {
                     boolean result = client.login(login, password);
                     if (result) {
-                        Prefs.setStringPrefs(context, Prefs.KEY_LOGIN, login);
-                        Prefs.setStringPrefs(context, Prefs.KEY_PASSWORD, password);
+                        Settings.setString(Settings.KEY_LOGIN, login);
+                        Settings.setString(Settings.KEY_PASSWORD, password);
                         context.startActivity(new Intent(context, MainActivity.class));
                     } else {
                         Toast.makeText(context, R.string.wrong_login_or_password, Toast.LENGTH_SHORT).show();

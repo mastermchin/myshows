@@ -5,11 +5,8 @@ import android.app.ActivityGroup;
 import android.app.LocalActivityManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
-import android.view.View;
 import android.view.Window;
 
-import java.util.ArrayList;
 import java.util.Stack;
 
 /**
@@ -33,7 +30,7 @@ public class ActivityStack extends ActivityGroup {
             push("defaultStackClass", new Intent(this, defaultClass));
         else
             //start default activity
-            push("SearchActivity", new Intent(this, SearchActivity.class));
+            push("SearchFragment", new Intent(this, SearchFragment.class));
     }
 
 

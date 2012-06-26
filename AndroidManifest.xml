@@ -19,9 +19,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".SearchActivity"/>
-        <activity android:name=".NewsActivity"/>
-        <activity android:name=".ProfileActivity" android:launchMode="singleTask"/>
         <activity android:name=".ShowActivity"/>
         <activity android:name=".ActivityStack"/>
         <activity android:name=".MyShowsPreferenceAcrivity"/>

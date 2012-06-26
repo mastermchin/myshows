@@ -34,7 +34,7 @@ import java.util.*;
  * Time: 1:10
  * To change this template use File | Settings | File Templates.
  */
-public class NewEpisodesActivity extends Fragment {
+public class NewEpisodesFragment extends Fragment {
 
     private SectionedAdapter adapter;
     private RelativeLayout rootView;
@@ -47,7 +47,7 @@ public class NewEpisodesActivity extends Fragment {
     private LayoutInflater inflater;
 
 
-    public NewEpisodesActivity() {
+    public NewEpisodesFragment() {
     }
 
     @Override
@@ -86,7 +86,7 @@ public class NewEpisodesActivity extends Fragment {
                 Toast.makeText(getActivity(), msg.what, Toast.LENGTH_SHORT).show();
                 removeSaveButton();
                 setUpdatedAdapter();
-                //new GetNewEpisodesTask(NewEpisodesActivity.this).execute();
+                //new GetNewEpisodesTask(NewEpisodesFragment.this).execute();
 
             }
         };

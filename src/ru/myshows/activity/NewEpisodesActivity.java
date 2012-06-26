@@ -10,6 +10,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.view.*;
 import android.widget.*;
 import ru.myshows.client.MyShowsClient;
@@ -32,47 +34,46 @@ import java.util.*;
  * Time: 1:10
  * To change this template use File | Settings | File Templates.
  */
-public class NewEpisodesActivity extends ListActivity {
+public class NewEpisodesActivity extends Fragment {
 
     private SectionedAdapter adapter;
     private RelativeLayout rootView;
     private Button saveButton;
     private List<Episode> localEpisodes = null;
-
+    private ListView list;
     MyShowsClient client = MyShowsClient.getInstance();
     DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
     MyShows app;
+    private LayoutInflater inflater;
+
+
+    public NewEpisodesActivity() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.new_episodes);
-        app = (MyShows) getApplication();
-        rootView = (RelativeLayout) findViewById(R.id.new_episodes_root_view);
-        getListView().setDivider(null);
-        getListView().setDividerHeight(0);
-        new GetNewEpisodesTask(this).execute();
-        registerForContextMenu(getListView());
+        app = (MyShows) getActivity().getApplication();
+
     }
+
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.shows_menu, menu);
-        return super.onCreateOptionsMenu(menu);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.inflater = inflater;
+
+
+        rootView = (RelativeLayout) inflater.inflate(R.layout.new_episodes, container, false);
+        list = (ListView) rootView.findViewById(R.id.list);
+        //getListView().setDivider(null);
+        //getListView().setDividerHeight(0);
+       new GetNewEpisodesTask(getActivity()).execute();
+        //registerForContextMenu(getListView());
+        return list;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
 
-            case R.id.update:
-                new GetNewEpisodesTask(this).execute();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     View.OnClickListener saveButtonListener = new View.OnClickListener() {
         ProgressDialog dialog = null;
@@ -82,7 +83,7 @@ public class NewEpisodesActivity extends ListActivity {
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 if (dialog != null && dialog.isShowing()) dialog.dismiss();
-                Toast.makeText(NewEpisodesActivity.this, msg.what, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), msg.what, Toast.LENGTH_SHORT).show();
                 removeSaveButton();
                 setUpdatedAdapter();
                 //new GetNewEpisodesTask(NewEpisodesActivity.this).execute();
@@ -119,7 +120,7 @@ public class NewEpisodesActivity extends ListActivity {
                             client.syncAllShowEpisodes(showId, episodesIds, null);
                         }
                     }.start();
-                }
+               }
 
                 int message = R.string.changes_saved;
                 handler.sendEmptyMessage(message);
@@ -130,7 +131,7 @@ public class NewEpisodesActivity extends ListActivity {
         @Override
         public void onClick(View v) {
             saveButton.setEnabled(false);
-            dialog = ProgressDialog.show(getParent(), "", getResources().getString(R.string.loading));
+            dialog = ProgressDialog.show(getActivity(), "", getResources().getString(R.string.loading));
             handler.postDelayed(checkEpisodesTask, 1000);
         }
 
@@ -138,14 +139,14 @@ public class NewEpisodesActivity extends ListActivity {
 
 
     private void setUpdatedAdapter() {
-        adapter = new SectionedAdapter(getLayoutInflater(), clickListener);
+        adapter = new SectionedAdapter(inflater, clickListener);
         populateAdapter(localEpisodes);
-        NewEpisodesActivity.this.setListAdapter(adapter);
+        list.setAdapter(adapter);
     }
 
     private Button getSaveButton() {
         if (saveButton == null) {
-            saveButton = new Button(NewEpisodesActivity.this);
+            saveButton = new Button(getActivity());
             saveButton.setText(R.string.save);
             saveButton.setId(1);
             saveButton.setTextColor(Color.WHITE);
@@ -166,7 +167,7 @@ public class NewEpisodesActivity extends ListActivity {
         RelativeLayout.LayoutParams listParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         listParams.addRule(RelativeLayout.ABOVE, getSaveButton().getId());
         listParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-        getListView().setLayoutParams(listParams);
+        list.setLayoutParams(listParams);
 
     }
 
@@ -204,8 +205,7 @@ public class NewEpisodesActivity extends ListActivity {
 
             if (episode != null) {
                 if (convertView == null) {
-                    LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    convertView = vi.inflate(R.layout.new_episode_item, null);
+                    convertView = inflater.inflate(R.layout.new_episode_item, null);
                     holder = new ViewHolder();
                     holder.title = (TextView) convertView.findViewById(R.id.episode_title);
                     holder.checkBox = (CheckBox) convertView.findViewById(R.id.episode_check_box);
@@ -258,7 +258,7 @@ public class NewEpisodesActivity extends ListActivity {
                     client.changeEpisodeRatio(msg.arg1, episode.getEpisodeId());
                 }
             };
-            RatingDialog rate = new RatingDialog(getParent(), handler);
+            RatingDialog rate = new RatingDialog(getActivity(), handler);
             rate.setTitle(R.string.episode_rating);
             rate.show();
 
@@ -304,9 +304,9 @@ public class NewEpisodesActivity extends ListActivity {
         protected void onPostExecute(Object result) {
             if (this.dialog.isShowing()) this.dialog.dismiss();
             if (result != null) {
-                adapter = new SectionedAdapter(getLayoutInflater(), clickListener);
+                adapter = new SectionedAdapter(inflater, clickListener);
                 populateAdapter((List<Episode>) result);
-                NewEpisodesActivity.this.setListAdapter(adapter);
+                list.setAdapter(adapter);
             }
 
         }
@@ -349,7 +349,7 @@ public class NewEpisodesActivity extends ListActivity {
             String title = app.getUserShow(showId) != null ? app.getUserShow(showId).getTitle() : "test";
             List<Episode> episodes = entry.getValue();
             Collections.sort(episodes, new EpisodeComparator("shortName"));
-            adapter.addSection(title + "*", new EpisodesAdapter(this, R.layout.new_episode_item, episodes, title));
+            adapter.addSection(title + "*", new EpisodesAdapter(getActivity(), R.layout.new_episode_item, episodes, title));
         }
 
 

@@ -20,13 +20,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".SearchActivity"/>
-        <activity android:name=".LoginActivity"/>
         <activity android:name=".NewsActivity"/>
         <activity android:name=".ProfileActivity" android:launchMode="singleTask"/>
-        <activity android:name=".ShowsActivity"/>
         <activity android:name=".ShowActivity"/>
         <activity android:name=".ActivityStack"/>
         <activity android:name=".MyShowsPreferenceAcrivity"/>
-        <activity android:name=".NewEpisodesActivity"/>
     </application>
 </manifest>

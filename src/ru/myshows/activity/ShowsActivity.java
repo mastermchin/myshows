@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.util.TypedValue;
 import android.view.*;
 import android.widget.*;
@@ -29,7 +31,7 @@ import java.util.List;
  * Time: 15:19:35
  * To change this template use File | Settings | File Templates.
  */
-public class ShowsActivity extends ListActivity {
+public class ShowsActivity extends ListFragment {
 
     public static final int ACTION_SEARCH_SHOWS = 1;
     public static final int ACTION_GET_TOP_SHOWS = 2;
@@ -41,61 +43,44 @@ public class ShowsActivity extends ListActivity {
     private int lastAction;
     MyShowsClient client = MyShowsClient.getInstance();
     MyShows app;
-    //DBAdapter db = new DBAdapter(this);
+    private LayoutInflater inflater;
+
+    public ShowsActivity(String search) {
+        this.search = search;
+    }
+
+
+
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.shows);
-        app = (MyShows) getApplication();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.inflater = inflater;
+        ListView list = (ListView) inflater.inflate(R.layout.shows, container, false);
+      //  getListView().setDivider(null);
+       // getListView().setDividerHeight(0);
 
-
-        getListView().setDivider(null);
-        getListView().setDividerHeight(0);
-        search = getBundleValue(this.getIntent(), "search", null);
+        //search = getBundleValue(getActivity().getIntent(), "search", null);
 
         if (search == null) lastAction = ACTION_GET_USER_SHOWS;
         else if (search.equals("top")) lastAction = ACTION_GET_TOP_SHOWS;
         else if (search.equals("all")) lastAction = ACTION_GET_ALL_SHOWS;
         else lastAction = ACTION_SEARCH_SHOWS;
-        new GetShowsTask(getParent()).execute(lastAction, search);
+        new GetShowsTask(getActivity()).execute(lastAction, search);
+        return list;
+
+
     }
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (app.isUserShowsChanged() && lastAction == ACTION_GET_USER_SHOWS) {
-            new GetShowsTask(getParent()).execute(lastAction, search);
-            app.setUserShowsChanged(false);
-        }
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+////        if (app.isUserShowsChanged() && lastAction == ACTION_GET_USER_SHOWS) {
+////            new GetShowsTask(getActivity()).execute(lastAction, search);
+////            app.setUserShowsChanged(false);
+////        }
+//    }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        System.out.println("Shows Activity on new intent!!!! Yeeeeep!");
-        System.out.println(getBundleValue(getIntent(), "showId", null));
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.shows_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-
-            case R.id.update:
-                new GetShowsTask(getParent()).execute(lastAction, "update");
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     private class ShowsAdapter extends ArrayAdapter<IShow> {
         private List<IShow> shows;
@@ -116,17 +101,12 @@ public class ShowsActivity extends ListActivity {
             final int pos = position;
             View row = convertView;
             if (row == null) {
-                LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                LayoutInflater vi = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 row = vi.inflate(R.layout.show_item, null);
             }
 
             IShow show = shows.get(position);
             if (show != null) {
-
-//                byte [] image = db.selectImage(show.getShowId());
-//                if (image != null)
-//                    ((ImageView) row.findViewById(R.id.show_logo)).setImageBitmap(MyShowsUtil.bytesToBitmap(image));
-
 
                 imageLoader.displayImage(show.getImageUrl(), (ImageView) row.findViewById(R.id.show_logo));
 
@@ -163,9 +143,10 @@ public class ShowsActivity extends ListActivity {
                     intent.putExtra("showId", show.getShowId());
                     intent.putExtra("watchStatus", show.getWatchStatus());
                     intent.putExtra("yoursRating", show.getYoursRating());
-                    intent.setClass(getParent(), ShowActivity.class);
-                    ActivityStack activityStack = (ActivityStack) getParent();
-                    activityStack.push("ShowActivity", intent);
+                    intent.setClass(getActivity(), ShowActivity.class);
+                    startActivity(intent);
+//                    ActivityStack activityStack = (ActivityStack) getParent();
+//                    activityStack.push("ShowActivity", intent);
                 }
             });
 
@@ -235,9 +216,9 @@ public class ShowsActivity extends ListActivity {
         protected void onPostExecute(Object result) {
             if (this.dialog.isShowing()) this.dialog.dismiss();
             if (result != null) {
-                adapter = new SectionedAdapter(getLayoutInflater());
+                adapter = new SectionedAdapter(inflater);
                 populateAdapter(lastAction, (List<IShow>) result);
-                ShowsActivity.this.setListAdapter(adapter);
+                setListAdapter(adapter);
             }
 
         }
@@ -257,47 +238,41 @@ public class ShowsActivity extends ListActivity {
         switch (action) {
             case ACTION_SEARCH_SHOWS:
                 String search = getResources().getString(R.string.search_results);
-                adapter.addSection(search, new ShowsAdapter(ShowsActivity.this, R.layout.show_item, shows, search));
+                adapter.addSection(search, new ShowsAdapter(getActivity(), R.layout.show_item, shows, search));
                 break;
             case ACTION_GET_TOP_SHOWS:
                 String top = getResources().getString(R.string.top);
-                adapter.addSection(top, new ShowsAdapter(ShowsActivity.this, R.layout.show_item, shows, top));
+                adapter.addSection(top, new ShowsAdapter(getActivity(), R.layout.show_item, shows, top));
                 break;
 
             case ACTION_GET_ALL_SHOWS:
                 String all = getResources().getString(R.string.all);
-                adapter.addSection(all, new ShowsAdapter(ShowsActivity.this, R.layout.show_item, shows, all));
+                adapter.addSection(all, new ShowsAdapter(getActivity(), R.layout.show_item, shows, all));
                 break;
             case ACTION_GET_USER_SHOWS:
                 String watching = getResources().getString(R.string.status_watching);
                 List<IShow> watchingShows = MyShowsUtil.getByWatchStatus(shows, MyShowsApi.STATUS.watching);
                 if (watchingShows.size() > 0)
-                    adapter.addSection(watching + " (" + watchingShows.size() + ")", new ShowsAdapter(this, R.layout.show_item, watchingShows, watching + " (" + watchingShows.size() + ")"));
+                    adapter.addSection(watching + " (" + watchingShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, watchingShows, watching + " (" + watchingShows.size() + ")"));
 
                 String willWatch = getResources().getString(R.string.status_will_watch);
                 List<IShow> willWatchShows = MyShowsUtil.getByWatchStatus(shows, MyShowsApi.STATUS.later);
                 if (willWatchShows.size() > 0)
-                    adapter.addSection(willWatch + " (" + willWatchShows.size() + ")", new ShowsAdapter(this, R.layout.show_item, willWatchShows, willWatch + " (" + willWatchShows.size() + ")"));
+                    adapter.addSection(willWatch + " (" + willWatchShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, willWatchShows, willWatch + " (" + willWatchShows.size() + ")"));
 
                 String cancelled = getResources().getString(R.string.status_cancelled);
                 List<IShow> cancelledShows = MyShowsUtil.getByWatchStatus(shows, MyShowsApi.STATUS.cancelled);
                 if (cancelledShows.size() > 0)
-                    adapter.addSection(cancelled + " (" + cancelledShows.size() + ")", new ShowsAdapter(this, R.layout.show_item, cancelledShows, cancelled + " (" + cancelledShows.size() + ")"));
+                    adapter.addSection(cancelled + " (" + cancelledShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, cancelledShows, cancelled + " (" + cancelledShows.size() + ")"));
 
                 String remove = getResources().getString(R.string.status_finished);
                 List<IShow> finishedShows = MyShowsUtil.getByWatchStatus(shows, MyShowsApi.STATUS.finished);
                 if (finishedShows.size() > 0)
-                    adapter.addSection(remove + " (" + finishedShows.size() + ")", new ShowsAdapter(this, R.layout.show_item, finishedShows, remove + " (" + finishedShows.size() + ")"));
+                    adapter.addSection(remove + " (" + finishedShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, finishedShows, remove + " (" + finishedShows.size() + ")"));
                 System.out.println("Populate shows adapter complete!");
                 break;
         }
     }
 
-
-    private int getThemeAttribute(int attr) {
-        TypedValue typedvalueattr = new TypedValue();
-        getTheme().resolveAttribute(attr, typedvalueattr, true);
-        return typedvalueattr.resourceId;
-    }
 
 }

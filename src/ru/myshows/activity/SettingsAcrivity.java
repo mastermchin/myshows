@@ -11,7 +11,7 @@ import android.preference.PreferenceActivity;
  * Time: 1:58:01
  * To change this template use File | Settings | File Templates.
  */
-public class MyShowsPreferenceAcrivity extends PreferenceActivity {
+public class SettingsAcrivity extends PreferenceActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

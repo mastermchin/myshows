@@ -204,7 +204,7 @@ public class ShowActivity extends Activity {
 
         //status buttons show if client is logged in otherwise remove view
        // if (isLoggedIn()) {
-        if (Settings.getBoolean(Settings.IS_LOGGED_IN)) {
+        if (Settings.getBoolean(Settings.KEY_LOGGED_IN)) {
 
             statusButtonsLayoyt.setVisibility(View.VISIBLE);
 

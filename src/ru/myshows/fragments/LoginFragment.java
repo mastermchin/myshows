@@ -1,4 +1,4 @@
-package ru.myshows.activity;
+package ru.myshows.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -10,6 +10,9 @@ import android.support.v4.app.Fragment;
 import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
+import ru.myshows.activity.MainActivity;
+import ru.myshows.activity.MyShows;
+import ru.myshows.activity.R;
 import ru.myshows.client.MyShowsClient;
 import ru.myshows.prefs.Settings;
 
@@ -81,7 +84,8 @@ public class LoginFragment extends Fragment {
         if (result) {
             Settings.setString(Settings.KEY_LOGIN, login);
             Settings.setString(Settings.KEY_PASSWORD, password);
-            Settings.setBoolean(Settings.KEY_PASSWORD, true);
+            Settings.setBoolean(Settings.KEY_LOGGED_IN, true);
+            getActivity().finish();
             startActivity(new Intent(getActivity(), MainActivity.class));
         } else {
             showError();
@@ -110,7 +114,6 @@ public class LoginFragment extends Fragment {
 
         }
 
-
         @Override
         protected Object doInBackground(Object... objects) {
             this.login = (String) objects[0];
@@ -118,15 +121,13 @@ public class LoginFragment extends Fragment {
             Boolean result = client.login(login, pass);
             return result;
 
-
         }
 
         @Override
         protected void onPostExecute(Object result) {
-            if (this.dialog.isShowing()) this.dialog.dismiss();
-            if (result == null) loginResult(false, login, pass);
+            if (this.dialog.isShowing())
+                this.dialog.dismiss();
             loginResult((Boolean) result, login, pass);
-
         }
 
     }

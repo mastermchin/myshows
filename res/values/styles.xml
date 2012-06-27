@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
+
+
+
+
+
     <!--Common styles-->
 
     <style name="windowContentOverlay">
@@ -19,9 +25,6 @@
     </style>
 
 
-    <style name="LightTabWidget" parent="@android:style/Widget.TabWidget">
-        <item name="android:textColor">@color/tab_indicator_text</item>
-    </style>
 
     <style name="LightRatingBar" >
         <item name="android:progressDrawable">@drawable/red_rating_bar</item>
@@ -128,11 +131,6 @@
     </style>
 
 
-    <style name="DarkTabWidget" parent="@android:style/Widget.TabWidget">
-        <item name="android:textColor">@color/tab_indicator_text</item>
-           
-
-    </style>
 
     <style name="DarkRatingBar" >
         <item name="android:progressDrawable">@drawable/yellow_rating_bar</item>

@@ -1,4 +1,4 @@
-package ru.myshows.activity;
+package ru.myshows.fragments;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -13,6 +13,10 @@ import android.support.v4.app.ListFragment;
 import android.util.TypedValue;
 import android.view.*;
 import android.widget.*;
+import ru.myshows.activity.MyShows;
+import ru.myshows.activity.R;
+import ru.myshows.activity.SectionedAdapter;
+import ru.myshows.activity.ShowActivity;
 import ru.myshows.api.MyShowsApi;
 import ru.myshows.client.MyShowsClient;
 import ru.myshows.domain.IShow;
@@ -41,36 +45,54 @@ public class ShowsFragment extends ListFragment {
     private SectionedAdapter adapter;
     private String search;
     private int lastAction;
-    MyShowsClient client = MyShowsClient.getInstance();
-    MyShows app;
     private LayoutInflater inflater;
+
+
+    public ShowsFragment() {
+
+    }
 
     public ShowsFragment(String search) {
         this.search = search;
     }
 
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.inflater = inflater;
         ListView list = (ListView) inflater.inflate(R.layout.shows, container, false);
-      //  getListView().setDivider(null);
-       // getListView().setDividerHeight(0);
+        list.setDivider(null);
+        list.setDividerHeight(0);
 
         //search = getBundleValue(getActivity().getIntent(), "search", null);
 
-        if (search == null) lastAction = ACTION_GET_USER_SHOWS;
-        else if (search.equals("top")) lastAction = ACTION_GET_TOP_SHOWS;
-        else if (search.equals("all")) lastAction = ACTION_GET_ALL_SHOWS;
-        else lastAction = ACTION_SEARCH_SHOWS;
-        new GetShowsTask(getActivity()).execute(lastAction, search);
+        if (adapter == null){
+            if (search == null) lastAction = ACTION_GET_USER_SHOWS;
+            else if (search.equals("top")) lastAction = ACTION_GET_TOP_SHOWS;
+            else if (search.equals("all")) lastAction = ACTION_GET_ALL_SHOWS;
+            else lastAction = ACTION_SEARCH_SHOWS;
+            new GetShowsTask(getActivity()).execute(lastAction, search);
+        } else {
+            list.setAdapter(adapter);
+        }
         return list;
-
-
     }
 
+
+//    @Override
+//    public void onActivityCreated(Bundle savedInstanceState) {
+//        super.onActivityCreated(savedInstanceState);
+//        if (savedInstanceState != null) {
+//            adapter = (SectionedAdapter) savedInstanceState.getSerializable("adapter");
+//            setListAdapter(adapter);
+//        } else {
+//            if (search == null) lastAction = ACTION_GET_USER_SHOWS;
+//            else if (search.equals("top")) lastAction = ACTION_GET_TOP_SHOWS;
+//            else if (search.equals("all")) lastAction = ACTION_GET_ALL_SHOWS;
+//            else lastAction = ACTION_SEARCH_SHOWS;
+//            new GetShowsTask(getActivity()).execute(lastAction, search);
+//        }
+//    }
 
 //    @Override
 //    public void onResume() {
@@ -145,8 +167,6 @@ public class ShowsFragment extends ListFragment {
                     intent.putExtra("yoursRating", show.getYoursRating());
                     intent.setClass(getActivity(), ShowActivity.class);
                     startActivity(intent);
-//                    ActivityStack activityStack = (ActivityStack) getParent();
-//                    activityStack.push("ShowActivity", intent);
                 }
             });
 
@@ -181,29 +201,21 @@ public class ShowsFragment extends ListFragment {
                 case ACTION_SEARCH_SHOWS:
                     lastAction = ACTION_SEARCH_SHOWS;
                     String query = (String) objects[1];
-                    shows = client.search(query);
+                    shows = MyShows.getClient().search(query);
                     break;
                 case ACTION_GET_TOP_SHOWS:
                     lastAction = ACTION_GET_TOP_SHOWS;
-                    shows = client.getTopShows(null);
+                    shows = MyShows.getClient().getTopShows(null);
                     Collections.sort(shows, new ShowsComparator());
                     break;
                 case ACTION_GET_ALL_SHOWS:
                     lastAction = ACTION_GET_ALL_SHOWS;
-                    shows = client.getTopShows(null);
+                    shows = MyShows.getClient().getTopShows(null);
                     Collections.sort(shows, new ShowsComparator("title"));
                     break;
                 case ACTION_GET_USER_SHOWS:
-
                     lastAction = ACTION_GET_USER_SHOWS;
-                    String s = (String) objects[1];
-                    if ((s != null && s.equals("update")) || app.getUserShows() == null) {
-                        shows = client.getShows();
-                        app.setUserShows(shows);
-                    } else {
-                        shows = app.getUserShows();
-                    }
-                    app.setUserShowsChanged(false);
+                    shows = MyShows.getClient().getShows();
                     break;
 
             }

@@ -1,4 +1,4 @@
-package ru.myshows.activity;
+package ru.myshows.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.*;
 import android.widget.*;
+import ru.myshows.activity.MainActivity;
+import ru.myshows.activity.R;
+import ru.myshows.activity.SectionedAdapter;
 import ru.myshows.client.MyShowsClient;
 import ru.myshows.domain.UserNews;
 import ru.myshows.util.NewsComparator;
@@ -35,10 +38,18 @@ public class NewsFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.inflater = inflater;
-        new GetNewsTask(getActivity()).execute();
         return  inflater.inflate(R.layout.news, container, false);
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (adapter == null){
+            new GetNewsTask(getActivity()).execute();
+        }else {
+            setListAdapter(adapter);
+        }
+    }
 
     private class NewsAdapter extends ArrayAdapter<UserNews> {
 

@@ -20,6 +20,7 @@ public class MyShows extends Application {
 
     private static Context context;
     private static MyShowsClient client;
+    private static boolean isLoggedIn;
 
     private List<UserShow> userShows = null;
     private boolean isUserShowsChanged = false;
@@ -32,11 +33,13 @@ public class MyShows extends Application {
         client = MyShowsClient.getInstance();
     }
 
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
+    public static boolean isLoggedIn() {
+        return isLoggedIn;
     }
 
+    public static void setLoggedIn(boolean loggedIn) {
+        isLoggedIn = loggedIn;
+    }
 
     public boolean isUserShowsChanged() {
         return isUserShowsChanged;
@@ -105,4 +108,6 @@ public class MyShows extends Application {
     public static MyShowsClient getClient() {
         return client;
     }
+
+
 }

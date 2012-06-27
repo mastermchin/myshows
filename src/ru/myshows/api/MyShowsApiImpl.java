@@ -8,10 +8,13 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import ru.myshows.activity.MyShows;
+import ru.myshows.prefs.Settings;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -31,15 +34,15 @@ public class MyShowsApiImpl implements MyShowsApi {
     private String password = null;
     private DefaultHttpClient httpClient = null;
 
+
     public MyShowsApiImpl() {
         this.httpClient = new DefaultHttpClient();
         ClientConnectionManager mgr = httpClient.getConnectionManager();
         HttpParams params = httpClient.getParams();
-        //HttpConnectionParams.setConnectionTimeout(params, 3000);
-        //HttpConnectionParams.setSoTimeout(params, 5000);
+        HttpConnectionParams.setConnectionTimeout(params, 30000);
+        HttpConnectionParams.setSoTimeout(params, 50000);
         this.httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);
     }
-
 
     private void setCredentials(String login, String password) {
         if (login != null && password != null)
@@ -49,47 +52,27 @@ public class MyShowsApiImpl implements MyShowsApi {
     }
 
     private InputStream execute(String url) {
-        setCredentials(login, password);
-        if (httpClient == null || url == null) {
-            return null;
-        }
-        HttpResponse response = null;
-        try {
-            HttpGet get = new HttpGet(url.replaceAll("\\s", "+"));
-            Log.d("", "Request = " + get.getRequestLine().toString());
-            response = httpClient.execute(get);
-            int code = response.getStatusLine().getStatusCode();
-            if (code == HttpURLConnection.HTTP_OK) {
-                return response.getEntity().getContent();
-            } else {
-                Log.e("", "Wrong response code " + code + " for request " + get.getRequestLine().toString());
+        if (login == null || password == null) {
+            String lgn = Settings.getString(Settings.KEY_LOGIN);
+            String pwd = Settings.getString(Settings.KEY_PASSWORD);
+            if (!login(lgn, pwd))
                 return null;
-            }
-
-        } catch (SocketTimeoutException e) {
-            e.printStackTrace();
-        } catch (IOException e1) {
-            e1.printStackTrace();
         }
-        return null;
-    }
+        return execute(url, login, password);
 
+    }
 
     private InputStream execute(String url, String login, String password) {
         setCredentials(login, password);
-        if (httpClient == null || url == null) {
-            return null;
-        }
-        HttpGet get = new HttpGet(url);
+        HttpGet get = new HttpGet(url.replaceAll("\\s", "+"));
         try {
-            Log.d("", "Request = " + get.getRequestLine().toString());
+            Log.d("MyShows", "Request = " + get.getRequestLine().toString());
             HttpResponse response = httpClient.execute(get);
             int code = response.getStatusLine().getStatusCode();
             if (code == HttpURLConnection.HTTP_OK) {
                 return response.getEntity().getContent();
-                //return convertStreamToString(responseStream);
             } else {
-                Log.e("", "Wrong response code " + code + " for request " + get.getRequestLine().toString());
+                Log.e("MyShows", "Wrong response code " + code + " for request " + get.getRequestLine().toString());
                 return null;
             }
         } catch (IOException e) {
@@ -99,9 +82,53 @@ public class MyShowsApiImpl implements MyShowsApi {
     }
 
 
+    @Override
+    public synchronized boolean login(String login, String password) {
+        if (login == null || password == null) return false;
+        String passwordHash = getPasswordHash(password);
+        String url = String.format(MyShowsApi.URL.URL_LOGIN, login, passwordHash);
+        if (execute(url, login, passwordHash) != null) {
+            Log.d("MyShows", "Login is successful");
+            this.login = login;
+            this.password = passwordHash;
+            MyShows.setLoggedIn(true);
+            return true;
+        }
+        return false;
+    }
+
+    private String getPasswordHash(String _password) {
+        try {
+            MessageDigest algorithm = MessageDigest.getInstance("MD5");
+            algorithm.reset();
+            algorithm.update(_password.getBytes());
+            byte[] hashDigest = algorithm.digest();
+            StringBuffer hexString = new StringBuffer();
+            for (int i = 0; i < hashDigest.length; i++) {
+                String hex = Integer.toHexString(0xFF & hashDigest[i]);
+                if (hex.length() == 1) {
+                    hex = "0" + hex;
+                }
+                hexString.append(hex);
+            }
+            return hexString.toString();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean register(String login, String password, String email, GENDER gender) {
+        if (login == null || password == null || gender == null) return false;
+        return false;
+    }
+
+
     private JSONObject toJson(String s) {
         if (s == null) return null;
-        System.out.println("s = " + s);
+       Log.d("MyShows", "s = " + s);
         try {
             return new JSONObject(s);
         } catch (JSONException e) {
@@ -141,52 +168,9 @@ public class MyShowsApiImpl implements MyShowsApi {
     }
 
 
-    @Override
-    public boolean login(String login, String password) {
-        System.out.println("Login!");
-        if (login == null || password == null) return false;
-        String passwordHash = getPasswordHash(password);
-        String url = String.format(MyShowsApi.URL.URL_LOGIN, login, passwordHash);
-        if (execute(url, login, passwordHash) != null) {
-            System.out.println("Login is successful");
-            this.login = login;
-            this.password = passwordHash;
-            return true;
-        }
-        return false;
-    }
-
-    private String getPasswordHash(String _password) {
-        try {
-            MessageDigest algorithm = MessageDigest.getInstance("MD5");
-            algorithm.reset();
-            algorithm.update(_password.getBytes());
-            byte[] hashDigest = algorithm.digest();
-            StringBuffer hexString = new StringBuffer();
-            for (int i = 0; i < hashDigest.length; i++) {
-                String hex = Integer.toHexString(0xFF & hashDigest[i]);
-                if (hex.length() == 1) {
-                    hex = "0" + hex;
-                }
-                hexString.append(hex);
-            }
-            return hexString.toString();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public boolean register(String login, String password, String email, GENDER gender) {
-        if (login == null || password == null || gender == null) return false;
-        return false;
-    }
 
     @Override
     public JSONObject getShows() {
-        System.out.println("Get User Shows!");
         String url = MyShowsApi.URL.URL_GET_SHOWS;
         return toJson(executeWithStringResult(url));
     }

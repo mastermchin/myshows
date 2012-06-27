@@ -1,8 +1,5 @@
 package ru.myshows.activity;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,11 +7,11 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.viewpagerindicator.PageIndicator;
 import com.viewpagerindicator.TitlePageIndicator;
+import ru.myshows.fragments.*;
 import ru.myshows.prefs.Settings;
-import ru.myshows.util.CustomExceptionHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,106 +23,70 @@ import java.util.List;
  * Time: 15:47:52
  * To change this template use File | Settings | File Templates.
  */
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends SherlockFragmentActivity {
 
-    MyShows app;
-    ViewPager pager;
-    PageIndicator indicator;
-    TabsAdapter adapter;
+    private ViewPager pager;
+    private PageIndicator indicator;
+    private TabsAdapter adapter;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler("/sdcard/MyShows", null));
+       // Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler("/sdcard/MyShows", null));
 
         adapter = new TabsAdapter(getSupportFragmentManager());
-        pager = (ViewPager)findViewById(R.id.pager);
+        pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(adapter);
-        indicator = (TitlePageIndicator)findViewById(R.id.indicator);
+        indicator = (TitlePageIndicator) findViewById(R.id.indicator);
         indicator.setViewPager(pager);
 
-        initTabs();
+        indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
 
-     }
+            }
+
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {}
+            @Override
+            public void onPageScrollStateChanged(int i) {}
+        });
 
 
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+
+      //  initTabs();
+        new LoginTask().execute();
+
+    }
 
 
     private void initTabs() {
-        if (Settings.getBoolean(Settings.IS_LOGGED_IN))
+        if (Settings.getBoolean(Settings.KEY_LOGGED_IN))
             getPrivateTabs();
         else
-            //new LoginTask(this).execute(Settings.getString(Settings.KEY_LOGIN), Settings.getString(Settings.KEY_PASSWORD));
             getPublicTabs();
 
     }
 
 
     private void getPrivateTabs() {
-        Log.d("MyShows", "get private tabs");
-        adapter.addFragment(new ShowsFragment("top"), getResources().getString(R.string.tab_shows_title) );
-        adapter.addFragment(new NewEpisodesFragment(), getResources().getString(R.string.tab_new) );
-        adapter.addFragment(new NewsFragment(), getResources().getString(R.string.tab_news_title) );
-        adapter.addFragment(new ProfileFragment(Settings.getString(Settings.KEY_LOGIN)), getResources().getString(R.string.tab_profile_title) );
+        adapter.addFragment(new ShowsFragment(), getResources().getString(R.string.tab_shows_title));
+        adapter.addFragment(new NewEpisodesFragment(), getResources().getString(R.string.tab_new));
+        adapter.addFragment(new NewsFragment(), getResources().getString(R.string.tab_news_title));
+        adapter.addFragment(new ProfileFragment(Settings.getString(Settings.KEY_LOGIN)), getResources().getString(R.string.tab_profile_title));
         adapter.addFragment(new SearchFragment(), getResources().getString(R.string.tab_search_title));
     }
 
     private void getPublicTabs() {
-        Log.d("MyShows", "get public tabs");
         adapter.addFragment(new SearchFragment(), getResources().getString(R.string.tab_search_title));
-        adapter.addFragment(new LoginFragment(),  getResources().getString(R.string.tab_profile_title));
+        adapter.addFragment(new LoginFragment(), getResources().getString(R.string.tab_login_title));
+        adapter.notifyDataSetChanged();
     }
-
-
-
-    private Object getBundleValue(Intent intent, String key, Object defaultValue) {
-        if (intent == null) return defaultValue;
-        if (intent.getExtras() == null) return defaultValue;
-        if (intent.getExtras().get(key) == null) return defaultValue;
-        return intent.getExtras().get(key);
-    }
-
-
-
-//    private class LoginTask extends AsyncTask {
-//        private ProgressDialog dialog;
-//
-//        private LoginTask(Context context) {
-//            this.dialog = new ProgressDialog(context);
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            this.dialog.setMessage(getResources().getString(R.string.loading));
-//            this.dialog.show();
-//
-//        }
-//
-//        @Override
-//        protected Object doInBackground(Object... objects) {
-//            Boolean result = false;
-//            String login = (String) objects[0];
-//            String pass = (String) objects[1];
-//            if (login != null && pass != null)
-//                result = MyShows.getClient().login(login, pass);
-//            return result;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Object result) {
-//            if (this.dialog.isShowing())
-//                this.dialog.dismiss();
-//
-//            if ((Boolean) result)
-//                getPrivateTabs();
-//            else
-//                getPublicTabs();
-//
-//        }
-//
-//    }
 
 
     public class TabsAdapter extends FragmentPagerAdapter {
@@ -144,10 +105,11 @@ public class MainActivity extends FragmentActivity {
 
         @Override
         public int getCount() {
+            if (fragments == null) return 0;
             return fragments.size();
         }
 
-        public void addFragment(Fragment fragment, String title){
+        public void addFragment(Fragment fragment, String title) {
             if (fragments == null)
                 fragments = new ArrayList<Fragment>();
             if (titles == null)
@@ -161,5 +123,38 @@ public class MainActivity extends FragmentActivity {
             return titles.get(position);
         }
     }
+
+
+    private class LoginTask extends AsyncTask<Object, Void, Boolean> {
+
+        @Override
+        protected void onPreExecute() {
+          super.onPreExecute();
+        }
+
+        @Override
+        protected Boolean doInBackground(Object... objects) {
+            if (MyShows.isLoggedIn()) return true;
+            if (Settings.getBoolean(Settings.KEY_LOGGED_IN)){
+                String login = Settings.getString(Settings.KEY_LOGIN);
+                String pass = Settings.getString(Settings.KEY_PASSWORD);
+                return MyShows.getClient().login(login, pass);
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (result)  getPrivateTabs();
+            else         getPublicTabs();
+            indicator.notifyDataSetChanged();
+            adapter.notifyDataSetChanged();
+        }
+
+    }
+
+
+
+
 
 }

@@ -7,10 +7,11 @@ import android.widget.Adapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SectionedAdapter extends BaseAdapter {
+public class SectionedAdapter extends BaseAdapter implements Serializable {
 
     private LayoutInflater inflater;
     private List<Section> sections = new ArrayList<Section>();
@@ -153,9 +154,9 @@ public class SectionedAdapter extends BaseAdapter {
         return (position);
     }
 
-    class Section {
-        String caption;
-        Adapter adapter;
+    public class Section {
+       public String caption;
+       public Adapter adapter;
 
         Section(String caption, Adapter adapter) {
             this.caption = caption;

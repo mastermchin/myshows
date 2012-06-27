@@ -10,8 +10,8 @@
 
     <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="10"/>
 
-    <application android:name="MyShows" android:icon="@drawable/ic_logo" android:label="MyShows">
-        <activity android:theme="@android:style/Theme.NoTitleBar" android:name=".MainActivity" android:configChanges="keyboardHidden|orientation"
+    <application android:name="MyShows" android:icon="@drawable/ic_logo" android:label="MyShows" android:theme="@style/Theme.Sherlock.ForceOverflow">
+        <activity android:name=".MainActivity" android:configChanges="keyboardHidden|orientation"
                   android:launchMode="singleTask"
                   android:icon="@drawable/ic_logo">
             <intent-filter>
@@ -20,7 +20,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".ShowActivity"/>
-        <activity android:name=".ActivityStack"/>
-        <activity android:name=".MyShowsPreferenceAcrivity"/>
+        <activity android:name=".SettingsAcrivity"/>
     </application>
 </manifest>

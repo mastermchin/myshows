@@ -1,4 +1,4 @@
-package ru.myshows.activity;
+package ru.myshows.fragments;
 
 import android.app.Activity;
 import android.app.ListActivity;
@@ -14,6 +14,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.view.*;
 import android.widget.*;
+import ru.myshows.activity.MyShows;
+import ru.myshows.activity.R;
+import ru.myshows.activity.SectionedAdapter;
 import ru.myshows.client.MyShowsClient;
 import ru.myshows.components.RatingDialog;
 import ru.myshows.domain.Episode;
@@ -41,7 +44,6 @@ public class NewEpisodesFragment extends Fragment {
     private Button saveButton;
     private List<Episode> localEpisodes = null;
     private ListView list;
-    MyShowsClient client = MyShowsClient.getInstance();
     DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
     MyShows app;
     private LayoutInflater inflater;
@@ -58,20 +60,20 @@ public class NewEpisodesFragment extends Fragment {
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.inflater = inflater;
-
-
         rootView = (RelativeLayout) inflater.inflate(R.layout.new_episodes, container, false);
         list = (ListView) rootView.findViewById(R.id.list);
-        //getListView().setDivider(null);
-        //getListView().setDividerHeight(0);
-       new GetNewEpisodesTask(getActivity()).execute();
-        //registerForContextMenu(getListView());
-        return list;
+
+        if (adapter == null){
+            new GetNewEpisodesTask(getActivity()).execute();
+        }else {
+            list.setAdapter(adapter);
+        }
+        return rootView;
     }
+
 
 
 
@@ -117,10 +119,10 @@ public class NewEpisodesFragment extends Fragment {
                             UserShow userShow = app.getUserShow(showId);
                             userShow.setWatchedEpisodes(userShow.getWatchedEpisodes() + episodesIds.split(",").length);
                             app.setUserShowsChanged(true);
-                            client.syncAllShowEpisodes(showId, episodesIds, null);
+                            MyShows.getClient().syncAllShowEpisodes(showId, episodesIds, null);
                         }
                     }.start();
-               }
+                }
 
                 int message = R.string.changes_saved;
                 handler.sendEmptyMessage(message);
@@ -244,32 +246,27 @@ public class NewEpisodesFragment extends Fragment {
         }
     }
 
+//
+//    @Override
+//    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+//        super.onCreateContextMenu(menu, v, menuInfo);
+//        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+//        final Episode episode = (Episode) adapter.getItem(info.position);
+//
+//        if (episode != null) {
+//            Handler handler = new Handler() {
+//                @Override
+//                public void handleMessage(Message msg) {
+//                    MyShows.getClient().changeEpisodeRatio(msg.arg1, episode.getEpisodeId());
+//                }
+//            };
+//            RatingDialog rate = new RatingDialog(getActivity(), handler);
+//            rate.setTitle(R.string.episode_rating);
+//            rate.show();
+//
+//        }
+//    }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-        final Episode episode = (Episode) adapter.getItem(info.position);
-
-        if (episode != null) {
-            Handler handler = new Handler() {
-                @Override
-                public void handleMessage(Message msg) {
-                    client.changeEpisodeRatio(msg.arg1, episode.getEpisodeId());
-                }
-            };
-            RatingDialog rate = new RatingDialog(getActivity(), handler);
-            rate.setTitle(R.string.episode_rating);
-            rate.show();
-
-        }
-    }
-
-
-    @Override
-    public boolean onContextItemSelected(MenuItem menuItem) {
-        return super.onContextItemSelected(menuItem);
-    }
 
     private String composeShortTitle(Episode e) {
         int season = e.getSeasonNumber();
@@ -295,7 +292,7 @@ public class NewEpisodesFragment extends Fragment {
 
         @Override
         protected List doInBackground(Object... objects) {
-            List<Episode> newEpisodes = client.getUnwatchedEpisodes();
+            List<Episode> newEpisodes = MyShows.getClient().getUnwatchedEpisodes();
             localEpisodes = newEpisodes;
             return newEpisodes;
         }

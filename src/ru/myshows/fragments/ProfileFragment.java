@@ -1,6 +1,5 @@
-package ru.myshows.activity;
+package ru.myshows.fragments;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -11,8 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import ru.myshows.activity.MainActivity;
+import ru.myshows.activity.MyShows;
+import ru.myshows.activity.R;
 import ru.myshows.api.MyShowsApi;
-import ru.myshows.client.MyShowsClient;
 import ru.myshows.components.TextProgressBar;
 import ru.myshows.domain.*;
 import ru.myshows.prefs.Settings;
@@ -39,7 +40,9 @@ public class ProfileFragment extends Fragment {
     private TextView nickName;
     private String currentUser;
     private String login;
-    MyShows app;
+    private MyShows app;
+    private Profile profile;
+    private View mainView;
 
 
     public ProfileFragment(String login) {
@@ -50,54 +53,61 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        View view = inflater.inflate(R.layout.profile, container, false);
+        mainView= inflater.inflate(R.layout.profile, container, false);
         app = (MyShows) getActivity().getApplication();
 
         if (login != null) {
             currentUser = login;
-            new GetProfileTask(getActivity()).execute(login);
 
-
-            logoutButton = (Button) view.findViewById(R.id.logout_button);
+            logoutButton = (Button) mainView.findViewById(R.id.logout_button);
             logoutButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    logoutButton.setEnabled(false);
                     Settings.setString(Settings.KEY_LOGIN, null);
                     Settings.setString(Settings.KEY_PASSWORD, null);
-                    Settings.setBoolean(Settings.IS_LOGGED_IN, false);
-                    app.clearShows();
-                    logoutButton.setEnabled(true);
+                    Settings.setBoolean(Settings.KEY_LOGGED_IN, false);
+                    MyShows.setLoggedIn(false);
+                    getActivity().finish();
                     startActivity(new Intent(getActivity(), MainActivity.class));
                 }
             });
         }
 
-        return view;
-    }
-
-    private void populateUI(Profile profile, ProfileStats stats) {
-        avatar = (ImageView) getView().findViewById(R.id.avatar);
-        if (profile.getAvatarUrl() != null) {
-            avatar.setImageBitmap(MyShowsUtil.getAvatar(profile.getAvatarUrl()));
+        if (profile == null){
+            new GetProfileTask(getActivity()).execute(login);
+        } else {
+             populateUI(profile, profile.getStats());
         }
 
-        nickName = (TextView) getView().findViewById(R.id.profile_name);
+        return mainView;
+    }
+
+
+
+    private void populateUI(Profile profile, ProfileStats stats) {
+        
+        
+        avatar = (ImageView) mainView.findViewById(R.id.avatar);
+//        if (profile.getAvatarUrl() != null) {
+//            avatar.setImageBitmap(MyShowsUtil.getAvatar(profile.getAvatarUrl()));
+//        }
+
+        nickName = (TextView) mainView.findViewById(R.id.profile_name);
         nickName.setText(profile.getLogin());
 
 
-        episodesBar = (TextProgressBar) getView().findViewById(R.id.episodes_bar);
+        episodesBar = (TextProgressBar) mainView.findViewById(R.id.episodes_bar);
         episodesBar.setMax(stats.getWatchedEpisodes() + stats.getRemainingEpisodes());
         episodesBar.setProgress(stats.getWatchedEpisodes());
         episodesBar.setText(stats.getWatchedEpisodes() + "/" + (stats.getWatchedEpisodes() + stats.getRemainingEpisodes()));
 
 
-        hoursBar = (TextProgressBar) getView().findViewById(R.id.hours_bar);
+        hoursBar = (TextProgressBar) mainView.findViewById(R.id.hours_bar);
         hoursBar.setMax((int) stats.getWatchedHours().doubleValue() + (int) stats.getRemainingHours().doubleValue());
         hoursBar.setProgress((int) stats.getWatchedHours().doubleValue());
         hoursBar.setText((int) stats.getWatchedHours().doubleValue() + "/" + (int) (stats.getWatchedHours() + stats.getRemainingHours()));
 
-        daysBar = (TextProgressBar) getView().findViewById(R.id.days_bar);
+        daysBar = (TextProgressBar) mainView.findViewById(R.id.days_bar);
         daysBar.setMax(stats.getWatchedDays() + stats.getRemainingDays());
         daysBar.setProgress(stats.getWatchedDays());
         daysBar.setText(stats.getWatchedDays() + "/" + (stats.getWatchedDays() + stats.getRemainingDays()));
@@ -106,27 +116,27 @@ public class ProfileFragment extends Fragment {
             List<UserShow> shows = app.getUserShows();
 
             if (shows != null) {
-                getView().findViewById(R.id.profile_shows_info).setVisibility(View.VISIBLE);
-                ((TextView) getView().findViewById(R.id.profile_watching_label)).setText
+                mainView.findViewById(R.id.profile_shows_info).setVisibility(View.VISIBLE);
+                ((TextView) mainView.findViewById(R.id.profile_watching_label)).setText
                         (getResources().getString(R.string.status_watching) + " " +
                                 MyShowsUtil.getUserShowsByWatchStatus(shows, MyShowsApi.STATUS.watching).size());
 
-                ((TextView) getView().findViewById(R.id.profile_will_watch_label)).setText
+                ((TextView) mainView.findViewById(R.id.profile_will_watch_label)).setText
                         (getResources().getString(R.string.status_will_watch) + " " +
                                 MyShowsUtil.getUserShowsByWatchStatus(shows, MyShowsApi.STATUS.later).size());
 
 
-                ((TextView) getView().findViewById(R.id.profile_cancelled_label)).setText
+                ((TextView) mainView.findViewById(R.id.profile_cancelled_label)).setText
                         (getResources().getString(R.string.status_cancelled) + " " +
                                 MyShowsUtil.getUserShowsByWatchStatus(shows, MyShowsApi.STATUS.cancelled).size());
 
-                ((TextView) getView().findViewById(R.id.profile_finished_label)).setText(
+                ((TextView) mainView.findViewById(R.id.profile_finished_label)).setText(
                         getResources().getString(R.string.status_finished) + " " +
                                 MyShowsUtil.getUserShowsByWatchStatus(shows, MyShowsApi.STATUS.finished).size());
             }
 
         } else {
-            getView().findViewById(R.id.profile_shows_info).setVisibility(View.INVISIBLE);
+            mainView.findViewById(R.id.profile_shows_info).setVisibility(View.INVISIBLE);
         }
     }
 
@@ -180,7 +190,7 @@ public class ProfileFragment extends Fragment {
         protected void onPostExecute(Object result) {
             if (this.dialog.isShowing()) this.dialog.dismiss();
             if (result != null) {
-                Profile profile = (Profile) result;
+                profile = (Profile) result;
                 populateUI(profile, profile.getStats());
             }
 

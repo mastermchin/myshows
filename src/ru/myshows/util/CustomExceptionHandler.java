@@ -45,6 +45,7 @@ public class CustomExceptionHandler implements Thread.UncaughtExceptionHandler {
 
         String stacktrace = result.toString() + "\n" + e.getCause().toString();
         printWriter.close();
+        System.out.println("stacktrace = " + stacktrace);
         String filename = "log.txt";
 
         if (localPath != null) {

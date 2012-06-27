@@ -1,4 +1,4 @@
-package ru.myshows.activity;
+package ru.myshows.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import ru.myshows.activity.R;
 
 /**
  * Created by IntelliJ IDEA.

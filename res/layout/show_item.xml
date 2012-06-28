@@ -3,18 +3,14 @@
 <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:padding="5dp"
         xmlns:android="http://schemas.android.com/apk/res/android">
 
 
     <ImageView
             android:id="@+id/show_logo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="5dp"
-            android:maxHeight="40dp"
-            android:maxWidth="60dp"
-            android:adjustViewBounds="true"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:scaleType="centerCrop"
             />
 
     <TextView
@@ -23,6 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/show_logo"
             android:textColor="@color/white"
+            android:paddingLeft="10dp"
             />
 
     <RatingBar
@@ -36,6 +33,7 @@
             android:layout_toRightOf="@id/show_logo"
             android:layout_below="@id/show_name"
             android:paddingBottom="7dp"
+            android:layout_marginLeft="10dp"
             />
 
      <TextView
@@ -49,11 +47,6 @@
 
             />
 
-    <ImageView
-            android:id="@+id/divider"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            />
+
 
 </RelativeLayout>

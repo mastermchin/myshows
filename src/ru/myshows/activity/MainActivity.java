@@ -1,5 +1,6 @@
 package ru.myshows.activity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,7 +8,9 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.widget.EditText;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.viewpagerindicator.PageIndicator;
 import com.viewpagerindicator.TitlePageIndicator;
 import ru.myshows.fragments.*;
@@ -28,7 +31,7 @@ public class MainActivity extends SherlockFragmentActivity {
     private ViewPager pager;
     private PageIndicator indicator;
     private TabsAdapter adapter;
-
+    private EditText search;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,10 +39,10 @@ public class MainActivity extends SherlockFragmentActivity {
         setContentView(R.layout.main);
        // Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler("/sdcard/MyShows", null));
 
-        adapter = new TabsAdapter(getSupportFragmentManager());
-        pager = (ViewPager) findViewById(R.id.pager);
-        pager.setAdapter(adapter);
+        adapter =    new TabsAdapter(getSupportFragmentManager());
+        pager =     (ViewPager) findViewById(R.id.pager);
         indicator = (TitlePageIndicator) findViewById(R.id.indicator);
+        pager.setAdapter(adapter);
         indicator.setViewPager(pager);
 
         indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -59,20 +62,37 @@ public class MainActivity extends SherlockFragmentActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
-      //  initTabs();
         new LoginTask().execute();
 
     }
 
 
-    private void initTabs() {
-        if (Settings.getBoolean(Settings.KEY_LOGGED_IN))
-            getPrivateTabs();
-        else
-            getPublicTabs();
+    public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 
+        menu.add(0, 1, 1, "Refresh" ).setIcon(R.drawable.ic_navigation_refresh).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM );
+        menu.add(0, 2, 2, "Settings").setIcon(R.drawable.ic_action_settings).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        menu.add(0, 3, 3, "Search"  ).setIcon(R.drawable.ic_action_search).setActionView(R.layout.action_search).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+
+        return super.onCreateOptionsMenu(menu);
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
+        switch (item.getItemId()){
+            case 1:
+                //((RadioFragment) mAdapter.getItem(mPager.getCurrentItem())).updateChannels();
+                break;
+            case 2:
+                startActivity(new Intent(this, SettingsAcrivity.class));
+                break;
+            case 3:
+                search = (EditText) item.getActionView();
+                //search.addTextChangedListener(filterTextWatcher);
+                break;
+        }
+        return true;
+    }
 
     private void getPrivateTabs() {
         adapter.addFragment(new ShowsFragment(), getResources().getString(R.string.tab_shows_title));
@@ -85,7 +105,6 @@ public class MainActivity extends SherlockFragmentActivity {
     private void getPublicTabs() {
         adapter.addFragment(new SearchFragment(), getResources().getString(R.string.tab_search_title));
         adapter.addFragment(new LoginFragment(), getResources().getString(R.string.tab_login_title));
-        adapter.notifyDataSetChanged();
     }
 
 

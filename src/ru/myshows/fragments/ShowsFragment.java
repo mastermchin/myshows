@@ -61,8 +61,6 @@ public class ShowsFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.inflater = inflater;
         ListView list = (ListView) inflater.inflate(R.layout.shows, container, false);
-        list.setDivider(null);
-        list.setDividerHeight(0);
 
         //search = getBundleValue(getActivity().getIntent(), "search", null);
 
@@ -79,20 +77,6 @@ public class ShowsFragment extends ListFragment {
     }
 
 
-//    @Override
-//    public void onActivityCreated(Bundle savedInstanceState) {
-//        super.onActivityCreated(savedInstanceState);
-//        if (savedInstanceState != null) {
-//            adapter = (SectionedAdapter) savedInstanceState.getSerializable("adapter");
-//            setListAdapter(adapter);
-//        } else {
-//            if (search == null) lastAction = ACTION_GET_USER_SHOWS;
-//            else if (search.equals("top")) lastAction = ACTION_GET_TOP_SHOWS;
-//            else if (search.equals("all")) lastAction = ACTION_GET_ALL_SHOWS;
-//            else lastAction = ACTION_SEARCH_SHOWS;
-//            new GetShowsTask(getActivity()).execute(lastAction, search);
-//        }
-//    }
 
 //    @Override
 //    public void onResume() {
@@ -146,13 +130,13 @@ public class ShowsFragment extends ListFragment {
                     }
                 }
 
-                // remove last divider in section
-                if (show.equals(last)) {
-                    ((ImageView) row.findViewById(R.id.divider)).setBackgroundDrawable(null);
-                } else {
-                    Drawable divider = getResources().getDrawable(R.drawable.divider_horizontal_dim_dark);
-                    ((ImageView) row.findViewById(R.id.divider)).setBackgroundDrawable(divider);
-                }
+//                // remove last divider in section
+//                if (show.equals(last)) {
+//                    ((ImageView) row.findViewById(R.id.divider)).setBackgroundDrawable(null);
+//                } else {
+//                    Drawable divider = getResources().getDrawable(R.drawable.divider_horizontal_dim_dark);
+//                    ((ImageView) row.findViewById(R.id.divider)).setBackgroundDrawable(divider);
+//                }
             }
 
 

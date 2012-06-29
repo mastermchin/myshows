@@ -4,7 +4,6 @@ package ru.myshows.domain;
 import org.json.JSONObject;
 import ru.myshows.api.MyShowsApi;
 import ru.myshows.util.JsonUtil;
-import ru.myshows.util.MyShowsUtil;
 
 import java.util.Collection;
 

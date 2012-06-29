@@ -1,10 +1,7 @@
-package ru.myshows.client;
+package ru.myshows.api;
 
-import android.os.Handler;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import ru.myshows.api.MyShowsApi;
-import ru.myshows.api.MyShowsApiImpl;
 import ru.myshows.domain.*;
 import ru.myshows.util.JsonUtil;
 

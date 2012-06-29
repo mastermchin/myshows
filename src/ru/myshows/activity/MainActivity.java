@@ -4,17 +4,15 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.widget.EditText;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
-import com.viewpagerindicator.PageIndicator;
 import com.viewpagerindicator.TitlePageIndicator;
 import ru.myshows.fragments.*;
-import ru.myshows.prefs.Settings;
+import ru.myshows.util.Settings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +27,7 @@ import java.util.List;
 public class MainActivity extends SherlockFragmentActivity {
 
     private ViewPager pager;
-    private PageIndicator indicator;
+    private TitlePageIndicator indicator;
     private TabsAdapter adapter;
     private EditText search;
 
@@ -44,6 +42,7 @@ public class MainActivity extends SherlockFragmentActivity {
         indicator = (TitlePageIndicator) findViewById(R.id.indicator);
         pager.setAdapter(adapter);
         indicator.setViewPager(pager);
+        indicator.setTypeface(MyShows.font);
 
         indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -61,7 +60,6 @@ public class MainActivity extends SherlockFragmentActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-
         new LoginTask().execute();
 
     }

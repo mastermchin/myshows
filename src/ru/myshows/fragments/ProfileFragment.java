@@ -16,8 +16,8 @@ import ru.myshows.activity.R;
 import ru.myshows.api.MyShowsApi;
 import ru.myshows.components.TextProgressBar;
 import ru.myshows.domain.*;
-import ru.myshows.prefs.Settings;
-import ru.myshows.util.MyShowsUtil;
+import ru.myshows.util.Settings;
+import ru.myshows.util.Utils;
 
 import java.util.List;
 
@@ -89,7 +89,7 @@ public class ProfileFragment extends Fragment {
         
         avatar = (ImageView) mainView.findViewById(R.id.avatar);
 //        if (profile.getAvatarUrl() != null) {
-//            avatar.setImageBitmap(MyShowsUtil.getAvatar(profile.getAvatarUrl()));
+//            avatar.setImageBitmap(Utils.getAvatar(profile.getAvatarUrl()));
 //        }
 
         nickName = (TextView) mainView.findViewById(R.id.profile_name);
@@ -119,20 +119,20 @@ public class ProfileFragment extends Fragment {
                 mainView.findViewById(R.id.profile_shows_info).setVisibility(View.VISIBLE);
                 ((TextView) mainView.findViewById(R.id.profile_watching_label)).setText
                         (getResources().getString(R.string.status_watching) + " " +
-                                MyShowsUtil.getUserShowsByWatchStatus(shows, MyShowsApi.STATUS.watching).size());
+                                Utils.getUserShowsByWatchStatus(shows, MyShowsApi.STATUS.watching).size());
 
                 ((TextView) mainView.findViewById(R.id.profile_will_watch_label)).setText
                         (getResources().getString(R.string.status_will_watch) + " " +
-                                MyShowsUtil.getUserShowsByWatchStatus(shows, MyShowsApi.STATUS.later).size());
+                                Utils.getUserShowsByWatchStatus(shows, MyShowsApi.STATUS.later).size());
 
 
                 ((TextView) mainView.findViewById(R.id.profile_cancelled_label)).setText
                         (getResources().getString(R.string.status_cancelled) + " " +
-                                MyShowsUtil.getUserShowsByWatchStatus(shows, MyShowsApi.STATUS.cancelled).size());
+                                Utils.getUserShowsByWatchStatus(shows, MyShowsApi.STATUS.cancelled).size());
 
                 ((TextView) mainView.findViewById(R.id.profile_finished_label)).setText(
                         getResources().getString(R.string.status_finished) + " " +
-                                MyShowsUtil.getUserShowsByWatchStatus(shows, MyShowsApi.STATUS.finished).size());
+                                Utils.getUserShowsByWatchStatus(shows, MyShowsApi.STATUS.finished).size());
             }
 
         } else {

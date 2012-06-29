@@ -23,7 +23,6 @@
     </style>
 
 
-
     <style name="CustomTitlePageIndicator">
         <item name="android:background">#18FF0000</item>
         <item name="footerColor">#FFAA2222</item>
@@ -56,7 +55,7 @@
 
 
     <style name="LightRatingBar" >
-        <item name="android:progressDrawable">@drawable/red_rating_bar</item>
+        <item name="android:progressDrawable">@drawable/yellow_big_rating_bar</item>
         <item name="android:minHeight">18dip</item>
         <item name="android:maxHeight">18dip</item>
     </style>
@@ -162,7 +161,7 @@
 
 
     <style name="DarkRatingBar" >
-        <item name="android:progressDrawable">@drawable/yellow_rating_bar</item>
+        <item name="android:progressDrawable">@drawable/yellow_big_rating_bar</item>
         <item name="android:minHeight">20dip</item>
         <item name="android:maxHeight">20dip</item>
         

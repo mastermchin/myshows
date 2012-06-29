@@ -1,4 +1,4 @@
-package ru.myshows.prefs;
+package ru.myshows.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;

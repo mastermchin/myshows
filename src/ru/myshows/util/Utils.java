@@ -1,19 +1,15 @@
 package ru.myshows.util;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
-import ru.myshows.activity.MainActivity;
 import ru.myshows.api.MyShowsApi;
-import ru.myshows.client.MyShowsClient;
+import ru.myshows.api.MyShowsClient;
 import ru.myshows.domain.IShow;
 import ru.myshows.domain.UserShow;
-import ru.myshows.prefs.Settings;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -26,13 +22,21 @@ import java.util.List;
  * Time: 18:44:56
  * To change this template use File | Settings | File Templates.
  */
-public class MyShowsUtil {
+public class Utils {
 
     public static final String APP_DIR_NAME = "MyShows";
 
     public static final File SD_DIR = Environment.getExternalStorageDirectory();
     public static final File APP_DIR = new File(SD_DIR + "/MyShows");
     public static final File LOG_DIR = new File(APP_DIR_NAME + "/log");
+    public static final File CACHE_DIR = new File(APP_DIR + "/cache");
+
+
+    static {
+        if (!APP_DIR.exists())   APP_DIR.mkdir();
+        if (!CACHE_DIR.exists()) CACHE_DIR.mkdir();
+        if (!LOG_DIR.exists())   LOG_DIR.mkdir();
+    }
 
 
     public static List<IShow> getByWatchStatus(List<IShow> shows, MyShowsApi.STATUS status) {
@@ -133,11 +137,24 @@ public class MyShowsUtil {
 
 
 
-    public static boolean isNetworkAvailable(Context context) {
+    public static boolean isInternetAvailable(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return (netInfo != null);
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        } else
+            return false;
+    }
 
+    public static boolean isSdAvailable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            return false;
+        } else {
+            return false;
+        }
     }
 
     public static void copyStream(InputStream is, OutputStream os) {

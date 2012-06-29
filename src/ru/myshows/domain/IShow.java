@@ -15,15 +15,10 @@ import java.util.Collection;
 public interface IShow extends Serializable {
 
     public Integer getShowId();
-
     public String getTitle();
-
     public Double getRating();
-
     public Double getYoursRating();
-
     public MyShowsApi.STATUS getWatchStatus();
-
     public String getImageUrl();
 
 }

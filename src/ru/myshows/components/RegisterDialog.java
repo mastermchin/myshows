@@ -9,8 +9,8 @@ import android.widget.*;
 import ru.myshows.activity.MainActivity;
 import ru.myshows.activity.R;
 import ru.myshows.api.MyShowsApi;
-import ru.myshows.client.MyShowsClient;
-import ru.myshows.prefs.Settings;
+import ru.myshows.api.MyShowsClient;
+import ru.myshows.util.Settings;
 
 /**
  * Created by IntelliJ IDEA.

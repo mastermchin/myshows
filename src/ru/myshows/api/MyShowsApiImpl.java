@@ -14,11 +14,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import ru.myshows.activity.MyShows;
-import ru.myshows.prefs.Settings;
+import ru.myshows.util.Settings;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.SocketTimeoutException;
 import java.security.MessageDigest;
 
 /**

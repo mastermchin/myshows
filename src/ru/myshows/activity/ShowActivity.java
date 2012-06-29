@@ -13,13 +13,13 @@ import android.os.Message;
 import android.view.*;
 import android.widget.*;
 import android.widget.Button;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import ru.myshows.api.MyShowsApi;
-import ru.myshows.client.MyShowsClient;
+import ru.myshows.api.MyShowsClient;
 import ru.myshows.components.RatingDialog;
 import ru.myshows.domain.*;
-import ru.myshows.prefs.Settings;
+import ru.myshows.util.Settings;
 import ru.myshows.util.EpisodeComparator;
-import ru.myshows.util.ImageLoader;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -65,7 +65,6 @@ public class ShowActivity extends Activity {
 
     MyShowsClient client = MyShowsClient.getInstance();
     DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
-    ImageLoader imageLoader = new ImageLoader(this);
     MyShows app;
     Show currentShow;
 
@@ -112,7 +111,7 @@ public class ShowActivity extends Activity {
         removeButton = (Button) statusButtonsLayoyt.findViewById(R.id.button_remove);
 
 
-        imageLoader.displayImage(currentShow.getImageUrl(), showLogo);
+        ImageLoader.getInstance().displayImage(currentShow.getImageUrl(), showLogo);
 
 
         if (currentShow.getTitle() != null) {

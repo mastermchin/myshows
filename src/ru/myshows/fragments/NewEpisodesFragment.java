@@ -1,32 +1,23 @@
 package ru.myshows.fragments;
 
-import android.app.Activity;
-import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.view.*;
 import android.widget.*;
 import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
 import ru.myshows.activity.SectionedAdapter;
-import ru.myshows.client.MyShowsClient;
-import ru.myshows.components.RatingDialog;
 import ru.myshows.domain.Episode;
-import ru.myshows.domain.IShow;
 import ru.myshows.domain.UserShow;
 import ru.myshows.util.EpisodeComparator;
-import ru.myshows.util.ShowsComparator;
 
 import java.text.DateFormat;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 

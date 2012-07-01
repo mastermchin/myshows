@@ -24,6 +24,7 @@ public abstract class BaseTask<T> extends AsyncTask<Object, Void, T> {
     public ProgressDialog dialog;
     public Exception exception;
     public boolean isOnline = true;
+    public boolean showProgressDialog = true;
 
     protected BaseTask() {
     }
@@ -33,12 +34,19 @@ public abstract class BaseTask<T> extends AsyncTask<Object, Void, T> {
         this.dialog = new ProgressDialog(context);
     }
 
+    public BaseTask(Context context, boolean showProgressDialog) {
+        this.context = context;
+        this.dialog = new ProgressDialog(context);
+        this.showProgressDialog = showProgressDialog;
+    }
+
     @Override
     protected void onPreExecute() {
         if (!Utils.isInternetAvailable(context))
             isOnline = false;
         this.dialog.setMessage(context.getResources().getString(R.string.loading));
-        this.dialog.show();
+        if (showProgressDialog)
+            this.dialog.show();
 
     }
 

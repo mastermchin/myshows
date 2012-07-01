@@ -9,14 +9,12 @@ package ru.myshows.activity;
  */
 
 import android.app.ListActivity;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
+import ru.myshows.adapters.SectionedAdapter;
 
 import java.util.Arrays;
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package ru.myshows.activity;
+package ru.myshows.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import ru.myshows.activity.R;
 
 import java.io.Serializable;
 import java.util.ArrayList;

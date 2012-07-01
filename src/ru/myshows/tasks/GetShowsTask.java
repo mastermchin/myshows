@@ -1,16 +1,9 @@
 package ru.myshows.tasks;
 
 import android.content.Context;
-import android.content.res.Resources;
 import ru.myshows.activity.MyShows;
-import ru.myshows.activity.R;
-import ru.myshows.activity.SectionedAdapter;
-import ru.myshows.activity.SectionedDemo;
-import ru.myshows.api.MyShowsApi;
 import ru.myshows.domain.IShow;
-import ru.myshows.fragments.ShowsFragment;
 import ru.myshows.util.ShowsComparator;
-import ru.myshows.util.Utils;
 
 import java.util.Collections;
 import java.util.List;
@@ -29,11 +22,22 @@ public class GetShowsTask extends BaseTask<List<IShow>> {
     public static final int SHOWS_USER = 3;
     public static final int SHOWS_ALL = 4;
 
-    private SectionedAdapter adapter;
+    private ShowsLoadingListener showsLoadingListener;
     private int action;
 
-    public GetShowsTask(Context context, SectionedAdapter adapter) {
+    public GetShowsTask(Context context) {
         super(context);
+    }
+
+
+    public GetShowsTask(Context context, boolean showProgressDialog, int action) {
+        super(context, showProgressDialog);
+        this.action = action;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
     }
 
     @Override
@@ -43,7 +47,6 @@ public class GetShowsTask extends BaseTask<List<IShow>> {
             return null;
         }
 
-        action = (Integer) objects[0];
         List shows = null;
         switch (action) {
             case SHOWS_SEARCH:
@@ -68,7 +71,7 @@ public class GetShowsTask extends BaseTask<List<IShow>> {
 
     @Override
     public void onResult(List<IShow> shows) {
-        populateAdapter(action, shows);
+        showsLoadingListener.onShowsLoaded(shows);
 
     }
 
@@ -78,49 +81,15 @@ public class GetShowsTask extends BaseTask<List<IShow>> {
     }
 
 
+    public void setShowsLoadingListener(ShowsLoadingListener showsLoadingListener) {
+        this.showsLoadingListener = showsLoadingListener;
+    }
 
 
-    public void populateAdapter(int action, List<IShow> shows) {
-        Resources res = context.getResources();
-        switch (action) {
 
-            case SHOWS_SEARCH:
-                String search = res.getString(R.string.search_results);
-                adapter.addSection(search, new ShowsFragment.ShowsAdapter(context, R.layout.show_item, shows, search, adapter));
-                break;
-            case SHOWS_TOP:
-                String top = res.getString(R.string.top);
-                adapter.addSection(top, new ShowsFragment.ShowsAdapter(context, R.layout.show_item, shows, top, adapter));
-                break;
+    public interface ShowsLoadingListener{
 
-            case SHOWS_ALL:
-                String all = res.getString(R.string.all);
-                adapter.addSection(all, new ShowsFragment.ShowsAdapter(context, R.layout.show_item, shows, all, adapter));
-                break;
-            case SHOWS_USER:
-                String watching = res.getString(R.string.status_watching);
-                List<IShow> watchingShows = Utils.getByWatchStatus(shows, MyShowsApi.STATUS.watching);
-                if (watchingShows.size() > 0)
-                    adapter.addSection(watching + " (" + watchingShows.size() + ")", new ShowsFragment.ShowsAdapter(context, R.layout.show_item, watchingShows, watching + " (" + watchingShows.size() + ")", adapter));
+        public void onShowsLoaded(List<IShow> shows);
 
-                String willWatch = res.getString(R.string.status_will_watch);
-                List<IShow> willWatchShows = Utils.getByWatchStatus(shows, MyShowsApi.STATUS.later);
-                if (willWatchShows.size() > 0)
-                    adapter.addSection(willWatch + " (" + willWatchShows.size() + ")", new ShowsFragment.ShowsAdapter(context, R.layout.show_item, willWatchShows, willWatch + " (" + willWatchShows.size() + ")", adapter));
-
-                String cancelled = res.getString(R.string.status_cancelled);
-                List<IShow> cancelledShows = Utils.getByWatchStatus(shows, MyShowsApi.STATUS.cancelled);
-                if (cancelledShows.size() > 0)
-                    adapter.addSection(cancelled + " (" + cancelledShows.size() + ")", new ShowsFragment.ShowsAdapter(context, R.layout.show_item, cancelledShows, cancelled + " (" + cancelledShows.size() + ")", adapter));
-
-                String remove = res.getString(R.string.status_finished);
-                List<IShow> finishedShows = Utils.getByWatchStatus(shows, MyShowsApi.STATUS.finished);
-                if (finishedShows.size() > 0)
-                    adapter.addSection(remove + " (" + finishedShows.size() + ")", new ShowsFragment.ShowsAdapter(context, R.layout.show_item, finishedShows, remove + " (" + finishedShows.size() + ")", adapter));
-                System.out.println("Populate shows adapter complete!");
-                break;
-            default:
-                adapter.notifyDataSetChanged();
-        }
     }
 }

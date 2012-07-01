@@ -7,11 +7,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.widget.EditText;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.viewpagerindicator.TitlePageIndicator;
+import ru.myshows.adapters.SectionedAdapter;
 import ru.myshows.fragments.*;
+import ru.myshows.tasks.GetShowsTask;
 import ru.myshows.util.Settings;
 
 import java.util.ArrayList;
@@ -26,6 +29,14 @@ import java.util.List;
  */
 public class MainActivity extends SherlockFragmentActivity {
 
+    private static final int TAB_SHOWS = 0;
+    private static final int TAB_NEW_EPISODES = 1;
+    private static final int TAB_NEWS = 2;
+    private static final int TAB_PROFILE = 3;
+    private static final int TAB_SEARCH = 4;
+    private static final int TAB_LOGIN = 5;
+
+
     private ViewPager pager;
     private TitlePageIndicator indicator;
     private TabsAdapter adapter;
@@ -35,10 +46,10 @@ public class MainActivity extends SherlockFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-       // Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler("/sdcard/MyShows", null));
+        // Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler("/sdcard/MyShows", null));
 
-        adapter =    new TabsAdapter(getSupportFragmentManager());
-        pager =     (ViewPager) findViewById(R.id.pager);
+        adapter = new TabsAdapter(getSupportFragmentManager());
+        pager = (ViewPager) findViewById(R.id.pager);
         indicator = (TitlePageIndicator) findViewById(R.id.indicator);
         pager.setAdapter(adapter);
         indicator.setViewPager(pager);
@@ -47,13 +58,26 @@ public class MainActivity extends SherlockFragmentActivity {
         indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
+                System.out.println("position = " + position);
+                switch (position) {
+                    case TAB_SHOWS:
+                        GetShowsTask task = new GetShowsTask(MainActivity.this, false, GetShowsTask.SHOWS_USER);
+                        task.setShowsLoadingListener((GetShowsTask.ShowsLoadingListener)adapter.getItem(position));
+                        task.execute();
+                        break;
+                    case TAB_NEW_EPISODES:
+
+                }
 
             }
 
             @Override
-            public void onPageScrolled(int i, float v, int i1) {}
+            public void onPageScrolled(int i, float v, int i1) {
+            }
+
             @Override
-            public void onPageScrollStateChanged(int i) {}
+            public void onPageScrollStateChanged(int i) {
+            }
         });
 
 
@@ -67,9 +91,9 @@ public class MainActivity extends SherlockFragmentActivity {
 
     public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 
-        menu.add(0, 1, 1, "Refresh" ).setIcon(R.drawable.ic_navigation_refresh).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM );
+        menu.add(0, 1, 1, "Refresh").setIcon(R.drawable.ic_navigation_refresh).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         menu.add(0, 2, 2, "Settings").setIcon(R.drawable.ic_action_settings).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        menu.add(0, 3, 3, "Search"  ).setIcon(R.drawable.ic_action_search).setActionView(R.layout.action_search).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+        menu.add(0, 3, 3, "Search").setIcon(R.drawable.ic_action_search).setActionView(R.layout.action_search).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -77,8 +101,10 @@ public class MainActivity extends SherlockFragmentActivity {
 
     @Override
     public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case 1:
+                int currentItem = pager.getCurrentItem();
+
                 //((RadioFragment) mAdapter.getItem(mPager.getCurrentItem())).updateChannels();
                 break;
             case 2:
@@ -93,11 +119,17 @@ public class MainActivity extends SherlockFragmentActivity {
     }
 
     private void getPrivateTabs() {
-        adapter.addFragment(new ShowsFragment(), getResources().getString(R.string.tab_shows_title));
+
+        adapter.addFragment(new ShowsFragment(ShowsFragment.SHOWS_USER), getResources().getString(R.string.tab_shows_title));
         adapter.addFragment(new NewEpisodesFragment(), getResources().getString(R.string.tab_new));
         adapter.addFragment(new NewsFragment(), getResources().getString(R.string.tab_news_title));
         adapter.addFragment(new ProfileFragment(Settings.getString(Settings.KEY_LOGIN)), getResources().getString(R.string.tab_profile_title));
         adapter.addFragment(new SearchFragment(), getResources().getString(R.string.tab_search_title));
+
+        // fire first task manually
+        GetShowsTask task = new GetShowsTask(MainActivity.this, false, GetShowsTask.SHOWS_USER);
+        task.setShowsLoadingListener((GetShowsTask.ShowsLoadingListener)adapter.getItem(0));
+        task.execute();
     }
 
     private void getPublicTabs() {
@@ -146,13 +178,13 @@ public class MainActivity extends SherlockFragmentActivity {
 
         @Override
         protected void onPreExecute() {
-          super.onPreExecute();
+            super.onPreExecute();
         }
 
         @Override
         protected Boolean doInBackground(Object... objects) {
             if (MyShows.isLoggedIn()) return true;
-            if (Settings.getBoolean(Settings.KEY_LOGGED_IN)){
+            if (Settings.getBoolean(Settings.KEY_LOGGED_IN)) {
                 String login = Settings.getString(Settings.KEY_LOGIN);
                 String pass = Settings.getString(Settings.KEY_PASSWORD);
                 return MyShows.getClient().login(login, pass);
@@ -162,16 +194,13 @@ public class MainActivity extends SherlockFragmentActivity {
 
         @Override
         protected void onPostExecute(Boolean result) {
-            if (result)  getPrivateTabs();
-            else         getPublicTabs();
+            if (result) getPrivateTabs();
+            else getPublicTabs();
             indicator.notifyDataSetChanged();
             adapter.notifyDataSetChanged();
         }
 
     }
-
-
-
 
 
 }

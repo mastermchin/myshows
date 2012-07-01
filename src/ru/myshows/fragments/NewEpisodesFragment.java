@@ -12,7 +12,7 @@ import android.view.*;
 import android.widget.*;
 import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
-import ru.myshows.activity.SectionedAdapter;
+import ru.myshows.adapters.SectionedAdapter;
 import ru.myshows.domain.Episode;
 import ru.myshows.domain.UserShow;
 import ru.myshows.util.EpisodeComparator;

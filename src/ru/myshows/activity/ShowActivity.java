@@ -81,7 +81,7 @@ public class ShowActivity extends Activity {
             watchStatus = u.getWatchStatus();
             yoursRating = u.getRating();
         }
-        new GetShowInfoTask(getParent()).execute();
+        new GetShowInfoTask(this).execute();
 
     }
 
@@ -91,7 +91,7 @@ public class ShowActivity extends Activity {
         showId = (Integer) getBundleValue(intent, "showId", null);
         watchStatus = (MyShowsApi.STATUS) getBundleValue(intent, "watchStatus", MyShowsApi.STATUS.remove);
         yoursRating = (Double) getBundleValue(intent, "yoursRating", 0.0);
-        new GetShowInfoTask(getParent()).execute();
+        new GetShowInfoTask(this).execute();
     }
 
     private void populateUI() {

@@ -8,6 +8,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import ru.myshows.api.MyShowsClient;
+import ru.myshows.domain.Episode;
 import ru.myshows.domain.Show;
 import ru.myshows.domain.UserShow;
 import ru.myshows.util.Utils;
@@ -34,6 +35,7 @@ public class MyShows extends Application {
     private static List<UserShow> userShows = null;
     private static List<Show> topShows;
     private static List<Show> allShows;
+    private static List<Episode> newEpisodes;
 
 
     private boolean isUserShowsChanged = false;
@@ -106,6 +108,14 @@ public class MyShows extends Application {
 
     public static void setAllShows(List<Show> allShows) {
         MyShows.allShows = allShows;
+    }
+
+    public static List<Episode> getNewEpisodes() {
+        return newEpisodes;
+    }
+
+    public static void setNewEpisodes(List<Episode> newEpisodes) {
+        MyShows.newEpisodes = newEpisodes;
     }
 
     public UserShow getUserShow(Integer showId) {

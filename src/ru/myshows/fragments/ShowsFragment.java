@@ -1,10 +1,10 @@
 package ru.myshows.fragments;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.view.*;
 import android.widget.*;
@@ -13,15 +13,14 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
-import ru.myshows.activity.SectionedAdapter;
 import ru.myshows.activity.ShowActivity;
+import ru.myshows.adapters.SectionedAdapter;
 import ru.myshows.api.MyShowsApi;
 import ru.myshows.domain.IShow;
 import ru.myshows.domain.UserShow;
+import ru.myshows.tasks.GetShowsTask;
 import ru.myshows.util.Utils;
-import ru.myshows.util.ShowsComparator;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,7 +30,7 @@ import java.util.List;
  * Time: 15:19:35
  * To change this template use File | Settings | File Templates.
  */
-public class ShowsFragment extends ListFragment {
+public class ShowsFragment extends Fragment implements GetShowsTask.ShowsLoadingListener{
 
     public static final int SHOWS_SEARCH = 1;
     public static final int SHOWS_TOP = 2;
@@ -39,44 +38,45 @@ public class ShowsFragment extends ListFragment {
     public static final int SHOWS_ALL = 4;
 
 
-    private SectionedAdapter adapter;
+    private int action;
+    private ListView  list;
+    private ProgressBar progress;
     private LayoutInflater inflater;
 
-    // private int action;
-
-    public ShowsFragment() {
+    public ShowsFragment(int action) {
+        this.action = action;
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.shows, container, false);
+        list =     (ListView) view.findViewById(R.id.shows_list);
+        progress = (ProgressBar) view.findViewById(R.id.progress);
         this.inflater = inflater;
-        return inflater.inflate(R.layout.shows, container, false);
+        return view;
+    }
+
+    @Override
+    public void onShowsLoaded(List<IShow> shows) {
+        list.setAdapter(populateAdapter(action,shows));
+        progress.setVisibility(View.GONE);
+        progress.setIndeterminate(false);
+        list.setVisibility(View.VISIBLE);
     }
 
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-////        if (app.isUserShowsChanged() && lastAction == SHOWS_USER) {
-////            new GetShowsTask(getActivity()).execute(lastAction, search);
-////            app.setUserShowsChanged(false);
-////        }
-//    }
+    public class ShowsAdapter extends ArrayAdapter<IShow> {
 
-
-    public static class ShowsAdapter extends ArrayAdapter<IShow> {
         private List<IShow> shows;
         private String section;
         private Context context;
-        private SectionedAdapter adapter;
 
         public ShowsAdapter(Context context, int textViewResourceId, List<IShow> shows, String section) {
             super(context, textViewResourceId, shows);
             this.context = context;
             this.shows = shows;
             this.section = section;
-            this.adapter = adapter;
         }
 
         @Override
@@ -140,7 +140,8 @@ public class ShowsFragment extends ListFragment {
                 @Override
                 public void onClick(View v) {
 
-                    IShow show = (IShow)adapter.getItem(pos, section);
+                    //IShow show = adapter.getItem(pos, section);
+                    IShow show = getItem(pos);
                     Intent intent = new Intent();
                     intent.putExtra("showId", show.getShowId());
                     intent.putExtra("watchStatus", show.getWatchStatus());
@@ -152,100 +153,46 @@ public class ShowsFragment extends ListFragment {
 
             return row;
         }
-    }
-
-
-    private class GetShowsTask extends AsyncTask {
-        private ProgressDialog dialog;
-
-        private GetShowsTask(Context context) {
-            this.dialog = new ProgressDialog(context);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            this.dialog.setMessage(getResources().getString(R.string.loading));
-            this.dialog.show();
-
-        }
-
-
-        @Override
-        protected List doInBackground(Object... objects) {
-            Integer action = (Integer) objects[0];
-            List shows = null;
-            switch (action) {
-                case SHOWS_SEARCH:
-                    String query = (String) objects[1];
-                    shows = MyShows.getClient().search(query);
-                    break;
-                case SHOWS_TOP:
-                    shows = MyShows.getTopShows() != null ? MyShows.getTopShows() : MyShows.getClient().getTopShows(null);
-                    Collections.sort(shows, new ShowsComparator());
-                    break;
-                case SHOWS_ALL:
-                    shows = MyShows.getAllShows() != null ? MyShows.getAllShows() : MyShows.getClient().getTopShows(null);
-                    Collections.sort(shows, new ShowsComparator("title"));
-                    break;
-                case SHOWS_USER:
-                    shows = MyShows.getUserShows() != null ? MyShows.getUserShows() : MyShows.getClient().getShows();
-                    break;
-
-            }
-            return shows;
-        }
-
-        @Override
-        protected void onPostExecute(Object result) {
-            if (this.dialog.isShowing()) this.dialog.dismiss();
-            if (result != null) {
-                adapter = new SectionedAdapter(inflater);
-                populateAdapter(lastAction, (List<IShow>) result);
-                setListAdapter(adapter);
-            }
-
-        }
-
 
     }
 
 
-    public SectionedAdapter getAdapter() {
-        return adapter;
-    }
 
-    public void populateAdapter(int action, List<IShow> shows) {
+    public SectionedAdapter populateAdapter(int action, List<IShow> shows) {
+        SectionedAdapter adapter = new SectionedAdapter(inflater);
+        Resources res = getActivity().getResources();
         switch (action) {
+
             case SHOWS_SEARCH:
-                String search = getResources().getString(R.string.search_results);
+                String search = res.getString(R.string.search_results);
                 adapter.addSection(search, new ShowsAdapter(getActivity(), R.layout.show_item, shows, search));
                 break;
             case SHOWS_TOP:
-                String top = getResources().getString(R.string.top);
+                String top = res.getString(R.string.top);
                 adapter.addSection(top, new ShowsAdapter(getActivity(), R.layout.show_item, shows, top));
                 break;
 
             case SHOWS_ALL:
-                String all = getResources().getString(R.string.all);
+                String all = res.getString(R.string.all);
                 adapter.addSection(all, new ShowsAdapter(getActivity(), R.layout.show_item, shows, all));
                 break;
             case SHOWS_USER:
-                String watching = getResources().getString(R.string.status_watching);
+                String watching = res.getString(R.string.status_watching);
                 List<IShow> watchingShows = Utils.getByWatchStatus(shows, MyShowsApi.STATUS.watching);
                 if (watchingShows.size() > 0)
                     adapter.addSection(watching + " (" + watchingShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, watchingShows, watching + " (" + watchingShows.size() + ")"));
 
-                String willWatch = getResources().getString(R.string.status_will_watch);
+                String willWatch = res.getString(R.string.status_will_watch);
                 List<IShow> willWatchShows = Utils.getByWatchStatus(shows, MyShowsApi.STATUS.later);
                 if (willWatchShows.size() > 0)
                     adapter.addSection(willWatch + " (" + willWatchShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, willWatchShows, willWatch + " (" + willWatchShows.size() + ")"));
 
-                String cancelled = getResources().getString(R.string.status_cancelled);
+                String cancelled = res.getString(R.string.status_cancelled);
                 List<IShow> cancelledShows = Utils.getByWatchStatus(shows, MyShowsApi.STATUS.cancelled);
                 if (cancelledShows.size() > 0)
                     adapter.addSection(cancelled + " (" + cancelledShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, cancelledShows, cancelled + " (" + cancelledShows.size() + ")"));
 
-                String remove = getResources().getString(R.string.status_finished);
+                String remove = res.getString(R.string.status_finished);
                 List<IShow> finishedShows = Utils.getByWatchStatus(shows, MyShowsApi.STATUS.finished);
                 if (finishedShows.size() > 0)
                     adapter.addSection(remove + " (" + finishedShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, finishedShows, remove + " (" + finishedShows.size() + ")"));
@@ -254,7 +201,21 @@ public class ShowsFragment extends ListFragment {
             default:
                 adapter.notifyDataSetChanged();
         }
+        return adapter;
     }
+
+
+    //    @Override
+//    public void onResume() {
+//        super.onResume();
+////        if (app.isUserShowsChanged() && lastAction == SHOWS_USER) {
+////            new GetShowsTask(getActivity()).execute(lastAction, search);
+////            app.setUserShowsChanged(false);
+////        }
+//    }
+
+
+
 
 
 }

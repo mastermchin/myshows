@@ -11,7 +11,7 @@ import android.view.*;
 import android.widget.*;
 import ru.myshows.activity.MainActivity;
 import ru.myshows.activity.R;
-import ru.myshows.activity.SectionedAdapter;
+import ru.myshows.adapters.SectionedAdapter;
 import ru.myshows.api.MyShowsClient;
 import ru.myshows.domain.UserNews;
 import ru.myshows.util.NewsComparator;

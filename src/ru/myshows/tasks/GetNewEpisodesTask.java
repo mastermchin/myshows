@@ -19,14 +19,20 @@ public class GetNewEpisodesTask extends BaseTask<List<Episode>> {
 
     private NewEpisodesLoadingListener episodesLoadingListener;
 
-    public GetNewEpisodesTask(Context context, boolean showProgressDialog) {
-        super(context, showProgressDialog);
+    public GetNewEpisodesTask(Context context) {
+        super(context);
+    }
+
+    public GetNewEpisodesTask(Context context, boolean forceUpdate) {
+        super(context, forceUpdate);
     }
 
     @Override
     public List<Episode> doWork(Object... objects) throws Exception {
-        List<Episode> newEpisodes = MyShows.getClient().getUnwatchedEpisodes();
-        MyShows.setNewEpisodes(newEpisodes);
+        if (isForceUpdate)
+            MyShows.newEpisodes = null;
+        List<Episode> newEpisodes = MyShows.newEpisodes != null ? MyShows.newEpisodes : MyShows.client.getUnwatchedEpisodes();
+        MyShows.newEpisodes = newEpisodes;
         return newEpisodes;
     }
 
@@ -41,8 +47,12 @@ public class GetNewEpisodesTask extends BaseTask<List<Episode>> {
     }
 
 
-    public  interface NewEpisodesLoadingListener{
-       public void onNewEpisodesLoaded(List<Episode> episodes);
+    public void setEpisodesLoadingListener(NewEpisodesLoadingListener episodesLoadingListener) {
+        this.episodesLoadingListener = episodesLoadingListener;
+    }
+
+    public interface NewEpisodesLoadingListener {
+        public void onNewEpisodesLoaded(List<Episode> episodes);
     }
 
 }

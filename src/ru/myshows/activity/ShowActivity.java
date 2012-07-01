@@ -173,7 +173,7 @@ public class ShowActivity extends Activity {
                         UserShow us = app.getUserShow(showId);
                         if (us != null) {
                             us.setRating((double) msg.what);
-                            app.setUserShowsChanged(true);
+                            //app.setUserShowsChanged(true);
                         }
                     }
                 }
@@ -303,7 +303,7 @@ public class ShowActivity extends Activity {
                     UserShow us = app.getUserShow(showId);
                     if (us != null) {
                         us.setWatchedEpisodes(checked.split(",").length);
-                        app.setUserShowsChanged(true);
+                       // app.setUserShowsChanged(true);
                     }
                 } else {
                     message = R.string.changes_not_saved;
@@ -763,11 +763,11 @@ public class ShowActivity extends Activity {
                 // delete user show from cache
                 if (isRemove) {
                     app.removeUserShow(showId);
-                    app.setUserShowsChanged(true);
+                  //  app.setUserShowsChanged(true);
                 } else {
                     // add new show to cache
                     app.addOrUpdateUserShow(new UserShow(currentShow, watchStatus));
-                    app.setUserShowsChanged(true);
+                  //  app.setUserShowsChanged(true);
                 }
 
                 // disable yours rating if clicked status = remove , enable if != remove

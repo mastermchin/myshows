@@ -21,33 +21,26 @@ import ru.myshows.util.Utils;
 public abstract class BaseTask<T> extends AsyncTask<Object, Void, T> {
 
     public Context context;
-    public ProgressDialog dialog;
     public Exception exception;
     public boolean isOnline = true;
-    public boolean showProgressDialog = true;
+    public boolean isForceUpdate = false;
 
     protected BaseTask() {
     }
 
     public BaseTask(Context context) {
         this.context = context;
-        this.dialog = new ProgressDialog(context);
     }
 
-    public BaseTask(Context context, boolean showProgressDialog) {
+    protected BaseTask(Context context, boolean forceUpdate) {
         this.context = context;
-        this.dialog = new ProgressDialog(context);
-        this.showProgressDialog = showProgressDialog;
+        this.isForceUpdate = forceUpdate;
     }
 
     @Override
     protected void onPreExecute() {
         if (!Utils.isInternetAvailable(context))
             isOnline = false;
-        this.dialog.setMessage(context.getResources().getString(R.string.loading));
-        if (showProgressDialog)
-            this.dialog.show();
-
     }
 
     @Override
@@ -63,8 +56,6 @@ public abstract class BaseTask<T> extends AsyncTask<Object, Void, T> {
 
     @Override
     protected void onPostExecute(T result) {
-        if (dialog != null && dialog.isShowing())
-            dialog.dismiss();
         if (exception == null) {
             onResult(result);
         } else {
@@ -75,7 +66,6 @@ public abstract class BaseTask<T> extends AsyncTask<Object, Void, T> {
     @Override
     protected void onCancelled(T t) {
         super.onCancelled(t);
-        if (dialog.isShowing()) dialog.dismiss();
     }
 
     public abstract T doWork(Object... objects) throws Exception;

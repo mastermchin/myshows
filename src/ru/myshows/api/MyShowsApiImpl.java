@@ -90,7 +90,7 @@ public class MyShowsApiImpl implements MyShowsApi {
             Log.d("MyShows", "Login is successful");
             this.login = login;
             this.password = passwordHash;
-            MyShows.setLoggedIn(true);
+            MyShows.isLoggedIn = true;
             return true;
         }
         return false;

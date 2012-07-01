@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.view.*;
 import android.widget.*;
@@ -14,6 +15,7 @@ import ru.myshows.activity.R;
 import ru.myshows.adapters.SectionedAdapter;
 import ru.myshows.api.MyShowsClient;
 import ru.myshows.domain.UserNews;
+import ru.myshows.tasks.GetNewsTask;
 import ru.myshows.util.NewsComparator;
 
 import java.text.DateFormat;
@@ -27,28 +29,31 @@ import java.util.*;
  * Time: 15:19:10
  * To change this template use File | Settings | File Templates.
  */
-public class NewsFragment extends ListFragment {
+public class NewsFragment extends Fragment implements GetNewsTask.NewsLoadingListener{
 
-    MyShowsClient client = MyShowsClient.getInstance();
-    DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
 
-    private LayoutInflater inflater;
     private SectionedAdapter adapter;
+    private ListView  list;
+    private ProgressBar progress;
+    private LayoutInflater inflater;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.inflater = inflater;
-        return  inflater.inflate(R.layout.news, container, false);
+        View view =  inflater.inflate(R.layout.news, container, false);
+        list =     (ListView) view.findViewById(R.id.news_list);
+        progress = (ProgressBar) view.findViewById(R.id.progress);
+        return view;
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (adapter == null){
-            new GetNewsTask(getActivity()).execute();
-        }else {
-            setListAdapter(adapter);
-        }
+    public void onNewsLoaded(Map<String, List<UserNews>> news) {
+        adapter = new SectionedAdapter(inflater);
+        populateAdapter(news);
+        list.setAdapter(adapter);
+        progress.setVisibility(View.GONE);
+        progress.setIndeterminate(false);
+        list.setVisibility(View.VISIBLE);
     }
 
     private class NewsAdapter extends ArrayAdapter<UserNews> {
@@ -118,14 +123,6 @@ public class NewsFragment extends ListFragment {
                 }
             });
 
-
-            if (n.equals(last)) {
-                    ((ImageView) convertView.findViewById(R.id.divider)).setBackgroundDrawable(null);
-                } else {
-                    Drawable divider = getResources().getDrawable(R.drawable.divider_horizontal_dim_dark);
-                    ((ImageView) convertView.findViewById(R.id.divider)).setBackgroundDrawable(divider);
-                }
-
             return convertView;
         }
 
@@ -152,40 +149,8 @@ public class NewsFragment extends ListFragment {
 
     }
 
-    private class GetNewsTask extends AsyncTask {
-        private ProgressDialog dialog;
 
-        private GetNewsTask(Context context) {
-            this.dialog = new ProgressDialog(context);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            this.dialog.setMessage(getResources().getString(R.string.loading));
-            this.dialog.show();
-        }
-
-        @Override
-        protected Map<String, List<UserNews>> doInBackground(Object... objects) {
-            Map<String, List<UserNews>> news = client.getNews();
-            return news;
-        }
-
-        @Override
-        protected void onPostExecute(Object result) {
-            if (this.dialog.isShowing()) this.dialog.dismiss();
-            if (result != null) {
-                adapter = new SectionedAdapter(inflater);
-                populateAdapter(result);
-                NewsFragment.this.setListAdapter(adapter);
-            }
-
-        }
-
-    }
-
-    private void populateAdapter(Object result) {
-        Map<String, List<UserNews>> news = (Map<String, List<UserNews>>) result;
+    private void populateAdapter( Map<String, List<UserNews>> news) {
         TreeMap<String, List<UserNews>> m = new TreeMap<String, List<UserNews>>(new NewsComparator());
         m.putAll(news);
         for (Map.Entry<String, List<UserNews>> entry : m.entrySet()) {

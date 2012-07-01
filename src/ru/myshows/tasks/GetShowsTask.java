@@ -30,8 +30,13 @@ public class GetShowsTask extends BaseTask<List<IShow>> {
     }
 
 
-    public GetShowsTask(Context context, boolean showProgressDialog, int action) {
-        super(context, showProgressDialog);
+    public GetShowsTask(Context context, int action) {
+        super(context);
+        this.action = action;
+    }
+
+    public GetShowsTask(Context context, boolean forceUpdate, int action) {
+        super(context, forceUpdate);
         this.action = action;
     }
 
@@ -51,18 +56,24 @@ public class GetShowsTask extends BaseTask<List<IShow>> {
         switch (action) {
             case SHOWS_SEARCH:
                 String query = (String) objects[1];
-                shows = MyShows.getClient().search(query);
+                shows = MyShows.client.search(query);
                 break;
             case SHOWS_TOP:
-                shows = MyShows.getTopShows() != null ? MyShows.getTopShows() : MyShows.getClient().getTopShows(null);
+                if (isForceUpdate)
+                    MyShows.topShows = null;
+                shows = MyShows.topShows != null ? MyShows.topShows : MyShows.client.getTopShows(null);
                 Collections.sort(shows, new ShowsComparator());
                 break;
             case SHOWS_ALL:
-                shows = MyShows.getAllShows() != null ? MyShows.getAllShows() : MyShows.getClient().getTopShows(null);
+                if (isForceUpdate)
+                    MyShows.allShows  = null ;
+                shows = MyShows.allShows != null ? MyShows.allShows : MyShows.client.getTopShows(null);
                 Collections.sort(shows, new ShowsComparator("title"));
                 break;
             case SHOWS_USER:
-                shows = MyShows.getUserShows()!= null ? MyShows.getUserShows():  MyShows.getClient().getShows();
+                if (isForceUpdate)
+                    MyShows.userShows  = null;
+                shows = MyShows.userShows != null ? MyShows.userShows:  MyShows.client.getShows();
                 break;
 
         }

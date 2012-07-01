@@ -66,7 +66,7 @@ public class ProfileFragment extends Fragment {
                     Settings.setString(Settings.KEY_LOGIN, null);
                     Settings.setString(Settings.KEY_PASSWORD, null);
                     Settings.setBoolean(Settings.KEY_LOGGED_IN, false);
-                    MyShows.setLoggedIn(false);
+                    MyShows.isLoggedIn = false;
                     getActivity().finish();
                     startActivity(new Intent(getActivity(), MainActivity.class));
                 }
@@ -113,7 +113,7 @@ public class ProfileFragment extends Fragment {
         daysBar.setText(stats.getWatchedDays() + "/" + (stats.getWatchedDays() + stats.getRemainingDays()));
 
         if (currentUser.equals(Settings.getString(Settings.KEY_LOGIN))) {
-            List<UserShow> shows = app.getUserShows();
+            List<UserShow> shows = MyShows.userShows;
 
             if (shows != null) {
                 mainView.findViewById(R.id.profile_shows_info).setVisibility(View.VISIBLE);
@@ -181,7 +181,7 @@ public class ProfileFragment extends Fragment {
             String login = (String) objects[0];
             Profile profile = null;
             if (login != null) {
-                profile = MyShows.getClient().getProfile(login);
+                profile = MyShows.client.getProfile(login);
             }
             return profile;
         }

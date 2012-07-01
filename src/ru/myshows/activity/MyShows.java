@@ -10,11 +10,13 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import ru.myshows.api.MyShowsClient;
 import ru.myshows.domain.Episode;
 import ru.myshows.domain.Show;
+import ru.myshows.domain.UserNews;
 import ru.myshows.domain.UserShow;
 import ru.myshows.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,19 +28,20 @@ import java.util.List;
 public class MyShows extends Application {
 
 
-    private static Context context;
-    private static MyShowsClient client;
-    private static boolean isLoggedIn;
+    public static Context context;
+    public static MyShowsClient client;
+    public static boolean isLoggedIn;
     public static Typeface font;
 
 
-    private static List<UserShow> userShows = null;
-    private static List<Show> topShows;
-    private static List<Show> allShows;
-    private static List<Episode> newEpisodes;
+    public static List<UserShow> userShows;
+    public static List<Show> topShows;
+    public static List<Show> allShows;
+    public static List<Episode> newEpisodes;
+    public static Map<String, List<UserNews>> news;
 
 
-    private boolean isUserShowsChanged = false;
+    public boolean isUserShowsChanged = false;
 
 
     @Override
@@ -70,53 +73,7 @@ public class MyShows extends Application {
 
     }
 
-    public static boolean isLoggedIn() {
-        return isLoggedIn;
-    }
 
-    public static void setLoggedIn(boolean loggedIn) {
-        isLoggedIn = loggedIn;
-    }
-
-    public  boolean isUserShowsChanged() {
-        return isUserShowsChanged;
-    }
-
-    public void setUserShowsChanged(boolean userShowsChanged) {
-        isUserShowsChanged = userShowsChanged;
-    }
-
-    public static List<UserShow> getUserShows() {
-        return userShows;
-    }
-
-    public void setUserShows(List<UserShow> userShows) {
-        this.userShows = userShows;
-    }
-
-    public static List<Show> getTopShows() {
-        return topShows;
-    }
-
-    public static void setTopShows(List<Show> topShows) {
-        MyShows.topShows = topShows;
-    }
-
-    public static List<Show> getAllShows() {
-        return allShows;
-    }
-
-    public static void setAllShows(List<Show> allShows) {
-        MyShows.allShows = allShows;
-    }
-
-    public static List<Episode> getNewEpisodes() {
-        return newEpisodes;
-    }
-
-    public static void setNewEpisodes(List<Episode> newEpisodes) {
-        MyShows.newEpisodes = newEpisodes;
-    }
 
     public UserShow getUserShow(Integer showId) {
         if (userShows == null) return null;
@@ -162,13 +119,7 @@ public class MyShows extends Application {
         }
     }
 
-    public static Context getContext() {
-        return context;
-    }
 
-    public static MyShowsClient getClient() {
-        return client;
-    }
 
 
 }

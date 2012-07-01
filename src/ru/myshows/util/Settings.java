@@ -21,7 +21,7 @@ public class Settings {
 
 
     public  static SharedPreferences getPreferences() {
-        return PreferenceManager.getDefaultSharedPreferences(MyShows.getContext());
+        return PreferenceManager.getDefaultSharedPreferences(MyShows.context);
     }
 
     public static String getString(String name) {

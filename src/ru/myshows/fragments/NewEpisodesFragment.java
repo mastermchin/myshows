@@ -15,6 +15,7 @@ import ru.myshows.activity.R;
 import ru.myshows.adapters.SectionedAdapter;
 import ru.myshows.domain.Episode;
 import ru.myshows.domain.UserShow;
+import ru.myshows.tasks.GetNewEpisodesTask;
 import ru.myshows.util.EpisodeComparator;
 
 import java.text.DateFormat;
@@ -28,13 +29,14 @@ import java.util.*;
  * Time: 1:10
  * To change this template use File | Settings | File Templates.
  */
-public class NewEpisodesFragment extends Fragment {
+public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.NewEpisodesLoadingListener {
 
     private SectionedAdapter adapter;
     private RelativeLayout rootView;
     private Button saveButton;
     private List<Episode> localEpisodes = null;
     private ListView list;
+    private ProgressBar progress;
     DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
     MyShows app;
     private LayoutInflater inflater;
@@ -55,18 +57,21 @@ public class NewEpisodesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.inflater = inflater;
         rootView = (RelativeLayout) inflater.inflate(R.layout.new_episodes, container, false);
-        list = (ListView) rootView.findViewById(R.id.list);
-
-        if (adapter == null){
-            new GetNewEpisodesTask(getActivity()).execute();
-        }else {
-            list.setAdapter(adapter);
-        }
+        progress = (ProgressBar) rootView.findViewById(R.id.progress);
+        list = (ListView) rootView.findViewById(R.id.new_episodes_list);
         return rootView;
     }
 
 
-
+    @Override
+    public void onNewEpisodesLoaded(List<Episode> episodes) {
+        adapter = new SectionedAdapter(inflater, clickListener);
+        populateAdapter(episodes);
+        list.setAdapter(adapter);
+        progress.setVisibility(View.GONE);
+        progress.setIndeterminate(false);
+        list.setVisibility(View.VISIBLE);
+    }
 
     View.OnClickListener saveButtonListener = new View.OnClickListener() {
         ProgressDialog dialog = null;
@@ -109,8 +114,8 @@ public class NewEpisodesFragment extends Fragment {
                         public void run() {
                             UserShow userShow = app.getUserShow(showId);
                             userShow.setWatchedEpisodes(userShow.getWatchedEpisodes() + episodesIds.split(",").length);
-                            app.setUserShowsChanged(true);
-                            MyShows.getClient().syncAllShowEpisodes(showId, episodesIds, null);
+                            //app.setUserShowsChanged(true);
+                            MyShows.client.syncAllShowEpisodes(showId, episodesIds, null);
                         }
                     }.start();
                 }
@@ -263,42 +268,6 @@ public class NewEpisodesFragment extends Fragment {
         int season = e.getSeasonNumber();
         int episode = e.getEpisodeNumber();
         return ("s" + String.format("%1$02d", season) + "e" + String.format("%1$02d", episode));
-    }
-
-    private class GetNewEpisodesTask extends AsyncTask {
-
-        private Context context;
-        private ProgressDialog dialog;
-
-        private GetNewEpisodesTask(Context context) {
-            this.dialog = new ProgressDialog(context);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            this.dialog.setMessage(getResources().getString(R.string.loading));
-            this.dialog.show();
-        }
-
-
-        @Override
-        protected List doInBackground(Object... objects) {
-            List<Episode> newEpisodes = MyShows.getClient().getUnwatchedEpisodes();
-            localEpisodes = newEpisodes;
-            return newEpisodes;
-        }
-
-        @Override
-        protected void onPostExecute(Object result) {
-            if (this.dialog.isShowing()) this.dialog.dismiss();
-            if (result != null) {
-                adapter = new SectionedAdapter(inflater, clickListener);
-                populateAdapter((List<Episode>) result);
-                list.setAdapter(adapter);
-            }
-
-        }
-
     }
 
 

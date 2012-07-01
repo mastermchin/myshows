@@ -14,6 +14,8 @@ import com.actionbarsherlock.view.MenuItem;
 import com.viewpagerindicator.TitlePageIndicator;
 import ru.myshows.adapters.SectionedAdapter;
 import ru.myshows.fragments.*;
+import ru.myshows.tasks.GetNewEpisodesTask;
+import ru.myshows.tasks.GetNewsTask;
 import ru.myshows.tasks.GetShowsTask;
 import ru.myshows.util.Settings;
 
@@ -59,14 +61,22 @@ public class MainActivity extends SherlockFragmentActivity {
             @Override
             public void onPageSelected(int position) {
                 System.out.println("position = " + position);
+                Fragment currentFragment = adapter.getItem(position);
                 switch (position) {
                     case TAB_SHOWS:
-                        GetShowsTask task = new GetShowsTask(MainActivity.this, false, GetShowsTask.SHOWS_USER);
-                        task.setShowsLoadingListener((GetShowsTask.ShowsLoadingListener)adapter.getItem(position));
-                        task.execute();
+                        GetShowsTask showsTask = new GetShowsTask(MainActivity.this, GetShowsTask.SHOWS_USER);
+                        showsTask.setShowsLoadingListener((GetShowsTask.ShowsLoadingListener) currentFragment);
+                        showsTask.execute();
                         break;
                     case TAB_NEW_EPISODES:
-
+                        GetNewEpisodesTask episodesTask = new GetNewEpisodesTask(MainActivity.this);
+                        episodesTask.setEpisodesLoadingListener((GetNewEpisodesTask.NewEpisodesLoadingListener) currentFragment);
+                        episodesTask.execute();
+                        break;
+                    case TAB_NEWS:
+                        GetNewsTask newsTask = new GetNewsTask(MainActivity.this);
+                        newsTask.setNewsLoadingListener((GetNewsTask.NewsLoadingListener) currentFragment);
+                        newsTask.execute();
                 }
 
             }
@@ -127,8 +137,8 @@ public class MainActivity extends SherlockFragmentActivity {
         adapter.addFragment(new SearchFragment(), getResources().getString(R.string.tab_search_title));
 
         // fire first task manually
-        GetShowsTask task = new GetShowsTask(MainActivity.this, false, GetShowsTask.SHOWS_USER);
-        task.setShowsLoadingListener((GetShowsTask.ShowsLoadingListener)adapter.getItem(0));
+        GetShowsTask task = new GetShowsTask(MainActivity.this, GetShowsTask.SHOWS_USER);
+        task.setShowsLoadingListener((GetShowsTask.ShowsLoadingListener) adapter.getItem(0));
         task.execute();
     }
 
@@ -183,11 +193,11 @@ public class MainActivity extends SherlockFragmentActivity {
 
         @Override
         protected Boolean doInBackground(Object... objects) {
-            if (MyShows.isLoggedIn()) return true;
+            if (MyShows.isLoggedIn) return true;
             if (Settings.getBoolean(Settings.KEY_LOGGED_IN)) {
                 String login = Settings.getString(Settings.KEY_LOGIN);
                 String pass = Settings.getString(Settings.KEY_PASSWORD);
-                return MyShows.getClient().login(login, pass);
+                return MyShows.client.login(login, pass);
             }
             return false;
         }

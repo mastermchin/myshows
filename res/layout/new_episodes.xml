@@ -6,11 +6,21 @@
                 android:id="@+id/new_episodes_root_view"
                >
 
+    <ProgressBar
+            android:id="@+id/progress"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:layout_centerInParent="true"/>
+
+
     <ListView
-            android:id="@+id/list"
+            android:id="@+id/new_episodes_list"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:cacheColorHint="#00000000"
+            android:visibility="gone"
+            android:fastScrollEnabled="true"
             />
 
 </RelativeLayout>

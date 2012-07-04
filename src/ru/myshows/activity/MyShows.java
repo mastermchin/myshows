@@ -8,13 +8,11 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import ru.myshows.api.MyShowsClient;
-import ru.myshows.domain.Episode;
-import ru.myshows.domain.Show;
-import ru.myshows.domain.UserNews;
-import ru.myshows.domain.UserShow;
+import ru.myshows.domain.*;
 import ru.myshows.util.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,9 +37,7 @@ public class MyShows extends Application {
     public static List<Show> allShows;
     public static List<Episode> newEpisodes;
     public static Map<String, List<UserNews>> news;
-
-
-    public boolean isUserShowsChanged = false;
+    public static Map<String,Profile> profiles = new HashMap<String, Profile>();
 
 
     @Override
@@ -103,10 +99,7 @@ public class MyShows extends Application {
 
     }
 
-    public void clearShows() {
-        if (userShows != null) userShows.clear();
-        userShows = null;
-    }
+   
 
     public void removeUserShow(Integer showId) {
         if (userShows != null) {

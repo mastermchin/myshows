@@ -1,6 +1,7 @@
 package ru.myshows.activity;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,11 +17,14 @@ import ru.myshows.adapters.SectionedAdapter;
 import ru.myshows.fragments.*;
 import ru.myshows.tasks.GetNewEpisodesTask;
 import ru.myshows.tasks.GetNewsTask;
+import ru.myshows.tasks.GetProfileTask;
 import ru.myshows.tasks.GetShowsTask;
 import ru.myshows.util.Settings;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -60,6 +64,7 @@ public class MainActivity extends SherlockFragmentActivity {
         indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
+                if (!MyShows.isLoggedIn) return;
                 System.out.println("position = " + position);
                 Fragment currentFragment = adapter.getItem(position);
                 switch (position) {
@@ -77,6 +82,12 @@ public class MainActivity extends SherlockFragmentActivity {
                         GetNewsTask newsTask = new GetNewsTask(MainActivity.this);
                         newsTask.setNewsLoadingListener((GetNewsTask.NewsLoadingListener) currentFragment);
                         newsTask.execute();
+                        break;
+                    case TAB_PROFILE:
+                        GetProfileTask profileTask = new GetProfileTask(MainActivity.this);
+                        profileTask.setProfileLoadingListener((GetProfileTask.ProfileLoadingListener) currentFragment);
+                        profileTask.execute(Settings.getString(Settings.KEY_LOGIN));
+                        break;
                 }
 
             }
@@ -133,7 +144,7 @@ public class MainActivity extends SherlockFragmentActivity {
         adapter.addFragment(new ShowsFragment(ShowsFragment.SHOWS_USER), getResources().getString(R.string.tab_shows_title));
         adapter.addFragment(new NewEpisodesFragment(), getResources().getString(R.string.tab_new));
         adapter.addFragment(new NewsFragment(), getResources().getString(R.string.tab_news_title));
-        adapter.addFragment(new ProfileFragment(Settings.getString(Settings.KEY_LOGIN)), getResources().getString(R.string.tab_profile_title));
+        adapter.addFragment(new ProfileFragment(), getResources().getString(R.string.tab_profile_title));
         adapter.addFragment(new SearchFragment(), getResources().getString(R.string.tab_search_title));
 
         // fire first task manually

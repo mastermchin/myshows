@@ -6,16 +6,19 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import ru.myshows.activity.MainActivity;
 import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
 import ru.myshows.api.MyShowsApi;
 import ru.myshows.components.TextProgressBar;
 import ru.myshows.domain.*;
+import ru.myshows.tasks.GetProfileTask;
 import ru.myshows.util.Settings;
 import ru.myshows.util.Utils;
 
@@ -29,7 +32,7 @@ import java.util.List;
  * Time: 15:19:22
  * To change this template use File | Settings | File Templates.
  */
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements GetProfileTask.ProfileLoadingListener {
 
 
     private Button logoutButton;
@@ -38,59 +41,51 @@ public class ProfileFragment extends Fragment {
     private TextProgressBar hoursBar;
     private TextProgressBar daysBar;
     private TextView nickName;
-    private String currentUser;
-    private String login;
-    private MyShows app;
-    private Profile profile;
     private View mainView;
+    private ProgressBar progress;
+    private ScrollView scrollView;
 
-
-    public ProfileFragment(String login) {
-        this.login = login;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mainView= inflater.inflate(R.layout.profile, container, false);
-        app = (MyShows) getActivity().getApplication();
+        mainView = inflater.inflate(R.layout.profile, container, false);
+        progress = (ProgressBar) mainView.findViewById(R.id.progress);
+        scrollView = (ScrollView) mainView.findViewById(R.id.scroll_layout);
 
-        if (login != null) {
-            currentUser = login;
-
-            logoutButton = (Button) mainView.findViewById(R.id.logout_button);
-            logoutButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Settings.setString(Settings.KEY_LOGIN, null);
-                    Settings.setString(Settings.KEY_PASSWORD, null);
-                    Settings.setBoolean(Settings.KEY_LOGGED_IN, false);
-                    MyShows.isLoggedIn = false;
-                    getActivity().finish();
-                    startActivity(new Intent(getActivity(), MainActivity.class));
-                }
-            });
-        }
-
-        if (profile == null){
-            new GetProfileTask(getActivity()).execute(login);
-        } else {
-             populateUI(profile, profile.getStats());
-        }
+        logoutButton = (Button) mainView.findViewById(R.id.logout_button);
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Settings.setString(Settings.KEY_LOGIN, null);
+                Settings.setString(Settings.KEY_PASSWORD, null);
+                Settings.setBoolean(Settings.KEY_LOGGED_IN, false);
+                MyShows.isLoggedIn = false;
+                getActivity().finish();
+                startActivity(new Intent(getActivity(), MainActivity.class));
+            }
+        });
 
         return mainView;
     }
 
 
+    @Override
+    public void onProfileLoaded(Profile profile) {
+        populateUI(profile, profile.getStats());
+        progress.setIndeterminate(false);
+        progress.setVisibility(View.GONE);
+        scrollView.setVisibility(View.VISIBLE);
+    }
 
     private void populateUI(Profile profile, ProfileStats stats) {
-        
-        
+
+
         avatar = (ImageView) mainView.findViewById(R.id.avatar);
-//        if (profile.getAvatarUrl() != null) {
-//            avatar.setImageBitmap(Utils.getAvatar(profile.getAvatarUrl()));
-//        }
+        if (profile.getAvatarUrl() != null) {
+            ImageLoader.getInstance().displayImage(profile.getAvatarUrl(), avatar);
+        }
 
         nickName = (TextView) mainView.findViewById(R.id.profile_name);
         nickName.setText(profile.getLogin());
@@ -112,12 +107,16 @@ public class ProfileFragment extends Fragment {
         daysBar.setProgress(stats.getWatchedDays());
         daysBar.setText(stats.getWatchedDays() + "/" + (stats.getWatchedDays() + stats.getRemainingDays()));
 
-        if (currentUser.equals(Settings.getString(Settings.KEY_LOGIN))) {
+        Log.d("MyShows", "Current login = " + profile.getLogin());
+        Log.d("MyShows", "Current user = " + Settings.getString(Settings.KEY_LOGIN));
+
+        if (profile.getLogin().equals(Settings.getString(Settings.KEY_LOGIN))) {
             List<UserShow> shows = MyShows.userShows;
 
             if (shows != null) {
                 mainView.findViewById(R.id.profile_shows_info).setVisibility(View.VISIBLE);
-                ((TextView) mainView.findViewById(R.id.profile_watching_label)).setText
+               TextView label = (TextView) mainView.findViewById(R.id.profile_watching_label);
+               label.setText
                         (getResources().getString(R.string.status_watching) + " " +
                                 Utils.getUserShowsByWatchStatus(shows, MyShowsApi.STATUS.watching).size());
 
@@ -151,50 +150,4 @@ public class ProfileFragment extends Fragment {
 //    }
 
 
-    private String getBundleValue(Intent intent, String key, String defaultValue) {
-        if (intent == null) return defaultValue;
-        if (intent.getExtras() == null) return defaultValue;
-        if (intent.getExtras().get(key) == null) return defaultValue;
-        return intent.getExtras().get(key).toString();
-    }
-
-
-    private class GetProfileTask extends AsyncTask {
-        private Context context;
-        private ProgressDialog dialog;
-
-        private GetProfileTask(Context context) {
-            this.context = context;
-            this.dialog = new ProgressDialog(context);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            this.dialog.setMessage(getResources().getString(R.string.loading));
-            this.dialog.show();
-
-        }
-
-
-        @Override
-        protected Profile doInBackground(Object... objects) {
-            String login = (String) objects[0];
-            Profile profile = null;
-            if (login != null) {
-                profile = MyShows.client.getProfile(login);
-            }
-            return profile;
-        }
-
-        @Override
-        protected void onPostExecute(Object result) {
-            if (this.dialog.isShowing()) this.dialog.dismiss();
-            if (result != null) {
-                profile = (Profile) result;
-                populateUI(profile, profile.getStats());
-            }
-
-        }
-
-    }
 }

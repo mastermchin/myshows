@@ -74,6 +74,7 @@ public class GetShowsTask extends BaseTask<List<IShow>> {
                 if (isForceUpdate)
                     MyShows.userShows  = null;
                 shows = MyShows.userShows != null ? MyShows.userShows:  MyShows.client.getShows();
+                MyShows.userShows = shows;
                 break;
 
         }

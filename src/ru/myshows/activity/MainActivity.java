@@ -147,7 +147,7 @@ public class MainActivity extends SherlockFragmentActivity {
     }
 
 
-    public class TabsAdapter extends FragmentPagerAdapter {
+    public static class TabsAdapter extends FragmentPagerAdapter {
 
         public List<Fragment> fragments;
         public List<String> titles;

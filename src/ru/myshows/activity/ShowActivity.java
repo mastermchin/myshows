@@ -5,15 +5,25 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.view.ViewPager;
 import android.view.*;
+import android.view.MenuItem;
 import android.widget.*;
 import android.widget.Button;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.*;
+import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.view.Menu;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.viewpagerindicator.TitlePageIndicator;
 import ru.myshows.api.MyShowsApi;
 import ru.myshows.api.MyShowsClient;
 import ru.myshows.components.RatingDialog;
@@ -33,7 +43,7 @@ import java.util.List;
  * Time: 17:53:42
  * To change this template use File | Settings | File Templates.
  */
-public class ShowActivity extends Activity {
+public class ShowActivity extends SherlockFragmentActivity {
 
 
     private TextView showTitle;
@@ -67,11 +77,38 @@ public class ShowActivity extends Activity {
     DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
     MyShows app;
     Show currentShow;
+    ActionMode mMode;
+
+
+    private ViewPager pager;
+    private TitlePageIndicator indicator;
+    private MainActivity.TabsAdapter tabsAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.show);
+        //setContentView(R.layout.show);
+        setContentView(R.layout.main);
+
+
+        tabsAdapter = new MainActivity.TabsAdapter(getSupportFragmentManager());
+        pager = (ViewPager) findViewById(R.id.pager);
+        indicator = (TitlePageIndicator) findViewById(R.id.indicator);
+        pager.setAdapter(tabsAdapter);
+        indicator.setViewPager(pager);
+        indicator.setTypeface(MyShows.font);
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+
+        BitmapDrawable bg = (BitmapDrawable) getResources().getDrawable(R.drawable.stripe_red);
+        bg.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+        getSupportActionBar().setBackgroundDrawable(bg);
+
+
+
+
         app = (MyShows) getApplication();
         showId = (Integer) getBundleValue(getIntent(), "showId", null);
         watchStatus = (MyShowsApi.STATUS) getBundleValue(getIntent(), "watchStatus", MyShowsApi.STATUS.remove);
@@ -193,7 +230,7 @@ public class ShowActivity extends Activity {
                 };
 
 
-                dialog = ProgressDialog.show(getParent(), "", getResources().getString(R.string.loading));
+                dialog = ProgressDialog.show(ShowActivity.this, "", getResources().getString(R.string.loading));
                 handler.postDelayed(changeShowRatioTask, 500);
 
 
@@ -355,41 +392,32 @@ public class ShowActivity extends Activity {
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.show_menu, menu);
+    public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+
+        menu.add(0, 1, 1, "Refresh").setIcon(R.drawable.ic_navigation_refresh).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        menu.add(0, 2, 2, "Settings").setIcon(R.drawable.ic_action_settings).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
         return super.onCreateOptionsMenu(menu);
     }
 
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.check_all:
-                adapter.checkAll();
-                return true;
-            case R.id.view_on_site:
-                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://myshows.ru/view/" + showId + "/"));
-                startActivity(i);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
-
-//    private boolean isLoggedIn() {
-//        if (app.isLoggedIn()) {
-//            return true;
-//        } else if (Settings.getString(Settings.KEY_LOGIN) != null && Settings.getString(Settings.KEY_PASSWORD) != null) {
-//            loginResult(client.login(Settings.getString( Settings.KEY_LOGIN), Settings.getString(Settings.KEY_PASSWORD)));
-//            return app.isLoggedIn();
-//        } else {
-//            return false;
+//
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.check_all:
+//                adapter.checkAll();
+//                return true;
+//            case R.id.view_on_site:
+//                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://myshows.ru/view/" + showId + "/"));
+//                startActivity(i);
+//                return true;
+//            default:
+//                return super.onOptionsItemSelected(item);
 //        }
 //    }
-//
-//    private void loginResult(Boolean result) {
-//        app.setLoggedIn(result);
-//    }
+
+
+
+
 
 
     private void changeButtonStyleToActive(Button button) {
@@ -496,6 +524,7 @@ public class ShowActivity extends Activity {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     season.setChecked(isChecked);
+                    mMode = startActionMode(new AnActionModeOfEpicProportions());
                 }
             });
             holder.checkBox.setOnClickListener(new View.OnClickListener() {
@@ -788,5 +817,40 @@ public class ShowActivity extends Activity {
         }
 
 
+    }
+
+    private final class AnActionModeOfEpicProportions implements ActionMode.Callback {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            //Used to put dark icons on light action bar
+
+
+
+            menu.add("Search")
+                    .setIcon(R.drawable.ic_action_search)
+                    .setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+            menu.add("Settings")
+                    .setIcon(R.drawable.ic_action_settings )
+                    .setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, com.actionbarsherlock.view.MenuItem item) {
+            Toast.makeText(ShowActivity.this, "Got click: " + item, Toast.LENGTH_SHORT).show();
+            mode.finish();
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+        }
     }
 }

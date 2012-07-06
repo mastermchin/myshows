@@ -18,7 +18,9 @@ import ru.myshows.adapters.SectionedAdapter;
 import ru.myshows.api.MyShowsApi;
 import ru.myshows.domain.IShow;
 import ru.myshows.domain.UserShow;
+import ru.myshows.tasks.BaseTask;
 import ru.myshows.tasks.GetShowsTask;
+import ru.myshows.tasks.Taskable;
 import ru.myshows.util.Utils;
 
 import java.util.List;
@@ -30,7 +32,7 @@ import java.util.List;
  * Time: 15:19:35
  * To change this template use File | Settings | File Templates.
  */
-public class ShowsFragment extends Fragment implements GetShowsTask.ShowsLoadingListener{
+public class ShowsFragment extends Fragment implements  Taskable , GetShowsTask.ShowsLoadingListener{
 
     public static final int SHOWS_SEARCH = 1;
     public static final int SHOWS_TOP = 2;
@@ -65,6 +67,22 @@ public class ShowsFragment extends Fragment implements GetShowsTask.ShowsLoading
         list.setVisibility(View.VISIBLE);
     }
 
+
+    @Override
+    public void executeTask(){
+        GetShowsTask task = new GetShowsTask(getActivity(), GetShowsTask.SHOWS_USER);
+        task.setShowsLoadingListener(this);
+        task.execute();
+    }
+
+    @Override
+    public void executeUpdateTask() {
+        GetShowsTask task = new GetShowsTask(getActivity(), true, GetShowsTask.SHOWS_USER);
+        task.setShowsLoadingListener(this);
+        list.setVisibility(View.GONE);
+        progress.setVisibility(View.VISIBLE);
+        task.execute();
+    }
 
     public class ShowsAdapter extends ArrayAdapter<IShow> {
 

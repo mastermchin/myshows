@@ -2,6 +2,8 @@ package ru.myshows.activity;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,16 +11,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.viewpagerindicator.TitlePageIndicator;
 import ru.myshows.adapters.SectionedAdapter;
 import ru.myshows.fragments.*;
-import ru.myshows.tasks.GetNewEpisodesTask;
-import ru.myshows.tasks.GetNewsTask;
-import ru.myshows.tasks.GetProfileTask;
-import ru.myshows.tasks.GetShowsTask;
+import ru.myshows.tasks.*;
 import ru.myshows.util.Settings;
 
 import java.util.ArrayList;
@@ -64,32 +64,10 @@ public class MainActivity extends SherlockFragmentActivity {
         indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                if (!MyShows.isLoggedIn) return;
-                System.out.println("position = " + position);
+                if (!MyShows.isLoggedIn || position > TAB_PROFILE)
+                    return;
                 Fragment currentFragment = adapter.getItem(position);
-                switch (position) {
-                    case TAB_SHOWS:
-                        GetShowsTask showsTask = new GetShowsTask(MainActivity.this, GetShowsTask.SHOWS_USER);
-                        showsTask.setShowsLoadingListener((GetShowsTask.ShowsLoadingListener) currentFragment);
-                        showsTask.execute();
-                        break;
-                    case TAB_NEW_EPISODES:
-                        GetNewEpisodesTask episodesTask = new GetNewEpisodesTask(MainActivity.this);
-                        episodesTask.setEpisodesLoadingListener((GetNewEpisodesTask.NewEpisodesLoadingListener) currentFragment);
-                        episodesTask.execute();
-                        break;
-                    case TAB_NEWS:
-                        GetNewsTask newsTask = new GetNewsTask(MainActivity.this);
-                        newsTask.setNewsLoadingListener((GetNewsTask.NewsLoadingListener) currentFragment);
-                        newsTask.execute();
-                        break;
-                    case TAB_PROFILE:
-                        GetProfileTask profileTask = new GetProfileTask(MainActivity.this);
-                        profileTask.setProfileLoadingListener((GetProfileTask.ProfileLoadingListener) currentFragment);
-                        profileTask.execute(Settings.getString(Settings.KEY_LOGIN));
-                        break;
-                }
-
+                ((Taskable) currentFragment).executeTask();
             }
 
             @Override
@@ -105,6 +83,12 @@ public class MainActivity extends SherlockFragmentActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
+
+        BitmapDrawable bg = (BitmapDrawable) getResources().getDrawable(R.drawable.stripe_red);
+        bg.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+        getSupportActionBar().setBackgroundDrawable(bg);
+
+
         new LoginTask().execute();
 
     }
@@ -124,9 +108,13 @@ public class MainActivity extends SherlockFragmentActivity {
     public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
         switch (item.getItemId()) {
             case 1:
-                int currentItem = pager.getCurrentItem();
+                int position = pager.getCurrentItem();
+                if (!MyShows.isLoggedIn || position > TAB_PROFILE)
+                    break;
 
-                //((RadioFragment) mAdapter.getItem(mPager.getCurrentItem())).updateChannels();
+                Fragment currentFragment = adapter.getItem(position);
+                ((Taskable) currentFragment).executeUpdateTask();
+
                 break;
             case 2:
                 startActivity(new Intent(this, SettingsAcrivity.class));
@@ -191,6 +179,11 @@ public class MainActivity extends SherlockFragmentActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             return titles.get(position);
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            //super.destroyItem(container, position, object);
         }
     }
 

@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<bitmap  xmlns:android="http://schemas.android.com/apk/res/android"
-        android:src="@drawable/diagonal_line_2"
-        android:tileMode="repeat"
-        android:dither="true"
-        >
-</bitmap>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item>
+        <bitmap
+                android:src="@drawable/stripe_red"
+                android:tileMode="repeat"
+                android:dither="true"
+                >
+        </bitmap>
+    </item>
+    <!--<item >-->
+        <!--<shape android:shape="rectangle" >-->
+            <!--<gradient-->
+                    <!--android:endColor="#4fffffff"-->
+                    <!--android:gradientRadius="-270"-->
+                    <!--android:startColor="#8fffffff"-->
+                    <!--/>-->
+        <!--</shape>-->
+    <!--</item>-->
+</layer-list>

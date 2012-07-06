@@ -18,7 +18,9 @@ import ru.myshows.activity.R;
 import ru.myshows.api.MyShowsApi;
 import ru.myshows.components.TextProgressBar;
 import ru.myshows.domain.*;
+import ru.myshows.tasks.BaseTask;
 import ru.myshows.tasks.GetProfileTask;
+import ru.myshows.tasks.Taskable;
 import ru.myshows.util.Settings;
 import ru.myshows.util.Utils;
 
@@ -32,7 +34,7 @@ import java.util.List;
  * Time: 15:19:22
  * To change this template use File | Settings | File Templates.
  */
-public class ProfileFragment extends Fragment implements GetProfileTask.ProfileLoadingListener {
+public class ProfileFragment extends Fragment implements GetProfileTask.ProfileLoadingListener, Taskable {
 
 
     private Button logoutButton;
@@ -79,6 +81,22 @@ public class ProfileFragment extends Fragment implements GetProfileTask.ProfileL
         scrollView.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    public void executeTask() {
+        GetProfileTask profileTask = new GetProfileTask(getActivity());
+        profileTask.setProfileLoadingListener(this);
+        profileTask.execute(Settings.getString(Settings.KEY_LOGIN));
+    }
+
+    @Override
+    public void executeUpdateTask() {
+        GetProfileTask profileTask = new GetProfileTask(getActivity(), true);
+        profileTask.setProfileLoadingListener(this);
+        scrollView.setVisibility(View.GONE);
+        progress.setVisibility(View.VISIBLE);
+        profileTask.execute(Settings.getString(Settings.KEY_LOGIN));
+    }
+
     private void populateUI(Profile profile, ProfileStats stats) {
 
 
@@ -115,8 +133,8 @@ public class ProfileFragment extends Fragment implements GetProfileTask.ProfileL
 
             if (shows != null) {
                 mainView.findViewById(R.id.profile_shows_info).setVisibility(View.VISIBLE);
-               TextView label = (TextView) mainView.findViewById(R.id.profile_watching_label);
-               label.setText
+                TextView label = (TextView) mainView.findViewById(R.id.profile_watching_label);
+                label.setText
                         (getResources().getString(R.string.status_watching) + " " +
                                 Utils.getUserShowsByWatchStatus(shows, MyShowsApi.STATUS.watching).size());
 

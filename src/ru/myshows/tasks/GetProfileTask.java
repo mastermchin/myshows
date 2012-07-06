@@ -19,6 +19,10 @@ public class GetProfileTask extends BaseTask<Profile> {
         super(context);
     }
 
+    public GetProfileTask(Context context, boolean forceUpdate) {
+        super(context, forceUpdate);
+    }
+
     @Override
     public Profile doWork(Object... objects) throws Exception {
         String login = (String) objects[0];

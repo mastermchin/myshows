@@ -15,7 +15,9 @@ import ru.myshows.activity.R;
 import ru.myshows.adapters.SectionedAdapter;
 import ru.myshows.domain.Episode;
 import ru.myshows.domain.UserShow;
+import ru.myshows.tasks.BaseTask;
 import ru.myshows.tasks.GetNewEpisodesTask;
+import ru.myshows.tasks.Taskable;
 import ru.myshows.util.EpisodeComparator;
 
 import java.text.DateFormat;
@@ -29,7 +31,7 @@ import java.util.*;
  * Time: 1:10
  * To change this template use File | Settings | File Templates.
  */
-public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.NewEpisodesLoadingListener {
+public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.NewEpisodesLoadingListener, Taskable {
 
     private SectionedAdapter adapter;
     private RelativeLayout rootView;
@@ -62,6 +64,22 @@ public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.
         return rootView;
     }
 
+
+    @Override
+    public void executeTask(){
+        GetNewEpisodesTask episodesTask = new GetNewEpisodesTask(getActivity());
+        episodesTask.setEpisodesLoadingListener(this);
+        episodesTask.execute();
+    }
+
+    @Override
+    public void executeUpdateTask() {
+        GetNewEpisodesTask episodesTask = new GetNewEpisodesTask(getActivity(), true);
+        episodesTask.setEpisodesLoadingListener(this);
+        list.setVisibility(View.GONE);
+        progress.setVisibility(View.VISIBLE);
+        episodesTask.execute();
+    }
 
     @Override
     public void onNewEpisodesLoaded(List<Episode> episodes) {

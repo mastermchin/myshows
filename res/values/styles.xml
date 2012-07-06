@@ -18,14 +18,16 @@
     </style>
 
     <style name="MyShows.ActionBar" parent="Widget.Sherlock.ActionBar">
-        <item name="android:background">@color/dark_red</item>
-        <item name="background">@color/dark_red</item>
+        <!--<item name="android:background">@color/dark_red</item>-->
+        <!--<item name="background">@color/dark_red</item>-->
+        <item name="android:background">@drawable/tiled_background</item>
+        <item name="background">@drawable/tiled_background</item>
     </style>
 
 
     <style name="CustomTitlePageIndicator">
         <item name="android:background">#18FF0000</item>
-        <item name="footerColor">#FFAA2222</item>
+        <item name="footerColor">@color/dark_red</item>
         <item name="footerLineHeight">1dp</item>
         <item name="footerIndicatorHeight">3dp</item>
         <item name="footerIndicatorStyle">underline</item>
@@ -162,8 +164,8 @@
 
     <style name="DarkRatingBar" >
         <item name="android:progressDrawable">@drawable/yellow_big_rating_bar</item>
-        <item name="android:minHeight">20dip</item>
-        <item name="android:maxHeight">20dip</item>
+        <item name="android:minHeight">24dip</item>
+        <item name="android:maxHeight">24dip</item>
         
     </style>
 

@@ -15,7 +15,9 @@ import ru.myshows.activity.R;
 import ru.myshows.adapters.SectionedAdapter;
 import ru.myshows.api.MyShowsClient;
 import ru.myshows.domain.UserNews;
+import ru.myshows.tasks.BaseTask;
 import ru.myshows.tasks.GetNewsTask;
+import ru.myshows.tasks.Taskable;
 import ru.myshows.util.NewsComparator;
 
 import java.text.DateFormat;
@@ -29,19 +31,19 @@ import java.util.*;
  * Time: 15:19:10
  * To change this template use File | Settings | File Templates.
  */
-public class NewsFragment extends Fragment implements GetNewsTask.NewsLoadingListener{
+public class NewsFragment extends Fragment implements GetNewsTask.NewsLoadingListener, Taskable {
 
 
     private SectionedAdapter adapter;
-    private ListView  list;
+    private ListView list;
     private ProgressBar progress;
     private LayoutInflater inflater;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.inflater = inflater;
-        View view =  inflater.inflate(R.layout.news, container, false);
-        list =     (ListView) view.findViewById(R.id.news_list);
+        View view = inflater.inflate(R.layout.news, container, false);
+        list = (ListView) view.findViewById(R.id.news_list);
         progress = (ProgressBar) view.findViewById(R.id.progress);
         return view;
     }
@@ -54,6 +56,23 @@ public class NewsFragment extends Fragment implements GetNewsTask.NewsLoadingLis
         progress.setVisibility(View.GONE);
         progress.setIndeterminate(false);
         list.setVisibility(View.VISIBLE);
+    }
+
+
+    @Override
+    public void executeTask() {
+        GetNewsTask newsTask = new GetNewsTask(getActivity());
+        newsTask.setNewsLoadingListener(this);
+        newsTask.execute();
+    }
+
+    @Override
+    public void executeUpdateTask() {
+        GetNewsTask newsTask = new GetNewsTask(getActivity(), true);
+        newsTask.setNewsLoadingListener(this);
+        list.setVisibility(View.GONE);
+        progress.setVisibility(View.VISIBLE);
+        newsTask.execute();
     }
 
     private class NewsAdapter extends ArrayAdapter<UserNews> {
@@ -134,7 +153,7 @@ public class NewsFragment extends Fragment implements GetNewsTask.NewsLoadingLis
                 action = news.getAction() + " ";
 
             if (news.getEpisodes() == 1)
-                action +=  getResources().getString(R.string.episode) + " " +  news.getEpisode();
+                action += getResources().getString(R.string.episode) + " " + news.getEpisode();
             else
                 action += news.getEpisodes() + " " + getResources().getString(R.string.episodes);
             return action;
@@ -150,7 +169,7 @@ public class NewsFragment extends Fragment implements GetNewsTask.NewsLoadingLis
     }
 
 
-    private void populateAdapter( Map<String, List<UserNews>> news) {
+    private void populateAdapter(Map<String, List<UserNews>> news) {
         TreeMap<String, List<UserNews>> m = new TreeMap<String, List<UserNews>>(new NewsComparator());
         m.putAll(news);
         for (Map.Entry<String, List<UserNews>> entry : m.entrySet()) {

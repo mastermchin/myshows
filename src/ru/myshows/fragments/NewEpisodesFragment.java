@@ -9,7 +9,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.*;
+import android.view.ActionMode;
+import android.view.Menu;
 import android.widget.*;
+import com.actionbarsherlock.view.*;
 import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
 import ru.myshows.adapters.SectionedAdapter;
@@ -119,7 +122,7 @@ public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.
                                 paramsMap.put(e.getShowId(), e.getEpisodeId().toString());
                             else
                                 paramsMap.put(e.getShowId(), value += "," + e.getEpisodeId().toString());
-                            localEpisodes.remove(e);
+                            MyShows.newEpisodes.remove(e);
 
                         }
                     }
@@ -330,5 +333,36 @@ public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.
 
     }
 
+
+    private final class CheckNewEpisodesActionMode implements com.actionbarsherlock.view.ActionMode.Callback {
+        @Override
+        public boolean onCreateActionMode(com.actionbarsherlock.view.ActionMode mode, com.actionbarsherlock.view.Menu menu) {
+            //Used to put dark icons on light action bar
+
+
+
+            menu.add("Save")
+                    .setIcon(R.drawable.ic_save)
+                    .setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(com.actionbarsherlock.view.ActionMode mode, com.actionbarsherlock.view.Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(com.actionbarsherlock.view.ActionMode mode, com.actionbarsherlock.view.MenuItem item) {
+            //Toast.makeText(ShowActivity.this, "Got click: " + item, Toast.LENGTH_SHORT).show();
+            mode.finish();
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(com.actionbarsherlock.view.ActionMode mode) {
+        }
+    }
 
 }

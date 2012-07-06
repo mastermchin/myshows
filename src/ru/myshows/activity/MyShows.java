@@ -71,7 +71,7 @@ public class MyShows extends Application {
 
 
 
-    public UserShow getUserShow(Integer showId) {
+    public static  UserShow getUserShow(Integer showId) {
         if (userShows == null) return null;
         if (showId == null) return null;
         for (UserShow us : userShows) {
@@ -81,7 +81,7 @@ public class MyShows extends Application {
         return null;
     }
 
-    public void addOrUpdateUserShow(UserShow show) {
+    public static void addOrUpdateUserShow(UserShow show) {
         if (userShows == null) userShows = new ArrayList<UserShow>();
         boolean found = false;
         for (UserShow u : userShows) {
@@ -101,7 +101,7 @@ public class MyShows extends Application {
 
    
 
-    public void removeUserShow(Integer showId) {
+    public static  void removeUserShow(Integer showId) {
         if (userShows != null) {
             for (UserShow u : userShows) {
                 if (u.getShowId().equals(showId)) {

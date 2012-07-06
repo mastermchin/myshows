@@ -222,17 +222,6 @@
     </LinearLayout>
 
 
-    <ExpandableListView
-            android:id="@+id/episodes_list"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:layout_below="@id/show_status_buttons_layout"
-            android:groupIndicator="@drawable/indicator"
-            android:divider="@drawable/divider_horizontal_dim_dark"
-            android:dividerHeight="1px"
-            android:cacheColorHint="#00000000"
-            />
 
 
 </RelativeLayout>

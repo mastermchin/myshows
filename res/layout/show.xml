@@ -16,17 +16,21 @@
 
             />
 
+    <LinearLayout
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/show_title"
+            >
+
     <ImageView
             android:id="@+id/show_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="8dp"
-            android:paddingTop="8dp"
             android:adjustViewBounds="true"
-            android:maxHeight="90dp"
-            android:maxWidth="120dp"
-            android:layout_below="@id/show_title"
+            android:layout_weight="1"
             />
+
+    </LinearLayout>
 
     <LinearLayout android:id="@+id/show_info"
                   android:layout_width="wrap_content"

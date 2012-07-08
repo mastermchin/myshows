@@ -50,29 +50,36 @@ public class ShowFragment extends Fragment implements ChangeShowStatusTask.Chang
     private Button removeButton;
     private RelativeLayout rootView;
     private boolean isSaveButtonShowing = false;
-    private Show show;
 
-    public ShowFragment(Show show) {
+    private Show show;
+    private MyShowsApi.STATUS watchStatus;
+    private Double yoursRating;
+
+    public ShowFragment(Show show, MyShowsApi.STATUS watchStatus, Double yoursRating) {
         this.show = show;
+        this.watchStatus = watchStatus;
+        this.yoursRating = yoursRating;
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.show, container, false);
+        View view = inflater.inflate(R.layout.show, container, false);
+        populateUI(view);
+        return view;
     }
 
 
-    private void populateUI() {
-        rootView = (RelativeLayout) getView().findViewById(R.id.show_root_view);
-        showLogo = (ImageView) getView().findViewById(R.id.show_logo);
-        showTitle = (TextView) getView().findViewById(R.id.show_title);
-        dateLayout = (LinearLayout) getView().findViewById(R.id.show_date_layout);
-        genresLayoyt = (LinearLayout) getView().findViewById(R.id.show_genres_layout);
-        watchingLayoyt = (LinearLayout) getView().findViewById(R.id.show_watching_layout);
-        myShowsRatingLayoyt = (LinearLayout) getView().findViewById(R.id.show_rating_myshows_layout);
-        yoursRatingLayoyt = (LinearLayout) getView().findViewById(R.id.show_rating_yours_layout);
-        statusButtonsLayoyt = (LinearLayout) getView().findViewById(R.id.show_status_buttons_layout);
+    private void populateUI(View view) {
+        rootView = (RelativeLayout) view.findViewById(R.id.show_root_view);
+        showLogo = (ImageView) view.findViewById(R.id.show_logo);
+        showTitle = (TextView) view.findViewById(R.id.show_title);
+        dateLayout = (LinearLayout) view.findViewById(R.id.show_date_layout);
+        genresLayoyt = (LinearLayout) view.findViewById(R.id.show_genres_layout);
+        watchingLayoyt = (LinearLayout) view.findViewById(R.id.show_watching_layout);
+        myShowsRatingLayoyt = (LinearLayout) view.findViewById(R.id.show_rating_myshows_layout);
+        yoursRatingLayoyt = (LinearLayout) view.findViewById(R.id.show_rating_yours_layout);
+        statusButtonsLayoyt = (LinearLayout) view.findViewById(R.id.show_status_buttons_layout);
         watchingButton = (Button) statusButtonsLayoyt.findViewById(R.id.button_watching);
         willWatchButton = (Button) statusButtonsLayoyt.findViewById(R.id.button_will_watch);
         cancelledButton = (Button) statusButtonsLayoyt.findViewById(R.id.button_cancelled);
@@ -114,18 +121,18 @@ public class ShowFragment extends Fragment implements ChangeShowStatusTask.Chang
             myShowsRatingBar.setRating((float) show.getRating().doubleValue());
         }
 
-//        // yours rating
-//        if (yoursRating != null) {
-//            yoursRatingLayoyt.setVisibility(View.VISIBLE);
-//
-//            yoursRatingBar = ((RatingBar) yoursRatingLayoyt.findViewById(R.id.show_rating_yours_value));
-//            yoursRatingBar.setRating((float) yoursRating.doubleValue());
-//
-//            // disable rating changing if remove status
-//            if (watchStatus.equals(MyShowsApi.STATUS.remove))
-//                yoursRatingBar.setIsIndicator(true);
-//
-//        }
+        // yours rating
+        if (show != null) {
+            yoursRatingLayoyt.setVisibility(View.VISIBLE);
+
+            yoursRatingBar = ((RatingBar) yoursRatingLayoyt.findViewById(R.id.show_rating_yours_value));
+            yoursRatingBar.setRating((float) yoursRating.doubleValue());
+
+            // disable rating changing if remove status
+            if (watchStatus.equals(MyShowsApi.STATUS.remove))
+                yoursRatingBar.setIsIndicator(true);
+
+        }
 
         yoursRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             ProgressDialog dialog = null;
@@ -171,10 +178,10 @@ public class ShowFragment extends Fragment implements ChangeShowStatusTask.Chang
 
         //status buttons show if client is logged in otherwise remove view
         // if (isLoggedIn()) {
-        if (Settings.getBoolean(Settings.KEY_LOGGED_IN)) {
-
-            statusButtonsLayoyt.setVisibility(View.VISIBLE);
-
+//        if (Settings.getBoolean(Settings.KEY_LOGGED_IN)) {
+//
+//            statusButtonsLayoyt.setVisibility(View.VISIBLE);
+//
 //            if (watchStatus.equals(MyShowsApi.STATUS.watching) || watchStatus.equals(MyShowsApi.STATUS.finished)) {
 //                changeButtonStyleToActive(watchingButton);
 //                activeWatchButton = watchingButton;
@@ -193,13 +200,13 @@ public class ShowFragment extends Fragment implements ChangeShowStatusTask.Chang
 //                changeButtonStyleToActive(removeButton);
 //                activeWatchButton = removeButton;
 //            }
-
-        } else {
-            rootView.removeView(statusButtonsLayoyt);
-//            RelativeLayout.LayoutParams listParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-//            listParams.addRule(RelativeLayout.BELOW, R.id.show_info);
-//            episodesList.setLayoutParams(listParams);
-        }
+//
+//        } else {
+//            rootView.removeView(statusButtonsLayoyt);
+////            RelativeLayout.LayoutParams listParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+////            listParams.addRule(RelativeLayout.BELOW, R.id.show_info);
+////            episodesList.setLayoutParams(listParams);
+//        }
 
 
 //        Collection<Episode> episodes = currentShow.getEpisodes();

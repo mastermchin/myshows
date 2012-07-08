@@ -28,6 +28,9 @@ import ru.myshows.api.MyShowsApi;
 import ru.myshows.api.MyShowsClient;
 import ru.myshows.components.RatingDialog;
 import ru.myshows.domain.*;
+import ru.myshows.fragments.EpisodesFragment;
+import ru.myshows.fragments.ShowFragment;
+import ru.myshows.tasks.GetShowTask;
 import ru.myshows.util.Settings;
 import ru.myshows.util.EpisodeComparator;
 
@@ -43,33 +46,28 @@ import java.util.List;
  * Time: 17:53:42
  * To change this template use File | Settings | File Templates.
  */
-public class ShowActivity extends SherlockFragmentActivity {
+public class ShowActivity extends SherlockFragmentActivity implements GetShowTask.ShowLoadingListener {
 
-
-
-    private Button activeWatchButton;
-
-    private Button saveButton;
 
     private Integer showId;
     private MyShowsApi.STATUS watchStatus;
     private Double yoursRating;
-    private RelativeLayout rootView;
-    private boolean isSaveButtonShowing = false;
 
-    Show currentShow;
+
     ActionMode mMode;
 
 
     private ViewPager pager;
     private TitlePageIndicator indicator;
     private MainActivity.TabsAdapter tabsAdapter;
+    private LinearLayout indicatorLayout;
+    private ProgressBar progress;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.show);
-        setContentView(R.layout.main);
+        setContentView(R.layout.show_info);
 
 
         tabsAdapter = new MainActivity.TabsAdapter(getSupportFragmentManager());
@@ -78,6 +76,8 @@ public class ShowActivity extends SherlockFragmentActivity {
         pager.setAdapter(tabsAdapter);
         indicator.setViewPager(pager);
         indicator.setTypeface(MyShows.font);
+        progress = (ProgressBar) findViewById(R.id.progress);
+        indicatorLayout = (LinearLayout) findViewById(R.id.indicator_layout);
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -88,12 +88,15 @@ public class ShowActivity extends SherlockFragmentActivity {
         getSupportActionBar().setBackgroundDrawable(bg);
 
 
-
-
-
         showId = (Integer) getBundleValue(getIntent(), "showId", null);
-        watchStatus = (MyShowsApi.STATUS) getBundleValue(getIntent(), "watchStatus", MyShowsApi.STATUS.remove);
-        yoursRating = (Double) getBundleValue(getIntent(), "yoursRating", 0.0);
+        watchStatus = (MyShowsApi.STATUS) getBundleValue(getIntent(), "watchStatus", null);
+        yoursRating = (Double) getBundleValue(getIntent(), "yoursRating", null);
+
+        GetShowTask getShowTask = new GetShowTask(this);
+        getShowTask.setShowLoadingListener(this);
+        getShowTask.execute(showId);
+
+
 //        UserShow u = app.getUserShow(showId);
 //        if (u != null) {
 //            watchStatus = u.getWatchStatus();
@@ -103,13 +106,23 @@ public class ShowActivity extends SherlockFragmentActivity {
 
     }
 
+    @Override
+    public boolean onShowLoaded(Show show) {
+        progress.setVisibility(View.GONE);
+        indicatorLayout.setVisibility(View.VISIBLE);
+       // pager.setVisibility(View.VISIBLE);
 
+        tabsAdapter.addFragment(new ShowFragment(show, watchStatus, yoursRating), "Show");
+        tabsAdapter.addFragment(new EpisodesFragment(show), "Episodes");
+        indicator.notifyDataSetChanged();
+        tabsAdapter.notifyDataSetChanged();
+        // hide progress and show viewpager
+
+        return true;
+    }
 
 
     // status buttons handler, defined in show.xml
-
-
-
 
 
 //    private Button getSaveButton() {
@@ -169,26 +182,22 @@ public class ShowActivity extends SherlockFragmentActivity {
 //    }
 
 
-
-
-
-
-    private void changeButtonStyleToActive(Button button) {
-        button.setBackgroundDrawable(getResources().getDrawable(R.drawable.red_label));
-    }
-
-    private void changeButtonStyleToInactive(Button button) {
-        button.setBackgroundDrawable(null);
-
-    }
-
+    //
+//    private void changeButtonStyleToActive(Button button) {
+//        button.setBackgroundDrawable(getResources().getDrawable(R.drawable.red_label));
+//    }
+//
+//    private void changeButtonStyleToInactive(Button button) {
+//        button.setBackgroundDrawable(null);
+//
+//    }
+//
     private Object getBundleValue(Intent intent, String key, Object defaultValue) {
         if (intent == null) return defaultValue;
         if (intent.getExtras() == null) return defaultValue;
         if (intent.getExtras().get(key) == null) return defaultValue;
         return intent.getExtras().get(key);
     }
-
 
 
 //    @Override
@@ -218,11 +227,6 @@ public class ShowActivity extends SherlockFragmentActivity {
 //        }
 //    }
 //
-
-    @Override
-    public boolean onContextItemSelected(MenuItem menuItem) {
-        return super.onContextItemSelected(menuItem);
-    }
 
 
 //    private class GetShowInfoTask extends AsyncTask {
@@ -298,65 +302,65 @@ public class ShowActivity extends SherlockFragmentActivity {
 //
 //    }
 
-    private class ChangeShowStatusTask extends AsyncTask {
-
-        private Context context;
-        private ProgressDialog dialog;
-        private Button button;
-
-        private ChangeShowStatusTask(Context context) {
-            this.context = context;
-            this.dialog = new ProgressDialog(context);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            this.dialog.setMessage(getResources().getString(R.string.loading));
-            this.dialog.show();
-
-        }
-
-
-        @Override
-        protected Boolean doInBackground(Object... objects) {
-            button = (Button) objects[0];
-            return MyShows.client.changeShowStatus(showId, watchStatus);
-        }
-
-        @Override
-        protected void onPostExecute(Object result) {
-            if (this.dialog.isShowing()) this.dialog.dismiss();
-            if ((Boolean) result) {
-                boolean isRemove = watchStatus.equals(MyShowsApi.STATUS.remove);
-                // delete user show from cache
-                if (isRemove) {
-                    MyShows.removeUserShow(showId);
-                  //  app.setUserShowsChanged(true);
-                } else {
-                    // add new show to cache
-                    MyShows.addOrUpdateUserShow(new UserShow(currentShow, watchStatus));
-                  //  app.setUserShowsChanged(true);
-                }
-
-                // disable yours rating if clicked status = remove , enable if != remove
-                //yoursRatingBar.setIsIndicator(isRemove);
-                System.out.println("Disable rating bar");
-                // show/hide save button
-                if (!isRemove && saveButton == null && isSaveButtonShowing)
-                    addSaveButton();
-                else if (isRemove && saveButton != null)
-                    removeSaveButton();
-                // change active button style
-                changeButtonStyleToActive(button);
-                changeButtonStyleToInactive(activeWatchButton);
-                activeWatchButton = button;
-
-            }
-
-        }
-
-
-    }
+//    private class ChangeShowStatusTask extends AsyncTask {
+//
+//        private Context context;
+//        private ProgressDialog dialog;
+//        private Button button;
+//
+//        private ChangeShowStatusTask(Context context) {
+//            this.context = context;
+//            this.dialog = new ProgressDialog(context);
+//        }
+//
+//        @Override
+//        protected void onPreExecute() {
+//            this.dialog.setMessage(getResources().getString(R.string.loading));
+//            this.dialog.show();
+//
+//        }
+//
+//
+//        @Override
+//        protected Boolean doInBackground(Object... objects) {
+//            button = (Button) objects[0];
+//            return MyShows.client.changeShowStatus(showId, watchStatus);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Object result) {
+//            if (this.dialog.isShowing()) this.dialog.dismiss();
+//            if ((Boolean) result) {
+//                boolean isRemove = watchStatus.equals(MyShowsApi.STATUS.remove);
+//                // delete user show from cache
+//                if (isRemove) {
+//                    MyShows.removeUserShow(showId);
+//                  //  app.setUserShowsChanged(true);
+//                } else {
+//                    // add new show to cache
+//                    MyShows.addOrUpdateUserShow(new UserShow(currentShow, watchStatus));
+//                  //  app.setUserShowsChanged(true);
+//                }
+//
+//                // disable yours rating if clicked status = remove , enable if != remove
+//                //yoursRatingBar.setIsIndicator(isRemove);
+//                System.out.println("Disable rating bar");
+//                // show/hide save button
+//                if (!isRemove && saveButton == null && isSaveButtonShowing)
+//                    addSaveButton();
+//                else if (isRemove && saveButton != null)
+//                    removeSaveButton();
+//                // change active button style
+//                changeButtonStyleToActive(button);
+//                changeButtonStyleToInactive(activeWatchButton);
+//                activeWatchButton = button;
+//
+//            }
+//
+//        }
+//
+//
+//    }
 
     private final class AnActionModeOfEpicProportions implements ActionMode.Callback {
         @Override
@@ -364,13 +368,12 @@ public class ShowActivity extends SherlockFragmentActivity {
             //Used to put dark icons on light action bar
 
 
-
             menu.add("Search")
                     .setIcon(R.drawable.ic_action_search)
                     .setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
             menu.add("Settings")
-                    .setIcon(R.drawable.ic_action_settings )
+                    .setIcon(R.drawable.ic_action_settings)
                     .setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
             return true;

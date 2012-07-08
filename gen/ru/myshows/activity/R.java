@@ -1227,7 +1227,7 @@ containing a value of this type.
         public static final int catalog_image=0x7f04005f;
         public static final int catalog_layout=0x7f04005e;
         public static final int catalog_text=0x7f040060;
-        public static final int check_all=0x7f040080;
+        public static final int check_all=0x7f040081;
         public static final int days_bar=0x7f04004b;
         public static final int disableHome=0x7f04000c;
         public static final int divider=0x7f04003b;
@@ -1251,6 +1251,7 @@ containing a value of this type.
         public static final int homeAsUp=0x7f040009;
         public static final int hours_bar=0x7f040049;
         public static final int indicator=0x7f040039;
+        public static final int indicator_layout=0x7f04007b;
         public static final int listMode=0x7f040005;
         public static final int login_button=0x7f040037;
         public static final int login_field=0x7f040035;
@@ -1292,8 +1293,8 @@ containing a value of this type.
         public static final int show_genres_valye=0x7f04006c;
         public static final int show_info=0x7f040066;
         public static final int show_logo=0x7f040065;
-        public static final int show_name=0x7f04007b;
-        public static final int show_rating=0x7f04007c;
+        public static final int show_name=0x7f04007c;
+        public static final int show_rating=0x7f04007d;
         public static final int show_rating_myshows_label=0x7f040071;
         public static final int show_rating_myshows_layout=0x7f040070;
         public static final int show_rating_myshows_value=0x7f040072;
@@ -1306,15 +1307,15 @@ containing a value of this type.
         public static final int show_watching_label=0x7f04006e;
         public static final int show_watching_layout=0x7f04006d;
         public static final int show_watching_value=0x7f04006f;
-        public static final int shows_list=0x7f04007e;
+        public static final int shows_list=0x7f04007f;
         public static final int slogan=0x7f040034;
         public static final int tabMode=0x7f040006;
         public static final int triangle=0x7f040001;
         public static final int underline=0x7f040002;
-        public static final int unwatched_episodes=0x7f04007d;
-        public static final int update=0x7f040081;
+        public static final int unwatched_episodes=0x7f04007e;
+        public static final int update=0x7f040082;
         public static final int useLogo=0x7f040007;
-        public static final int view_on_site=0x7f04007f;
+        public static final int view_on_site=0x7f040080;
         public static final int watched_days_time=0x7f04004a;
         public static final int watched_episodes_time=0x7f040046;
         public static final int watched_hours_time=0x7f040048;
@@ -1366,8 +1367,9 @@ containing a value of this type.
         public static final int sherlock_spinner_dropdown_item=0x7f030023;
         public static final int sherlock_spinner_item=0x7f030024;
         public static final int show=0x7f030025;
-        public static final int show_item=0x7f030026;
-        public static final int shows=0x7f030027;
+        public static final int show_info=0x7f030026;
+        public static final int show_item=0x7f030027;
+        public static final int shows=0x7f030028;
     }
     public static final class menu {
         public static final int show_menu=0x7f0b0000;

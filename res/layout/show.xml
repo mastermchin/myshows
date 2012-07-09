@@ -5,227 +5,219 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:padding="5dp"
+        android:background="@drawable/gradient_background"
         xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <TextView android:id="@+id/show_title"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:gravity="center_horizontal|left"
-              android:textAppearance="@style/DarkTitleTextAppearance"
-
-            />
-
-    <LinearLayout
-                  android:layout_width="fill_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_below="@id/show_title"
-            >
-
-    <ImageView
-            android:id="@+id/show_logo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:layout_weight="1"
-            />
-
-    </LinearLayout>
-
-    <LinearLayout android:id="@+id/show_info"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:orientation="vertical"
-                  android:layout_toRightOf="@id/show_logo"
-                  android:layout_below="@id/show_title"
-            >
-
-        <LinearLayout android:id="@+id/show_date_layout"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:orientation="horizontal"
-                      android:visibility="invisible"
-
-                >
-
-            <TextView
-                    android:id="@+id/show_date_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/DarkLabelsTextAppearance"
-                    android:text="@string/date"
-                    android:paddingRight="3dp"
-                    />
-
-            <TextView
-                    android:id="@+id/show_date_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/DarkLabelsValuesTextAppearance"
-                    />
-
-        </LinearLayout>
-
-
-        <LinearLayout android:id="@+id/show_genres_layout"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:orientation="horizontal"
-                      android:visibility="invisible"
-                >
-
-            <TextView
-                    android:id="@+id/show_genres_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/DarkLabelsTextAppearance"
-                    android:text="@string/genres"
-                    android:paddingRight="3dp"
-                    />
-
-            <TextView
-                    android:id="@+id/show_genres_valye"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/DarkLabelsValuesTextAppearance"
-                    />
-
-        </LinearLayout>
-
-
-        <LinearLayout android:id="@+id/show_watching_layout"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:orientation="horizontal"
-                      android:visibility="invisible"
-                >
-
-            <TextView
-                    android:id="@+id/show_watching_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/DarkLabelsTextAppearance"
-                    android:text="@string/watching"
-                    android:paddingRight="3dp"
-                    />
-
-            <TextView
-                    android:id="@+id/show_watching_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/DarkLabelsValuesTextAppearance"
-                    />
-
-        </LinearLayout>
-
-
-        <LinearLayout android:id="@+id/show_rating_myshows_layout"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:orientation="horizontal"
-                      android:visibility="invisible"
-                >
-
-            <TextView
-                    android:id="@+id/show_rating_myshows_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/DarkLabelsTextAppearance"
-                    android:text="@string/my_shows_rating"
-                    android:paddingRight="3dp"
-                    />
-
-            <RatingBar
-                    android:id="@+id/show_rating_myshows_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:numStars="5"
-                    android:stepSize="0.25"
-                    android:isIndicator="true"
-                    style="@style/DarkRatingBar"
-                    />
-
-        </LinearLayout>
-
-        <LinearLayout android:id="@+id/show_rating_yours_layout"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:orientation="horizontal"
-                      android:visibility="invisible"
-                >
-
-            <TextView
-                    android:id="@+id/show_rating_yours"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/DarkLabelsTextAppearance"
-                    android:text="@string/yours_rating"
-                    android:paddingRight="3dp"
-                    />
-
-            <RatingBar
-                    android:id="@+id/show_rating_yours_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:numStars="5"
-                    android:stepSize="1.0"
-                    android:isIndicator="false"
-                    style="@style/DarkRatingBar"
-                    />
-
-
-        </LinearLayout>
-
-
-    </LinearLayout>
-
-    <LinearLayout
-            android:id="@+id/show_status_buttons_layout"
+    <ru.myshows.components.RobotoTextView
+            android:id="@+id/show_title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:orientation="horizontal"
-            android:layout_below="@id/show_info"
-            android:visibility="invisible"
+            android:gravity="center_horizontal|left"
+
+            />
+
+
+    <ScrollView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/show_title"
             >
 
-        <Button android:id="@+id/button_watching"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/status_watching"
-                android:padding="1dp"
-                android:layout_weight="0.25"
-                android:onClick="changeShowStatus"
-                style="@style/DarkStatusButtonInactive"/>
+        <LinearLayout android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                >
 
-        <Button android:id="@+id/button_will_watch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/status_will_watch"
-                android:layout_weight="0.25"
-                android:onClick="changeShowStatus"
-                style="@style/DarkStatusButtonInactive"/>
+            <ImageView
+                    android:id="@+id/show_logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
 
-        <Button android:id="@+id/button_cancelled"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/status_cancelled"
-                android:layout_weight="0.25"
-                android:onClick="changeShowStatus"
-                style="@style/DarkStatusButtonInactive"/>
+            <LinearLayout android:id="@+id/show_info"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:orientation="vertical"
+                    >
 
-        <Button android:id="@+id/button_remove"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/status_remove"
-                android:layout_weight="0.25"
-                android:onClick="changeShowStatus"
-                style="@style/DarkStatusButtonInactive"/>
+                <LinearLayout android:id="@+id/show_date_layout"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:orientation="horizontal"
+                              android:visibility="gone"
+
+                        >
+
+                    <ru.myshows.components.RobotoTextView
+                            android:id="@+id/show_date_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/date"
+                            android:paddingRight="3dp"
+                            />
+
+                    <ru.myshows.components.RobotoTextView
+                            android:id="@+id/show_date_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            />
+
+                </LinearLayout>
 
 
-    </LinearLayout>
+                <LinearLayout android:id="@+id/show_genres_layout"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:orientation="horizontal"
+                              android:visibility="gone"
+                        >
+
+                    <ru.myshows.components.RobotoTextView
+                            android:id="@+id/show_genres_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/genres"
+                            android:paddingRight="3dp"
+                            />
+
+                    <ru.myshows.components.RobotoTextView
+                            android:id="@+id/show_genres_valye"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            />
+
+                </LinearLayout>
 
 
+                <LinearLayout android:id="@+id/show_watching_layout"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:orientation="horizontal"
+                              android:visibility="gone"
+                        >
+
+                    <ru.myshows.components.RobotoTextView
+                            android:id="@+id/show_watching_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/watching"
+                            android:paddingRight="3dp"
+                            />
+
+                    <ru.myshows.components.RobotoTextView
+                            android:id="@+id/show_watching_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            />
+
+                </LinearLayout>
+
+
+                <LinearLayout android:id="@+id/show_rating_myshows_layout"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:orientation="horizontal"
+                              android:visibility="gone"
+                        >
+
+                    <ru.myshows.components.RobotoTextView
+                            android:id="@+id/show_rating_myshows_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/my_shows_rating"
+                            android:paddingRight="3dp"
+                            />
+
+                    <RatingBar
+                            android:id="@+id/show_rating_myshows_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:numStars="5"
+                            android:stepSize="0.25"
+                            android:isIndicator="true"
+                            style="@style/DarkRatingBar"
+                            />
+
+                </LinearLayout>
+
+                <LinearLayout android:id="@+id/show_rating_yours_layout"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:orientation="horizontal"
+                              android:visibility="gone"
+                        >
+
+                    <ru.myshows.components.RobotoTextView
+                            android:id="@+id/show_rating_yours"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/yours_rating"
+                            android:paddingRight="3dp"
+                            />
+
+                    <RatingBar
+                            android:id="@+id/show_rating_yours_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:numStars="5"
+                            android:stepSize="1.0"
+                            android:isIndicator="false"
+                            style="@style/bigDarkRatingBar"
+                            />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/show_status_buttons_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    >
+
+                <Button android:id="@+id/button_watching"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/status_watching"
+                        android:padding="1dp"
+                        android:layout_weight="0.25"
+                        android:onClick="changeShowStatus"
+                        style="@style/DarkStatusButtonInactive"/>
+
+                <Button android:id="@+id/button_will_watch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/status_will_watch"
+                        android:layout_weight="0.25"
+                        android:onClick="changeShowStatus"
+                        style="@style/DarkStatusButtonInactive"/>
+
+                <Button android:id="@+id/button_cancelled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/status_cancelled"
+                        android:layout_weight="0.25"
+                        android:onClick="changeShowStatus"
+                        style="@style/DarkStatusButtonInactive"/>
+
+                <Button android:id="@+id/button_remove"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/status_remove"
+                        android:layout_weight="0.25"
+                        android:onClick="changeShowStatus"
+                        style="@style/DarkStatusButtonInactive"/>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
 
 </RelativeLayout>

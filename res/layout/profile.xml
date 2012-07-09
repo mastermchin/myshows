@@ -3,7 +3,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-
+                android:background="@drawable/gradient_background"
         >
 
 
@@ -22,7 +22,7 @@
                 android:visibility="gone"
             >
         <RelativeLayout android:layout_width="fill_parent"
-                      android:layout_height="fill_parent"
+                        android:layout_height="fill_parent"
                 >
 
             <ImageView
@@ -44,13 +44,13 @@
                     />
 
 
-            <TextView android:id="@+id/watched_episodes_time"
-                      android:layout_width="fill_parent"
-                      android:layout_height="wrap_content"
-                      android:textAppearance="@style/DarkLabelsTextAppearance"
-                      android:layout_below="@id/avatar"
-                      android:text="@string/watched_episodes"
-                      android:paddingLeft="10dp"
+            <ru.myshows.components.RobotoTextView
+                    android:id="@+id/watched_episodes_time"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/avatar"
+                    android:text="@string/watched_episodes"
+                    android:paddingLeft="10dp"
                     />
 
 
@@ -66,13 +66,13 @@
                     android:progressDrawable="@drawable/progress_bar_red"
                     android:layout_below="@id/watched_episodes_time"/>
 
-            <TextView android:id="@+id/watched_hours_time"
-                      android:layout_width="fill_parent"
-                      android:layout_height="wrap_content"
-                      android:textAppearance="@style/DarkLabelsTextAppearance"
-                      android:layout_below="@id/episodes_bar"
-                      android:text="@string/watched_hours"
-                      android:paddingLeft="10dp"
+            <ru.myshows.components.RobotoTextView
+                    android:id="@+id/watched_hours_time"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/episodes_bar"
+                    android:text="@string/watched_hours"
+                    android:paddingLeft="10dp"
                     />
 
             <ru.myshows.components.TextProgressBar
@@ -87,13 +87,13 @@
                     android:progressDrawable="@drawable/progress_bar_blue"
                     android:layout_below="@id/watched_hours_time"/>
 
-            <TextView android:id="@+id/watched_days_time"
-                      android:layout_width="fill_parent"
-                      android:layout_height="wrap_content"
-                      android:textAppearance="@style/DarkLabelsTextAppearance"
-                      android:layout_below="@id/hours_bar"
-                      android:text="@string/watched_days"
-                      android:paddingLeft="10dp"
+            <ru.myshows.components.RobotoTextView
+                    android:id="@+id/watched_days_time"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/hours_bar"
+                    android:text="@string/watched_days"
+                    android:paddingLeft="10dp"
                     />
 
             <ru.myshows.components.TextProgressBar
@@ -116,32 +116,32 @@
                             android:paddingLeft="10dp"
                     >
 
-                <TextView android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:id="@+id/profile_watching_label"
-                          style="@style/DarkTitleTextAppearance"
+                <ru.myshows.components.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/profile_watching_label"
                         />
 
-                <TextView android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:id="@+id/profile_will_watch_label"
-                          android:layout_below="@id/profile_watching_label"
-                          style="@style/DarkTitleTextAppearance"
+                <ru.myshows.components.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/profile_will_watch_label"
+                        android:layout_below="@id/profile_watching_label"
                         />
 
 
-                <TextView android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:id="@+id/profile_cancelled_label"
-                          android:layout_below="@id/profile_will_watch_label"
-                          style="@style/DarkTitleTextAppearance"
+                <ru.myshows.components.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/profile_cancelled_label"
+                        android:layout_below="@id/profile_will_watch_label"
                         />
 
-                <TextView android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:id="@+id/profile_finished_label"
-                          android:layout_below="@id/profile_cancelled_label"
-                          style="@style/DarkTitleTextAppearance"
+                <ru.myshows.components.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/profile_finished_label"
+                        android:layout_below="@id/profile_cancelled_label"
                         />
 
 
@@ -160,7 +160,6 @@
                     />
         </RelativeLayout>
     </ScrollView>
-
 
 
 </RelativeLayout>

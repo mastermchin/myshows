@@ -41,6 +41,10 @@ public class ChangeShowStatusTask extends BaseTask<Boolean> {
         e.printStackTrace();
     }
 
+    public void setChangeShowStatusListener(ChangeShowStatusListener changeShowStatusListener) {
+        this.changeShowStatusListener = changeShowStatusListener;
+    }
+
     public interface ChangeShowStatusListener{
 
         public boolean onShowStatusChanged(boolean  result);

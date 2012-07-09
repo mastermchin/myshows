@@ -13,14 +13,13 @@
 
     <application android:name="MyShows" android:icon="@drawable/ic_logo" android:label="MyShows" android:theme="@style/Theme.MyShows">
         <activity android:name=".MainActivity" android:configChanges="keyboardHidden|orientation"
-                  android:launchMode="singleTask"
                   android:icon="@drawable/ic_logo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ShowActivity"/>
+        <activity android:name=".ShowActivity" android:configChanges="keyboardHidden|orientation"/>
         <activity android:name=".SettingsAcrivity"/>
     </application>
 </manifest>

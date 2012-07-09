@@ -69,7 +69,7 @@ public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.
 
 
     @Override
-    public void executeTask(){
+    public void executeTask() {
         GetNewEpisodesTask episodesTask = new GetNewEpisodesTask(getActivity());
         episodesTask.setEpisodesLoadingListener(this);
         episodesTask.execute();
@@ -214,7 +214,6 @@ public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.
             protected CheckBox checkBox;
             protected TextView shortTitle;
             private TextView airDate;
-            private ImageView divider;
         }
 
         @Override
@@ -224,13 +223,12 @@ public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.
 
             if (episode != null) {
                 if (convertView == null) {
-                    convertView = inflater.inflate(R.layout.new_episode_item, null);
+                    convertView = inflater.inflate(R.layout.episode, null);
                     holder = new ViewHolder();
                     holder.title = (TextView) convertView.findViewById(R.id.episode_title);
                     holder.checkBox = (CheckBox) convertView.findViewById(R.id.episode_check_box);
                     holder.shortTitle = (TextView) convertView.findViewById(R.id.episode_short_title);
                     holder.airDate = (TextView) convertView.findViewById(R.id.episode_air_date);
-                    holder.divider = (ImageView) convertView.findViewById(R.id.divider);
                     convertView.setTag(holder);
                 } else {
                     holder = (ViewHolder) convertView.getTag();
@@ -239,10 +237,6 @@ public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.
                 holder.title.setText(episode.getTitle());
                 holder.shortTitle.setText(episode.getShortName() != null ? episode.getShortName() : composeShortTitle(episode));
                 holder.airDate.setText(episode.getAirDate() != null ? df.format(episode.getAirDate()) : "unknown");
-
-                if (!episode.equals(last)) {
-                    convertView.findViewById(R.id.divider).setBackgroundDrawable(getResources().getDrawable(R.drawable.divider_horizontal_dim_dark));
-                }
 
 
                 holder.checkBox.setOnClickListener(new View.OnClickListener() {
@@ -309,7 +303,7 @@ public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.
     };
 
     private void populateAdapter(List<Episode> result) {
-
+        if (result == null) return;
         Map<Integer, List<Episode>> episodesByShows = new HashMap<Integer, List<Episode>>();
 
         for (Episode e : result) {
@@ -327,7 +321,7 @@ public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.
             String title = app.getUserShow(showId) != null ? app.getUserShow(showId).getTitle() : "test";
             List<Episode> episodes = entry.getValue();
             Collections.sort(episodes, new EpisodeComparator("shortName"));
-            adapter.addSection(title + "*", new EpisodesAdapter(getActivity(), R.layout.new_episode_item, episodes, title));
+            adapter.addSection(title + "*", new EpisodesAdapter(getActivity(), R.layout.episode, episodes, title));
         }
 
 
@@ -338,7 +332,6 @@ public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.
         @Override
         public boolean onCreateActionMode(com.actionbarsherlock.view.ActionMode mode, com.actionbarsherlock.view.Menu menu) {
             //Used to put dark icons on light action bar
-
 
 
             menu.add("Save")

@@ -135,7 +135,6 @@ public class ShowsFragment extends Fragment implements  Taskable , GetShowsTask.
                 });
 
                 TextView title = (TextView) row.findViewById(R.id.show_name);
-                title.setTypeface(MyShows.font);
                 title.setText(show.getTitle());
 
                 ((RatingBar) row.findViewById(R.id.show_rating)).setRating(show.getRating().floatValue());
@@ -162,6 +161,7 @@ public class ShowsFragment extends Fragment implements  Taskable , GetShowsTask.
                     IShow show = getItem(pos);
                     Intent intent = new Intent();
                     intent.putExtra("showId", show.getShowId());
+                    intent.putExtra("title", show.getTitle());
                     intent.putExtra("watchStatus", show.getWatchStatus());
                     intent.putExtra("yoursRating", show.getYoursRating());
                     intent.setClass(context, ShowActivity.class);
@@ -221,6 +221,8 @@ public class ShowsFragment extends Fragment implements  Taskable , GetShowsTask.
         }
         return adapter;
     }
+
+
 
 
     //    @Override

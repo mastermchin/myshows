@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,14 +43,12 @@ public class ShowFragment extends Fragment implements ChangeShowStatusTask.Chang
     private LinearLayout yoursRatingLayoyt;
     private RatingBar myShowsRatingBar;
     private RatingBar yoursRatingBar;
-    private LinearLayout statusButtonsLayoyt;
     private Button activeWatchButton;
     private Button watchingButton;
     private Button willWatchButton;
     private Button cancelledButton;
     private Button removeButton;
-    private RelativeLayout rootView;
-    private boolean isSaveButtonShowing = false;
+    private LinearLayout statusButtonsLayoyt;
 
     private Show show;
     private MyShowsApi.STATUS watchStatus;
@@ -71,7 +70,6 @@ public class ShowFragment extends Fragment implements ChangeShowStatusTask.Chang
 
 
     private void populateUI(View view) {
-        rootView = (RelativeLayout) view.findViewById(R.id.show_root_view);
         showLogo = (ImageView) view.findViewById(R.id.show_logo);
         showTitle = (TextView) view.findViewById(R.id.show_title);
         dateLayout = (LinearLayout) view.findViewById(R.id.show_date_layout);
@@ -122,7 +120,7 @@ public class ShowFragment extends Fragment implements ChangeShowStatusTask.Chang
         }
 
         // yours rating
-        if (show != null) {
+        if (yoursRating != null) {
             yoursRatingLayoyt.setVisibility(View.VISIBLE);
 
             yoursRatingBar = ((RatingBar) yoursRatingLayoyt.findViewById(R.id.show_rating_yours_value));
@@ -177,10 +175,10 @@ public class ShowFragment extends Fragment implements ChangeShowStatusTask.Chang
 
 
         //status buttons show if client is logged in otherwise remove view
-        // if (isLoggedIn()) {
-//        if (Settings.getBoolean(Settings.KEY_LOGGED_IN)) {
-//
-//            statusButtonsLayoyt.setVisibility(View.VISIBLE);
+        if (MyShows.isLoggedIn) {
+
+            statusButtonsLayoyt.setVisibility(View.VISIBLE);
+            updateStatusButtons();
 //
 //            if (watchStatus.equals(MyShowsApi.STATUS.watching) || watchStatus.equals(MyShowsApi.STATUS.finished)) {
 //                changeButtonStyleToActive(watchingButton);
@@ -200,24 +198,51 @@ public class ShowFragment extends Fragment implements ChangeShowStatusTask.Chang
 //                changeButtonStyleToActive(removeButton);
 //                activeWatchButton = removeButton;
 //            }
-//
-//        } else {
-//            rootView.removeView(statusButtonsLayoyt);
-////            RelativeLayout.LayoutParams listParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-////            listParams.addRule(RelativeLayout.BELOW, R.id.show_info);
-////            episodesList.setLayoutParams(listParams);
-//        }
+
+        }
+
+    }
 
 
-//        Collection<Episode> episodes = currentShow.getEpisodes();
-//        Episode o = (Episode) Collections.max(episodes, new EpisodeComparator());
-//        adapter = new MyExpandableListAdapter(episodes, o.getSeasonNumber());
-//        episodesList.setAdapter(adapter);
-//        registerForContextMenu(episodesList);
+    private void updateStatusButtons() {
+        boolean isWatching = watchStatus.equals(MyShowsApi.STATUS.watching) || watchStatus.equals(MyShowsApi.STATUS.finished);
+        watchingButton.setBackgroundDrawable(isWatching ? getResources().getDrawable(R.drawable.red_label) : null);
+
+        boolean isLater = watchStatus.equals(MyShowsApi.STATUS.later);
+        willWatchButton.setBackgroundDrawable(isLater ? getResources().getDrawable(R.drawable.red_label) : null);
+
+        boolean isCancelled = watchStatus.equals(MyShowsApi.STATUS.cancelled);
+        cancelledButton.setBackgroundDrawable(isCancelled ? getResources().getDrawable(R.drawable.red_label) : null);
+
+        boolean isRemove = watchStatus.equals(MyShowsApi.STATUS.remove);
+        removeButton.setBackgroundDrawable(isRemove ? getResources().getDrawable(R.drawable.red_label) : null);
 
 
     }
 
+    public void changeShowStatus(View v) {
+        switch (v.getId()) {
+            case R.id.button_watching:
+                watchStatus = MyShowsApi.STATUS.watching;
+                break;
+            case R.id.button_will_watch:
+                watchStatus = MyShowsApi.STATUS.later;
+                break;
+            case R.id.button_cancelled:
+                watchStatus = MyShowsApi.STATUS.cancelled;
+                break;
+            case R.id.button_remove:
+                watchStatus = MyShowsApi.STATUS.remove;
+                break;
+        }
+
+          //  activeWatchButton = (Button) v;
+            ChangeShowStatusTask task = new ChangeShowStatusTask(getActivity());
+            task.setChangeShowStatusListener(this);
+            task.execute(show.getShowId(), watchStatus);
+
+
+    }
 
     private void changeButtonStyleToActive(Button button) {
         button.setBackgroundDrawable(getResources().getDrawable(R.drawable.red_label));
@@ -225,30 +250,11 @@ public class ShowFragment extends Fragment implements ChangeShowStatusTask.Chang
 
     @Override
     public boolean onShowStatusChanged(boolean result) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        Log.d("MyShows", "result = " + result);
+        if (result)
+            updateStatusButtons();
+        return true;
     }
-
-
-    //    public void changeShowStatus(View v) {
-//        switch (v.getId()) {
-//            case R.id.button_watching:
-//                watchStatus = MyShowsApi.STATUS.watching;
-//                break;
-//            case R.id.button_will_watch:
-//                watchStatus = MyShowsApi.STATUS.later;
-//                break;
-//            case R.id.button_cancelled:
-//                watchStatus = MyShowsApi.STATUS.cancelled;
-//                break;
-//            case R.id.button_remove:
-//                watchStatus = MyShowsApi.STATUS.remove;
-//                break;
-//        }
-//        if (v.getId() != activeWatchButton.getId())
-//            new ChangeShowStatusTask(ShowActivity.this.getParent()).execute(v);
-//
-//    }
-
 
 
 }

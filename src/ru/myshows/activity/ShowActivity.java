@@ -1,8 +1,10 @@
 package ru.myshows.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Shader;
@@ -17,6 +19,7 @@ import android.view.*;
 import android.view.MenuItem;
 import android.widget.*;
 import android.widget.Button;
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.*;
@@ -30,6 +33,7 @@ import ru.myshows.components.RatingDialog;
 import ru.myshows.domain.*;
 import ru.myshows.fragments.EpisodesFragment;
 import ru.myshows.fragments.ShowFragment;
+import ru.myshows.tasks.ChangeShowStatusTask;
 import ru.myshows.tasks.GetShowTask;
 import ru.myshows.util.Settings;
 import ru.myshows.util.EpisodeComparator;
@@ -52,7 +56,7 @@ public class ShowActivity extends SherlockFragmentActivity implements GetShowTas
     private Integer showId;
     private MyShowsApi.STATUS watchStatus;
     private Double yoursRating;
-
+    private String title;
 
     ActionMode mMode;
 
@@ -79,9 +83,13 @@ public class ShowActivity extends SherlockFragmentActivity implements GetShowTas
         progress = (ProgressBar) findViewById(R.id.progress);
         indicatorLayout = (LinearLayout) findViewById(R.id.indicator_layout);
 
+        title = (String) getBundleValue(getIntent(), "title", null);
+
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        getSupportActionBar().setTitle(title);
 
         BitmapDrawable bg = (BitmapDrawable) getResources().getDrawable(R.drawable.stripe_red);
         bg.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
@@ -91,6 +99,8 @@ public class ShowActivity extends SherlockFragmentActivity implements GetShowTas
         showId = (Integer) getBundleValue(getIntent(), "showId", null);
         watchStatus = (MyShowsApi.STATUS) getBundleValue(getIntent(), "watchStatus", null);
         yoursRating = (Double) getBundleValue(getIntent(), "yoursRating", null);
+
+
 
         GetShowTask getShowTask = new GetShowTask(this);
         getShowTask.setShowLoadingListener(this);
@@ -165,6 +175,15 @@ public class ShowActivity extends SherlockFragmentActivity implements GetShowTas
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return true;
+    }
 
 //
 //    public boolean onOptionsItemSelected(MenuItem item) {
@@ -228,139 +247,10 @@ public class ShowActivity extends SherlockFragmentActivity implements GetShowTas
 //    }
 //
 
-
-//    private class GetShowInfoTask extends AsyncTask {
-//        private Context context;
-//        private ProgressDialog dialog;
-//
-//        private GetShowInfoTask(Context context) {
-//            this.context = context;
-//            this.dialog = new ProgressDialog(context);
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            this.dialog.setMessage(getResources().getString(R.string.loading));
-//            this.dialog.show();
-//
-//        }
-//
-//
-//        @Override
-//        protected Show doInBackground(Object... objects) {
-//            currentShow = client.getShowInfo(showId);
-//            if (currentShow != null) {
-//                populateGenres(currentShow, client.getGenresListAsMap());
-//                populateWatchedEpisodes(currentShow, client.getSeenEpisodes(showId));
-//            }
-//            return currentShow;
-//
-//
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Object result) {
-//            if (this.dialog.isShowing()) this.dialog.dismiss();
-//            if (result != null) {
-//                populateUI();
-//            }
-//
-//        }
-
-
-//        private void populateWatchedEpisodes(Show show, List<WatchedEpisode> episodes) {
-//            if (episodes == null || episodes.size() == 0) return;
-//            Iterator<Episode> i = show.getEpisodes().iterator();
-//            while (i.hasNext()) {
-//                Episode e = i.next();
-//                Iterator<WatchedEpisode> iter = episodes.iterator();
-//                while (iter.hasNext()) {
-//                    WatchedEpisode we = iter.next();
-//                    if (e.getEpisodeId().equals(we.getWatchedId())) {
-//                        e.setChecked(true);
-//                        break;
-//                    }
-//                }
-//
-//            }
-//        }
-
-//
-//        private void populateGenres(Show show, Map<Integer, Genre> allGenres) {
-//            Collection<Integer> showGenres = show.getGenresIds();
-//            String genresString = "";
-//            if (showGenres != null) {
-//                for (Iterator<Integer> iter = showGenres.iterator(); iter.hasNext(); ) {
-//                    Integer genreId = iter.next();
-//                    genresString += " " + allGenres.get(genreId).getTitle();
-//                }
-//            }
-//            show.setGenres(genresString);
-//
-//        }
-//
-//
-//    }
-
-//    private class ChangeShowStatusTask extends AsyncTask {
-//
-//        private Context context;
-//        private ProgressDialog dialog;
-//        private Button button;
-//
-//        private ChangeShowStatusTask(Context context) {
-//            this.context = context;
-//            this.dialog = new ProgressDialog(context);
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            this.dialog.setMessage(getResources().getString(R.string.loading));
-//            this.dialog.show();
-//
-//        }
-//
-//
-//        @Override
-//        protected Boolean doInBackground(Object... objects) {
-//            button = (Button) objects[0];
-//            return MyShows.client.changeShowStatus(showId, watchStatus);
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Object result) {
-//            if (this.dialog.isShowing()) this.dialog.dismiss();
-//            if ((Boolean) result) {
-//                boolean isRemove = watchStatus.equals(MyShowsApi.STATUS.remove);
-//                // delete user show from cache
-//                if (isRemove) {
-//                    MyShows.removeUserShow(showId);
-//                  //  app.setUserShowsChanged(true);
-//                } else {
-//                    // add new show to cache
-//                    MyShows.addOrUpdateUserShow(new UserShow(currentShow, watchStatus));
-//                  //  app.setUserShowsChanged(true);
-//                }
-//
-//                // disable yours rating if clicked status = remove , enable if != remove
-//                //yoursRatingBar.setIsIndicator(isRemove);
-//                System.out.println("Disable rating bar");
-//                // show/hide save button
-//                if (!isRemove && saveButton == null && isSaveButtonShowing)
-//                    addSaveButton();
-//                else if (isRemove && saveButton != null)
-//                    removeSaveButton();
-//                // change active button style
-//                changeButtonStyleToActive(button);
-//                changeButtonStyleToInactive(activeWatchButton);
-//                activeWatchButton = button;
-//
-//            }
-//
-//        }
-//
-//
-//    }
+    public void changeShowStatus(View v) {
+        ShowFragment showFragment = (ShowFragment) tabsAdapter.getItem(0);
+        showFragment.changeShowStatus(v);
+    }
 
     private final class AnActionModeOfEpicProportions implements ActionMode.Callback {
         @Override

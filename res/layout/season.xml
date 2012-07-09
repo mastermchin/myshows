@@ -9,12 +9,11 @@
 
                 >
 
-    <TextView
+    <ru.myshows.components.RobotoTextView
              android:id="@+id/season_title"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:paddingLeft="50dp"
-            android:textAppearance="@style/DarkLabelsTextAppearance"
             android:layout_centerVertical="true"
             />
 

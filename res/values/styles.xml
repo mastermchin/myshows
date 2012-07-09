@@ -6,27 +6,23 @@
          <item name="actionBarStyle">@style/MyShows.ActionBar</item>
          <item name="android:actionBarStyle">@style/MyShows.ActionBar</item>
          <item name="vpiTitlePageIndicatorStyle">@style/CustomTitlePageIndicator</item>
-         <!--<item name="android:listViewStyle">@style/MyShows.ListView</item>-->
-
+         <item name="android:listViewStyle">@style/MyShows.ListView</item>
      </style>
 
 
     <style name="MyShows.ListView" parent="android:Widget.ListView">
-        <item name="android:background">@color/dark_gray</item>
-        <item name="android:cacheColorHint">@color/dark_gray</item>
-
+        <item name="android:background">@drawable/gradient_background</item>
+        <item name="android:cacheColorHint">@android:color/transparent</item>
     </style>
 
     <style name="MyShows.ActionBar" parent="Widget.Sherlock.ActionBar">
-        <!--<item name="android:background">@color/dark_red</item>-->
-        <!--<item name="background">@color/dark_red</item>-->
         <item name="android:background">@drawable/tiled_background</item>
         <item name="background">@drawable/tiled_background</item>
     </style>
 
 
     <style name="CustomTitlePageIndicator">
-        <item name="android:background">#18FF0000</item>
+        <item name="android:background">@android:color/transparent</item>
         <item name="footerColor">@color/dark_red</item>
         <item name="footerLineHeight">1dp</item>
         <item name="footerIndicatorHeight">3dp</item>
@@ -37,129 +33,9 @@
     </style>
 
 
-    <!--Common styles-->
 
-    <style name="windowContentOverlay">
-        <item name="android:windowContentOverlay">@null</item>
-    </style>
-
-    <style name="windowNoTitle">
-        <item name="android:windowNoTitle">true</item>
-    </style>
-
-
-    <!--Lite theme styles-->
-
-    <style name="LightWindowBackground">
-        <item name="android:windowBackground">@color/app_background</item>
-    </style>
-
-
-
-    <style name="LightRatingBar" >
-        <item name="android:progressDrawable">@drawable/yellow_big_rating_bar</item>
-        <item name="android:minHeight">18dip</item>
-        <item name="android:maxHeight">18dip</item>
-    </style>
-
-     <style name="bigLightRatingBar" >
-        <item name="android:progressDrawable">@drawable/yellow_big_rating_bar</item>
-        <item name="android:minHeight">38dip</item>
-        <item name="android:maxHeight">38dip</item>
-    </style>
-
-
-    <!--Show tab-->
-
-    <style name="LightStatusButtonsTextAppearance" parent="@android:style/TextAppearance">
-        <item name="android:textSize">10sp</item>
-        <item name="android:textColor">@android:color/black</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="LightLabelsTextAppearance" parent="@android:style/TextAppearance">
-        <item name="android:textSize">12sp</item>
-        <item name="android:textColor">@android:color/black</item>
-    </style>
-
-    <style name="LightLabelsValuesTextAppearance" parent="@android:style/TextAppearance">
-        <item name="android:textSize">11sp</item>
-        <item name="android:textColor">@android:color/black</item>
-        <item name="android:textStyle">normal</item>
-    </style>
-
-    <style name="LightLabelsValuesTextAppearanceBold" parent="@android:style/TextAppearance">
-        <item name="android:textSize">11sp</item>
-        <item name="android:textColor">@android:color/black</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="LightTitleTextAppearance" parent="@android:style/TextAppearance">
-        <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/light_red</item>
-        <item name="android:textStyle">normal</item>
-    </style>
-
-
-
-    <!--News tab-->
-
-    <style name="LightUserNameTextAppearance" parent="@android:style/TextAppearance">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/dark_blue</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="LightShowTextAppearance" parent="@android:style/TextAppearance">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/dark_red</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-
-
-    <style name="LightStatusButtonActive" parent="@android:style/Widget.Button">
-        <item name="android:gravity">center_vertical|center_horizontal</item>
-        <item name="android:textColor">#FFFFFFFF</item>
-        <item name="android:background">@color/light_red</item>
-        <item name="android:focusable">true</item>
-        <item name="android:clickable">true</item>
-        <item name="android:textAppearance">@style/LightStatusButtonsTextAppearance</item>
-    </style>
-
-    <style name="LightStatusButtonInactive" parent="@style/LightStatusButtonActive">
-        <item name="android:textColor">@android:color/black</item>
-        <item name="android:background">@null</item>
-
-    </style>
-
-    <style name="LightCheckbox" parent="@android:style/Widget.CompoundButton.CheckBox">
-        <item name="android:background">@android:drawable/checkbox_on_background</item>
-        <item name="android:button">@android:drawable/checkbox_off_background</item>
-
-    </style>
-
-    <style name="LightCheck" parent="@android:style/Widget.CompoundButton.CheckBox">
-        <item name="android:button">@drawable/checkboxes</item>
-    </style>
-
-
-    <style name="LiteDivider">
-        <item name="android:background">@drawable/divider</item>
-    </style>
-
-    
-    <style name="LiteHeaderBackground">
-        <item name="android:background">@drawable/light_header</item>
-    </style>
-    
 
     <!--Dark theme styles-->
-
-    <style name="DarkWindowBackground">
-        <item name="android:windowBackground">@color/light_gray</item>
-    </style>
-
 
 
     <style name="DarkRatingBar" >
@@ -171,8 +47,6 @@
 
     <style name="bigDarkRatingBar" >
         <item name="android:progressDrawable">@drawable/yellow_big_rating_bar</item>
-        <item name="android:minHeight">38dip</item>
-        <item name="android:maxHeight">38dip</item>
     </style>
 
 
@@ -195,9 +69,6 @@
         <item name="android:textStyle">normal</item>
     </style>
 
-    <style name="DarkLabelsValuesTextAppearanceBold" parent="DarkLabelsValuesTextAppearance">
-        <item name="android:textStyle">bold</item>
-    </style>
 
     <style name="DarkTitleTextAppearance" parent="@android:style/TextAppearance">
         <item name="android:textSize">18sp</item>
@@ -246,12 +117,6 @@
     <style name="DarkCheck" parent="@android:style/Widget.CompoundButton.CheckBox">
         <item name="android:button">@drawable/dark_checkboxes</item>
     </style>
-
-    <style name="DarkHeaderBackground">
-        <item name="android:background">@drawable/dark_header</item>
-    </style>
-
-    
 
 
 </resources>

@@ -1111,82 +1111,66 @@ containing a value of this type.
         public static final int abs__tab_selected_holo=0x7f020052;
         public static final int abs__tab_selected_pressed_holo=0x7f020053;
         public static final int abs__tab_unselected_pressed_holo=0x7f020054;
-        public static final int btn_check_label_background=0x7f020055;
-        public static final int checkbox_background=0x7f020056;
-        public static final int checkbox_off_background=0x7f020057;
-        public static final int checkbox_on_background=0x7f020058;
-        public static final int checkboxes=0x7f020059;
-        public static final int dark_checkboxes=0x7f02005a;
-        public static final int dark_header=0x7f02005b;
-        public static final int diagonal_line_2=0x7f02005c;
-        public static final int divider=0x7f02005d;
-        public static final int divider_horizontal_dim_dark=0x7f02005e;
-        public static final int gradient_background=0x7f02005f;
-        public static final int ic_action_search=0x7f020060;
-        public static final int ic_action_settings=0x7f020061;
-        public static final int ic_big_star_half=0x7f020062;
-        public static final int ic_big_star_off=0x7f020063;
-        public static final int ic_big_star_on=0x7f020064;
-        public static final int ic_calendar=0x7f020065;
-        public static final int ic_cancel=0x7f020066;
-        public static final int ic_catalog=0x7f020067;
-        public static final int ic_checkbox_checked=0x7f020068;
-        public static final int ic_checkbox_unchecked=0x7f020069;
-        public static final int ic_clock=0x7f02006a;
-        public static final int ic_list_logo=0x7f02006b;
-        public static final int ic_logo=0x7f02006c;
-        public static final int ic_menu_light=0x7f02006d;
-        public static final int ic_menu_link=0x7f02006e;
-        public static final int ic_menu_refresh=0x7f02006f;
-        public static final int ic_menu_slideshow=0x7f020070;
-        public static final int ic_menu_tick=0x7f020071;
-        public static final int ic_mic=0x7f020072;
-        public static final int ic_navigation_refresh=0x7f020073;
-        public static final int ic_play=0x7f020074;
-        public static final int ic_rating=0x7f020075;
-        public static final int ic_rating_important=0x7f020076;
-        public static final int ic_refresh=0x7f020077;
-        public static final int ic_save=0x7f020078;
-        public static final int ic_search=0x7f020079;
-        public static final int ic_star_gray=0x7f02007a;
-        public static final int ic_star_half_yellow=0x7f02007b;
-        public static final int ic_star_off_yellow=0x7f02007c;
-        public static final int ic_star_on_yellow=0x7f02007d;
-        public static final int ic_star_yellow=0x7f02007e;
-        public static final int ic_star_yellow_half=0x7f02007f;
-        public static final int ic_stop=0x7f020080;
-        public static final int ic_volume=0x7f020081;
-        public static final int indicator=0x7f020082;
-        public static final int light_header=0x7f020083;
-        public static final int logo_tv=0x7f020084;
-        public static final int my_shows_logo=0x7f020085;
-        public static final int my_shows_logo_dark=0x7f020086;
-        public static final int progress_bar_blue=0x7f020087;
-        public static final int progress_bar_green=0x7f020088;
-        public static final int progress_bar_red=0x7f020089;
-        public static final int rate_star_med_half=0x7f02008a;
-        public static final int rate_star_med_off=0x7f02008b;
-        public static final int rate_star_med_on=0x7f02008c;
-        public static final int red_button=0x7f02008d;
-        public static final int red_label=0x7f02008e;
-        public static final int red_rating_bar=0x7f02008f;
-        public static final int season_indicator=0x7f020090;
-        public static final int season_indicator_expanded=0x7f020091;
-        public static final int shows_icon=0x7f020092;
-        public static final int star_icon=0x7f020093;
-        public static final int stripe_red=0x7f020094;
-        public static final int textfield=0x7f020095;
-        public static final int textfield_t=0x7f020096;
-        public static final int tiled_background=0x7f020097;
-        public static final int vpi__tab_indicator=0x7f020098;
-        public static final int vpi__tab_selected_focused_holo=0x7f020099;
-        public static final int vpi__tab_selected_holo=0x7f02009a;
-        public static final int vpi__tab_selected_pressed_holo=0x7f02009b;
-        public static final int vpi__tab_unselected_focused_holo=0x7f02009c;
-        public static final int vpi__tab_unselected_holo=0x7f02009d;
-        public static final int vpi__tab_unselected_pressed_holo=0x7f02009e;
-        public static final int yellow_big_rating_bar=0x7f02009f;
-        public static final int yellow_rating_bar=0x7f0200a0;
+        public static final int dark_checkboxes=0x7f020055;
+        public static final int diagonal_line_2=0x7f020056;
+        public static final int divider_horizontal_dim_dark=0x7f020057;
+        public static final int gradient_background=0x7f020058;
+        public static final int ic_action_search=0x7f020059;
+        public static final int ic_action_settings=0x7f02005a;
+        public static final int ic_big_star_half=0x7f02005b;
+        public static final int ic_big_star_off=0x7f02005c;
+        public static final int ic_big_star_on=0x7f02005d;
+        public static final int ic_calendar=0x7f02005e;
+        public static final int ic_cancel=0x7f02005f;
+        public static final int ic_catalog=0x7f020060;
+        public static final int ic_checkbox_checked=0x7f020061;
+        public static final int ic_checkbox_unchecked=0x7f020062;
+        public static final int ic_clock=0x7f020063;
+        public static final int ic_list_logo=0x7f020064;
+        public static final int ic_logo=0x7f020065;
+        public static final int ic_mic=0x7f020066;
+        public static final int ic_navigation_refresh=0x7f020067;
+        public static final int ic_play=0x7f020068;
+        public static final int ic_rating=0x7f020069;
+        public static final int ic_rating_half_important=0x7f02006a;
+        public static final int ic_rating_important=0x7f02006b;
+        public static final int ic_rating_not_important=0x7f02006c;
+        public static final int ic_refresh=0x7f02006d;
+        public static final int ic_save=0x7f02006e;
+        public static final int ic_search=0x7f02006f;
+        public static final int ic_star_gray=0x7f020070;
+        public static final int ic_star_half_yellow=0x7f020071;
+        public static final int ic_star_off_yellow=0x7f020072;
+        public static final int ic_star_on_yellow=0x7f020073;
+        public static final int ic_star_yellow=0x7f020074;
+        public static final int ic_star_yellow_half=0x7f020075;
+        public static final int ic_stop=0x7f020076;
+        public static final int ic_volume=0x7f020077;
+        public static final int indicator=0x7f020078;
+        public static final int light_header=0x7f020079;
+        public static final int logo_tv=0x7f02007a;
+        public static final int my_shows_logo=0x7f02007b;
+        public static final int my_shows_logo_dark=0x7f02007c;
+        public static final int progress_bar_blue=0x7f02007d;
+        public static final int progress_bar_green=0x7f02007e;
+        public static final int progress_bar_red=0x7f02007f;
+        public static final int red_button=0x7f020080;
+        public static final int red_label=0x7f020081;
+        public static final int season_indicator=0x7f020082;
+        public static final int season_indicator_expanded=0x7f020083;
+        public static final int stripe_red=0x7f020084;
+        public static final int textfield=0x7f020085;
+        public static final int textfield_t=0x7f020086;
+        public static final int tiled_background=0x7f020087;
+        public static final int vpi__tab_indicator=0x7f020088;
+        public static final int vpi__tab_selected_focused_holo=0x7f020089;
+        public static final int vpi__tab_selected_holo=0x7f02008a;
+        public static final int vpi__tab_selected_pressed_holo=0x7f02008b;
+        public static final int vpi__tab_unselected_focused_holo=0x7f02008c;
+        public static final int vpi__tab_unselected_holo=0x7f02008d;
+        public static final int vpi__tab_unselected_pressed_holo=0x7f02008e;
+        public static final int yellow_big_rating_bar=0x7f02008f;
+        public static final int yellow_rating_bar=0x7f020090;
     }
     public static final class id {
         public static final int abs__action_bar=0x7f040025;
@@ -1227,10 +1211,9 @@ containing a value of this type.
         public static final int catalog_image=0x7f04005f;
         public static final int catalog_layout=0x7f04005e;
         public static final int catalog_text=0x7f040060;
-        public static final int check_all=0x7f040081;
         public static final int days_bar=0x7f04004b;
         public static final int disableHome=0x7f04000c;
-        public static final int divider=0x7f04003b;
+        public static final int divider=0x7f040042;
         public static final int email_field=0x7f040052;
         public static final int episode_air_date=0x7f04002d;
         public static final int episode_cancel_button=0x7f040031;
@@ -1238,8 +1221,8 @@ containing a value of this type.
         public static final int episode_layout=0x7f04002a;
         public static final int episode_ok_button=0x7f040030;
         public static final int episode_rating=0x7f04002f;
-        public static final int episode_short_title=0x7f04002b;
-        public static final int episode_title=0x7f04002c;
+        public static final int episode_short_title=0x7f04002c;
+        public static final int episode_title=0x7f04002b;
         public static final int episodes_bar=0x7f040047;
         public static final int episodes_list=0x7f040032;
         public static final int favourites_image=0x7f04005c;
@@ -1257,12 +1240,12 @@ containing a value of this type.
         public static final int login_field=0x7f040035;
         public static final int logout_button=0x7f040051;
         public static final int my_shows_logo=0x7f040033;
-        public static final int new_episodes_list=0x7f04003e;
-        public static final int new_episodes_root_view=0x7f04003c;
-        public static final int news_action=0x7f040041;
-        public static final int news_list=0x7f04003f;
-        public static final int news_login=0x7f040040;
-        public static final int news_show=0x7f040042;
+        public static final int new_episodes_list=0x7f04003d;
+        public static final int new_episodes_root_view=0x7f04003b;
+        public static final int news_action=0x7f040040;
+        public static final int news_list=0x7f04003e;
+        public static final int news_login=0x7f04003f;
+        public static final int news_show=0x7f040041;
         public static final int none=0x7f040000;
         public static final int normal=0x7f040004;
         public static final int pager=0x7f04003a;
@@ -1273,7 +1256,7 @@ containing a value of this type.
         public static final int profile_shows_info=0x7f04004c;
         public static final int profile_watching_label=0x7f04004d;
         public static final int profile_will_watch_label=0x7f04004e;
-        public static final int progress=0x7f04003d;
+        public static final int progress=0x7f04003c;
         public static final int register_button=0x7f040038;
         public static final int scroll_layout=0x7f040043;
         public static final int search=0x7f040057;
@@ -1313,9 +1296,7 @@ containing a value of this type.
         public static final int triangle=0x7f040001;
         public static final int underline=0x7f040002;
         public static final int unwatched_episodes=0x7f04007e;
-        public static final int update=0x7f040082;
         public static final int useLogo=0x7f040007;
-        public static final int view_on_site=0x7f040080;
         public static final int watched_days_time=0x7f04004a;
         public static final int watched_episodes_time=0x7f040046;
         public static final int watched_hours_time=0x7f040048;
@@ -1356,24 +1337,19 @@ containing a value of this type.
         public static final int header=0x7f030018;
         public static final int login=0x7f030019;
         public static final int main=0x7f03001a;
-        public static final int new_episode_item=0x7f03001b;
-        public static final int new_episodes=0x7f03001c;
-        public static final int news=0x7f03001d;
-        public static final int news_item=0x7f03001e;
-        public static final int profile=0x7f03001f;
-        public static final int register=0x7f030020;
-        public static final int search=0x7f030021;
-        public static final int season=0x7f030022;
-        public static final int sherlock_spinner_dropdown_item=0x7f030023;
-        public static final int sherlock_spinner_item=0x7f030024;
-        public static final int show=0x7f030025;
-        public static final int show_info=0x7f030026;
-        public static final int show_item=0x7f030027;
-        public static final int shows=0x7f030028;
-    }
-    public static final class menu {
-        public static final int show_menu=0x7f0b0000;
-        public static final int shows_menu=0x7f0b0001;
+        public static final int new_episodes=0x7f03001b;
+        public static final int news=0x7f03001c;
+        public static final int news_item=0x7f03001d;
+        public static final int profile=0x7f03001e;
+        public static final int register=0x7f03001f;
+        public static final int search=0x7f030020;
+        public static final int season=0x7f030021;
+        public static final int sherlock_spinner_dropdown_item=0x7f030022;
+        public static final int sherlock_spinner_item=0x7f030023;
+        public static final int show=0x7f030024;
+        public static final int show_info=0x7f030025;
+        public static final int show_item=0x7f030026;
+        public static final int shows=0x7f030027;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
@@ -1473,49 +1449,25 @@ Tabs titles
     }
     public static final class style {
         public static final int CustomTitlePageIndicator=0x7f09005e;
-        public static final int DarkCheck=0x7f09007e;
-        public static final int DarkCheckbox=0x7f09007d;
-        public static final int DarkHeaderBackground=0x7f09007f;
-        public static final int DarkLabelsTextAppearance=0x7f090075;
-        public static final int DarkLabelsValuesTextAppearance=0x7f090076;
-        public static final int DarkLabelsValuesTextAppearanceBold=0x7f090077;
-        public static final int DarkRatingBar=0x7f090072;
-        public static final int DarkShowTextAppearance=0x7f09007a;
-        public static final int DarkStatusButtonActive=0x7f09007b;
-        public static final int DarkStatusButtonInactive=0x7f09007c;
-        /** Show styles
-         */
-        public static final int DarkStatusButtonsTextAppearance=0x7f090074;
-        public static final int DarkTitleTextAppearance=0x7f090078;
-        /** News tab
-         */
-        public static final int DarkUserNameTextAppearance=0x7f090079;
+        public static final int DarkCheck=0x7f09006a;
+        public static final int DarkCheckbox=0x7f090069;
+        public static final int DarkLabelsTextAppearance=0x7f090062;
+        public static final int DarkLabelsValuesTextAppearance=0x7f090063;
         /** Dark theme styles
          */
-        public static final int DarkWindowBackground=0x7f090071;
-        public static final int DialogWindowTitle_Sherlock=0x7f090036;
-        public static final int DialogWindowTitle_Sherlock_Light=0x7f090037;
-        public static final int LightCheck=0x7f09006e;
-        public static final int LightCheckbox=0x7f09006d;
-        public static final int LightLabelsTextAppearance=0x7f090065;
-        public static final int LightLabelsValuesTextAppearance=0x7f090066;
-        public static final int LightLabelsValuesTextAppearanceBold=0x7f090067;
-        public static final int LightRatingBar=0x7f090062;
-        public static final int LightShowTextAppearance=0x7f09006a;
-        public static final int LightStatusButtonActive=0x7f09006b;
-        public static final int LightStatusButtonInactive=0x7f09006c;
-        /** Show tab
+        public static final int DarkRatingBar=0x7f09005f;
+        public static final int DarkShowTextAppearance=0x7f090066;
+        public static final int DarkStatusButtonActive=0x7f090067;
+        public static final int DarkStatusButtonInactive=0x7f090068;
+        /** Show styles
          */
-        public static final int LightStatusButtonsTextAppearance=0x7f090064;
-        public static final int LightTitleTextAppearance=0x7f090068;
+        public static final int DarkStatusButtonsTextAppearance=0x7f090061;
+        public static final int DarkTitleTextAppearance=0x7f090064;
         /** News tab
          */
-        public static final int LightUserNameTextAppearance=0x7f090069;
-        /** Lite theme styles
-         */
-        public static final int LightWindowBackground=0x7f090061;
-        public static final int LiteDivider=0x7f09006f;
-        public static final int LiteHeaderBackground=0x7f090070;
+        public static final int DarkUserNameTextAppearance=0x7f090065;
+        public static final int DialogWindowTitle_Sherlock=0x7f090036;
+        public static final int DialogWindowTitle_Sherlock_Light=0x7f090037;
         public static final int MyShows_ActionBar=0x7f09005d;
         public static final int MyShows_ListView=0x7f09005c;
         public static final int Sherlock___TextAppearance_Small=0x7f09004a;
@@ -1550,8 +1502,6 @@ Tabs titles
         public static final int TextAppearance_Sherlock_Widget_PopupMenu_Small=0x7f090044;
         public static final int TextAppearance_Sherlock_Widget_TextView_SpinnerItem=0x7f090046;
         public static final int TextAppearance_TabPageIndicator=0x7f090003;
-        /** <item name="android:listViewStyle">@style/MyShows.ListView</item>
-         */
         public static final int Theme_MyShows=0x7f09005b;
         public static final int Theme_PageIndicatorDefaults=0x7f090000;
         public static final int Theme_Sherlock=0x7f090051;
@@ -1610,12 +1560,7 @@ Tabs titles
         public static final int Widget_Sherlock_Spinner_DropDown_ActionBar=0x7f090027;
         public static final int Widget_Sherlock_TextView_SpinnerItem=0x7f090035;
         public static final int Widget_TabPageIndicator=0x7f090002;
-        public static final int bigDarkRatingBar=0x7f090073;
-        public static final int bigLightRatingBar=0x7f090063;
-        /** Common styles
-         */
-        public static final int windowContentOverlay=0x7f09005f;
-        public static final int windowNoTitle=0x7f090060;
+        public static final int bigDarkRatingBar=0x7f090060;
     }
     public static final class styleable {
         /** Attributes that can be used with a CirclePageIndicator.

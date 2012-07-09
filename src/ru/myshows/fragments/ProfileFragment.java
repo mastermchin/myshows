@@ -56,18 +56,18 @@ public class ProfileFragment extends Fragment implements GetProfileTask.ProfileL
         progress = (ProgressBar) mainView.findViewById(R.id.progress);
         scrollView = (ScrollView) mainView.findViewById(R.id.scroll_layout);
 
-        logoutButton = (Button) mainView.findViewById(R.id.logout_button);
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Settings.setString(Settings.KEY_LOGIN, null);
-                Settings.setString(Settings.KEY_PASSWORD, null);
-                Settings.setBoolean(Settings.KEY_LOGGED_IN, false);
-                MyShows.isLoggedIn = false;
-                getActivity().finish();
-                startActivity(new Intent(getActivity(), MainActivity.class));
-            }
-        });
+//        logoutButton = (Button) mainView.findViewById(R.id.logout_button);
+//        logoutButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Settings.setString(Settings.KEY_LOGIN, null);
+//                Settings.setString(Settings.KEY_PASSWORD, null);
+//                Settings.setBoolean(Settings.KEY_LOGGED_IN, false);
+//                MyShows.isLoggedIn = false;
+//                getActivity().finish();
+//                startActivity(new Intent(getActivity(), MainActivity.class));
+//            }
+//        });
 
         return mainView;
     }

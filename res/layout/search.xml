@@ -45,7 +45,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:hint="@string/search"
-                android:background="@drawable/textfield_t"
                 android:singleLine="true"
                 />
 

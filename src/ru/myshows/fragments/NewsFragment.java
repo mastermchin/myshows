@@ -153,9 +153,9 @@ public class NewsFragment extends Fragment implements GetNewsTask.NewsLoadingLis
                 action = news.getAction() + " ";
 
             if (news.getEpisodes() == 1)
-                action += getResources().getString(R.string.episode) + " " + news.getEpisode();
+                action += news.getEpisode();
             else
-                action += news.getEpisodes() + " " + getResources().getString(R.string.episodes);
+                action += news.getEpisodes();
             return action;
         }
 

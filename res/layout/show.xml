@@ -162,7 +162,7 @@
                             android:numStars="5"
                             android:stepSize="1.0"
                             android:isIndicator="false"
-                            style="@style/bigDarkRatingBar"
+                            style="@style/DarkRatingBar"
                             />
 
 

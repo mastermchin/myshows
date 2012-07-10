@@ -38,7 +38,7 @@ public class MyShows extends Application {
     public static List<Episode> newEpisodes;
     public static Map<String, List<UserNews>> news;
     public static Map<String,Profile> profiles = new HashMap<String, Profile>();
-
+    public static Map<Integer, Genre> allGenres;
 
     @Override
     public void onCreate() {

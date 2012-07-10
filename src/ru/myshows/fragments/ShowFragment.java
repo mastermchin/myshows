@@ -15,14 +15,18 @@ import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
 import ru.myshows.api.MyShowsApi;
 import ru.myshows.domain.Episode;
+import ru.myshows.domain.Genre;
 import ru.myshows.domain.Show;
 import ru.myshows.domain.UserShow;
+import ru.myshows.tasks.BaseTask;
 import ru.myshows.tasks.ChangeShowStatusTask;
 import ru.myshows.util.EpisodeComparator;
 import ru.myshows.util.Settings;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.

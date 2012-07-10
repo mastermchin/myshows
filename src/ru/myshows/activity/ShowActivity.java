@@ -120,13 +120,11 @@ public class ShowActivity extends SherlockFragmentActivity implements GetShowTas
     public boolean onShowLoaded(Show show) {
         progress.setVisibility(View.GONE);
         indicatorLayout.setVisibility(View.VISIBLE);
-       // pager.setVisibility(View.VISIBLE);
 
         tabsAdapter.addFragment(new ShowFragment(show, watchStatus, yoursRating), "Show");
         tabsAdapter.addFragment(new EpisodesFragment(show), "Episodes");
         indicator.notifyDataSetChanged();
         tabsAdapter.notifyDataSetChanged();
-        // hide progress and show viewpager
 
         return true;
     }

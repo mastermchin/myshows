@@ -9,7 +9,6 @@
             android:id="@+id/episodes_list"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
             android:groupIndicator="@drawable/indicator"
             android:cacheColorHint="#00000000"
             android:background="@drawable/gradient_background"

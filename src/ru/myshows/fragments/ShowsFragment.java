@@ -44,6 +44,7 @@ public class ShowsFragment extends Fragment implements  Taskable , GetShowsTask.
     private ListView  list;
     private ProgressBar progress;
     private LayoutInflater inflater;
+    private boolean isTaskExecuted = false;
 
     public ShowsFragment() {
     }
@@ -61,7 +62,7 @@ public class ShowsFragment extends Fragment implements  Taskable , GetShowsTask.
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.shows, container, false);
         list =     (ListView) view.findViewById(R.id.shows_list);
-        progress = (ProgressBar) view.findViewById(R.id.progress);
+        progress = (ProgressBar) view.findViewById(R.id.progress_shows);
         this.inflater = inflater;
         return view;
     }
@@ -72,11 +73,14 @@ public class ShowsFragment extends Fragment implements  Taskable , GetShowsTask.
         progress.setVisibility(View.GONE);
         progress.setIndeterminate(false);
         list.setVisibility(View.VISIBLE);
+        isTaskExecuted = true;
     }
 
 
     @Override
     public void executeTask(){
+        if (isTaskExecuted)
+            return;
         GetShowsTask task = new GetShowsTask(getActivity(), GetShowsTask.SHOWS_USER);
         task.setShowsLoadingListener(this);
         task.execute();

@@ -80,7 +80,7 @@ public class ShowActivity extends SherlockFragmentActivity implements GetShowTas
         pager.setAdapter(tabsAdapter);
         indicator.setViewPager(pager);
         indicator.setTypeface(MyShows.font);
-        progress = (ProgressBar) findViewById(R.id.progress);
+        progress = (ProgressBar) findViewById(R.id.progress_show);
         indicatorLayout = (LinearLayout) findViewById(R.id.indicator_layout);
 
         title = (String) getBundleValue(getIntent(), "title", null);

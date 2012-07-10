@@ -45,7 +45,7 @@ public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.
     DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
     MyShows app;
     private LayoutInflater inflater;
-
+    private boolean isTaskExecuted = false;
 
     public NewEpisodesFragment() {
     }
@@ -62,7 +62,7 @@ public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.inflater = inflater;
         rootView = (RelativeLayout) inflater.inflate(R.layout.new_episodes, container, false);
-        progress = (ProgressBar) rootView.findViewById(R.id.progress);
+        progress = (ProgressBar) rootView.findViewById(R.id.progress_new_episodes);
         list = (ListView) rootView.findViewById(R.id.new_episodes_list);
         return rootView;
     }
@@ -70,6 +70,8 @@ public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.
 
     @Override
     public void executeTask() {
+        if (isTaskExecuted)
+            return;
         GetNewEpisodesTask episodesTask = new GetNewEpisodesTask(getActivity());
         episodesTask.setEpisodesLoadingListener(this);
         episodesTask.execute();
@@ -92,6 +94,7 @@ public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.
         progress.setVisibility(View.GONE);
         progress.setIndeterminate(false);
         list.setVisibility(View.VISIBLE);
+        isTaskExecuted = true;
     }
 
     View.OnClickListener saveButtonListener = new View.OnClickListener() {

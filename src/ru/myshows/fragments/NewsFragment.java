@@ -38,13 +38,14 @@ public class NewsFragment extends Fragment implements GetNewsTask.NewsLoadingLis
     private ListView list;
     private ProgressBar progress;
     private LayoutInflater inflater;
+    private boolean isTaskExecuted = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.inflater = inflater;
         View view = inflater.inflate(R.layout.news, container, false);
         list = (ListView) view.findViewById(R.id.news_list);
-        progress = (ProgressBar) view.findViewById(R.id.progress);
+        progress = (ProgressBar) view.findViewById(R.id.progress_news);
         return view;
     }
 
@@ -56,11 +57,14 @@ public class NewsFragment extends Fragment implements GetNewsTask.NewsLoadingLis
         progress.setVisibility(View.GONE);
         progress.setIndeterminate(false);
         list.setVisibility(View.VISIBLE);
+        isTaskExecuted = true;
     }
 
 
     @Override
     public void executeTask() {
+        if (isTaskExecuted)
+            return;
         GetNewsTask newsTask = new GetNewsTask(getActivity());
         newsTask.setNewsLoadingListener(this);
         newsTask.execute();

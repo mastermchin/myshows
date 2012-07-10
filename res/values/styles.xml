@@ -110,15 +110,7 @@
 
     </style>
 
-    <style name="DarkCheckbox" parent="@android:style/Widget.CompoundButton.CheckBox">
-        <item name="android:background">@android:drawable/checkbox_on_background</item>
-        <item name="android:button">@android:drawable/checkbox_off_background</item>
 
-    </style>
-
-    <style name="DarkCheck" parent="@android:style/Widget.CompoundButton.CheckBox">
-        <item name="android:button">@drawable/dark_checkboxes</item>
-    </style>
 
 
 </resources>

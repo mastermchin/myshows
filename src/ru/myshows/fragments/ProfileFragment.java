@@ -46,6 +46,7 @@ public class ProfileFragment extends Fragment implements GetProfileTask.ProfileL
     private View mainView;
     private ProgressBar progress;
     private ScrollView scrollView;
+    private boolean isTaskExecuted = false;
 
 
     @Override
@@ -53,7 +54,7 @@ public class ProfileFragment extends Fragment implements GetProfileTask.ProfileL
         super.onCreate(savedInstanceState);
 
         mainView = inflater.inflate(R.layout.profile, container, false);
-        progress = (ProgressBar) mainView.findViewById(R.id.progress);
+        progress = (ProgressBar) mainView.findViewById(R.id.progress_profile);
         scrollView = (ScrollView) mainView.findViewById(R.id.scroll_layout);
 
 //        logoutButton = (Button) mainView.findViewById(R.id.logout_button);
@@ -79,10 +80,13 @@ public class ProfileFragment extends Fragment implements GetProfileTask.ProfileL
         progress.setIndeterminate(false);
         progress.setVisibility(View.GONE);
         scrollView.setVisibility(View.VISIBLE);
+        isTaskExecuted = true;
     }
 
     @Override
     public void executeTask() {
+        if (isTaskExecuted)
+            return;
         GetProfileTask profileTask = new GetProfileTask(getActivity());
         profileTask.setProfileLoadingListener(this);
         profileTask.execute(Settings.getString(Settings.KEY_LOGIN));

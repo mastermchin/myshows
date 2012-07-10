@@ -6,11 +6,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.*;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.*;
 import ru.myshows.activity.R;
+import ru.myshows.activity.SearchActivity;
 
 /**
  * Created by IntelliJ IDEA.
@@ -25,6 +23,8 @@ public class SearchFragment extends Fragment {
     private LinearLayout catalog_layout;
     private EditText searchField;
     private Button searchButton;
+    private Button favourites;
+    private Button catalog;
     private LayoutInflater inflater;
 
     public SearchFragment() {
@@ -51,27 +51,43 @@ public class SearchFragment extends Fragment {
         });
 
 
-        favouritesLayout = (LinearLayout) view.findViewById(R.id.favourites_layout);
-        favouritesLayout.setOnClickListener(new View.OnClickListener() {
+//        favouritesLayout = (LinearLayout) view.findViewById(R.id.favourites_layout);
+//        favouritesLayout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                favouritesLayout.setEnabled(false);
+//                startShowsActivity("top");
+//                favouritesLayout.setEnabled(true);
+//            }
+//        });
+//
+//
+//        catalog_layout = (LinearLayout) view.findViewById(R.id.catalog_layout);
+//        catalog_layout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                catalog_layout.setEnabled(false);
+//                startShowsActivity("all");
+//                catalog_layout.setEnabled(true);
+//
+//            }
+//        });
+
+        catalog = (Button) view.findViewById(R.id.catalog_image);
+        catalog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                favouritesLayout.setEnabled(false);
-                startShowsActivity("top");
-                favouritesLayout.setEnabled(true);
-            }
-        });
-
-
-        catalog_layout = (LinearLayout) view.findViewById(R.id.catalog_layout);
-        catalog_layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                catalog_layout.setEnabled(false);
                 startShowsActivity("all");
-                catalog_layout.setEnabled(true);
-
             }
         });
+        favourites = (Button) view.findViewById(R.id.favourites_image);
+        favourites.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startShowsActivity("top");
+            }
+        });
+
 
 
         return view;
@@ -84,8 +100,8 @@ public class SearchFragment extends Fragment {
         imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
         Intent intent = new Intent();
         intent.putExtra("search", searchString);
-        intent.setClass(getActivity(), ShowsFragment.class);
-        startActivity(intent);
+        intent.setClass(getActivity(), SearchActivity.class);
+        getActivity().startActivity(intent);
     }
 
 }

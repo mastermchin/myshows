@@ -45,10 +45,17 @@ public class ShowsFragment extends Fragment implements  Taskable , GetShowsTask.
     private ProgressBar progress;
     private LayoutInflater inflater;
 
+    public ShowsFragment() {
+    }
+
     public ShowsFragment(int action) {
         this.action = action;
     }
 
+
+    public void setAction(int action) {
+        this.action = action;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,7 +68,7 @@ public class ShowsFragment extends Fragment implements  Taskable , GetShowsTask.
 
     @Override
     public void onShowsLoaded(List<IShow> shows) {
-        list.setAdapter(populateAdapter(action,shows));
+        list.setAdapter(populateAdapter(action, shows));
         progress.setVisibility(View.GONE);
         progress.setIndeterminate(false);
         list.setVisibility(View.VISIBLE);

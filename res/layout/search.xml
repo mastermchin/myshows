@@ -21,7 +21,7 @@
 
             />
 
-    <TextView
+    <ru.myshows.components.RobotoTextView
             android:id="@+id/slogan"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -71,62 +71,28 @@
             >
 
 
-        <LinearLayout
-                android:id="@+id/favourites_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="10dp"
-                >
 
-            <ImageView
+            <Button
                     android:id="@+id/favourites_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_rating"
-                    android:layout_margin="10dip"
-                    />
-
-            <TextView
-                    android:id="@+id/favourites_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_rating"
                     android:text="@string/favourites_text"
-                    android:layout_marginTop="10dip"
-                    android:layout_gravity="bottom"
+                    android:background="@null"
+                    android:padding="10dp"
                     />
 
-        </LinearLayout>
 
 
-        <LinearLayout
-                android:id="@+id/catalog_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="10dp"
-                >
-
-
-            <ImageView
+            <Button
                     android:id="@+id/catalog_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_catalog"
-                    android:layout_margin="10dip"
-                    />
-
-            <TextView
-                    android:id="@+id/catalog_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_catalog"
                     android:text="@string/catalog_text"
-                    android:layout_marginTop="10dip"
-                    android:layout_gravity="bottom"
+                    android:padding="10dp"
+                    android:background="@null"
                     />
-
-        </LinearLayout>
-
 
     </LinearLayout>
 

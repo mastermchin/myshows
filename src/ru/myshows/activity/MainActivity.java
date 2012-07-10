@@ -81,7 +81,6 @@ public class MainActivity extends SherlockFragmentActivity {
 
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         BitmapDrawable bg = (BitmapDrawable) getResources().getDrawable(R.drawable.stripe_red);

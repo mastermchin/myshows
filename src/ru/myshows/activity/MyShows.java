@@ -36,6 +36,7 @@ public class MyShows extends Application {
     public static List<Show> topShows;
     public static List<Show> allShows;
     public static List<Episode> newEpisodes;
+    public static List<Episode> nextEpisodes;
     public static Map<String, List<UserNews>> news;
     public static Map<String,Profile> profiles = new HashMap<String, Profile>();
     public static Map<Integer, Genre> allGenres;

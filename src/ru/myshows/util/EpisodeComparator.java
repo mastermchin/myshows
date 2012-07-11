@@ -35,15 +35,21 @@ public class EpisodeComparator implements Comparator {
             else return 0;
 
         } else if (sortBy.equals("episode")) {
-             if (e1.getEpisodeNumber() > e2.getEpisodeNumber())
+            if (e1.getEpisodeNumber() > e2.getEpisodeNumber())
                 return 1;
             else if (e1.getEpisodeNumber() < e2.getEpisodeNumber())
                 return -1;
             else return 0;
-        }  else if (sortBy.equals("shortName")){
-            e1.setShortName("s" + String.format("%1$02d" ,e1.getSeasonNumber()) + "e" + String.format("%1$02d" ,e1.getEpisodeNumber()));
-            e2.setShortName("s" + String.format("%1$02d" ,e2.getSeasonNumber()) + "e" + String.format("%1$02d" ,e2.getEpisodeNumber()));
+        } else if (sortBy.equals("shortName")) {
+            e1.setShortName("s" + String.format("%1$02d", e1.getSeasonNumber()) + "e" + String.format("%1$02d", e1.getEpisodeNumber()));
+            e2.setShortName("s" + String.format("%1$02d", e2.getSeasonNumber()) + "e" + String.format("%1$02d", e2.getEpisodeNumber()));
             return e1.getShortName().compareToIgnoreCase(e2.getShortName());
+        } else if (sortBy.equals("date")) {
+            if (e1.getAirDate().after(e2.getAirDate()))
+                return 1;
+            if (e1.getAirDate().before(e2.getAirDate()))
+                return -1;
+            else return 0;
         }
         return 0;
 

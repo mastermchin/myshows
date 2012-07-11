@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, Lop!</string>
+    <string name="app_name">MyShows</string>
+
+    <!--Tabs titles-->
+    <string name="tab_search_title">Поиск</string>
+    <string name="tab_login_title">Вход</string>
+    <string name="tab_profile_title">Профиль</string>
+    <string name="tab_shows_title">Сериалы</string>
+    <string name="tab_new">Новые</string>
+    <string name="tab_next">Скоро</string>
+    <string name="tab_news_title">Новости</string>
+
+
+    <string name="search">Искать сериал</string>
+    <string name="search_button">Поиск</string>
+    <string name="favourites_text">Рейтинг</string>
+    <string name="catalog_text">Каталог</string>
+    <string name="users_text">Пользователи</string>
+    <string name="username">Логин</string>
+    <string name="password">Пароль</string>
+    <string name="login_action">Вход</string>
+    <string name="register_action">Регистрация</string>
+    <string name="cancel_action">Отмена</string>
+    <string name="wrong_login_or_password">Имя пользователя или пароль не опознаны</string>
+
+
+    <!--Register-->
+    <string name="gender_male">Муж</string>
+    <string name="gender_female">Жен</string>
+    <string name="register_username">Логин*</string>
+    <string name="register_password">Пароль*</string>
+    <string name="register_failed">Не удалось выполнить регистрацию</string>
+
+
+    <string name="loading">Загрузка...</string>
+
+
+    <string name="search_results">Результаты поиска</string>
+    <string name="top">Рейтинг</string>
+    <string name="all">Все</string>
+    <string name="status_watching">Смотрю</string>
+    <string name="status_will_watch">Буду</string>
+    <string name="status_finished">Посмотрел</string>
+    <string name="status_cancelled">Перестал</string>
+    <string name="status_remove">Не смотрю</string>
+
+    <string name="logout">Выход</string>
+    <string name="save">Сохранить</string>
+    <string name="search_query">Введите запрос</string>
+    <string name="changes_saved">Изменения сохранены</string>
+    <string name="changes_not_saved">Изменения не сохранены</string>
+
+    <string name="register_title">Регистрация</string>
+    <string name="register_message">Для создания аккаунта перейдите на http://myshows.ru</string>
+
+
+    <string name="menu_check_all">Отметить все</string>
+    <string name="menu_view_on_site">Просмотреть на сайте</string>
+    <string name="menu_about">О программе</string>
+    <string name="menu_switch_theme">Сменить тему</string>
+    <string name="menu_update">Обновить</string>
+
+    <string name="episode_rating">Рейтинг эпизода</string>
+    <string name="season">Сезон</string>
+
+
+    <string name="date">Даты выхода:</string>
+    <string name="genres">Жанр:</string>
+    <string name="watching">Смотрящих:</string>
+    <string name="my_shows_rating">MyShows:</string>
+    <string name="yours_rating">Моя оценка:</string>
+
+    <string name="watched_episodes">Просмотрено эпизодов</string>
+    <string name="watched_hours">Потрачено часов</string>
+    <string name="watched_days">Потрачено дней</string>
+
+    <string name="action_watched">посмотрел</string>
+    <string name="episode">серию</string>
+    <string name="episodes">серии</string>
+
+
+    <string name="on">Вкл.</string>
+    <string name="off">Выкл.</string>
+
+    <string name="pref_title">Настройки</string>
+    <string name="pref_show_news">Показывать новости</string>
+</resources>

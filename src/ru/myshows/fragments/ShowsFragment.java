@@ -16,14 +16,16 @@ import ru.myshows.activity.R;
 import ru.myshows.activity.ShowActivity;
 import ru.myshows.adapters.SectionedAdapter;
 import ru.myshows.api.MyShowsApi;
+import ru.myshows.domain.Episode;
 import ru.myshows.domain.IShow;
 import ru.myshows.domain.UserShow;
 import ru.myshows.tasks.BaseTask;
 import ru.myshows.tasks.GetShowsTask;
 import ru.myshows.tasks.Taskable;
+import ru.myshows.util.EpisodeComparator;
 import ru.myshows.util.Utils;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,7 +34,7 @@ import java.util.List;
  * Time: 15:19:35
  * To change this template use File | Settings | File Templates.
  */
-public class ShowsFragment extends Fragment implements  Taskable , GetShowsTask.ShowsLoadingListener{
+public class ShowsFragment extends Fragment implements Taskable, GetShowsTask.ShowsLoadingListener {
 
     public static final int SHOWS_SEARCH = 1;
     public static final int SHOWS_TOP = 2;
@@ -41,7 +43,7 @@ public class ShowsFragment extends Fragment implements  Taskable , GetShowsTask.
 
 
     private int action;
-    private ListView  list;
+    private ListView list;
     private ProgressBar progress;
     private LayoutInflater inflater;
     private boolean isTaskExecuted = false;
@@ -61,7 +63,7 @@ public class ShowsFragment extends Fragment implements  Taskable , GetShowsTask.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.shows, container, false);
-        list =     (ListView) view.findViewById(R.id.shows_list);
+        list = (ListView) view.findViewById(R.id.shows_list);
         progress = (ProgressBar) view.findViewById(R.id.progress_shows);
         this.inflater = inflater;
         return view;
@@ -78,7 +80,7 @@ public class ShowsFragment extends Fragment implements  Taskable , GetShowsTask.
 
 
     @Override
-    public void executeTask(){
+    public void executeTask() {
         if (isTaskExecuted)
             return;
         GetShowsTask task = new GetShowsTask(getActivity(), GetShowsTask.SHOWS_USER);
@@ -152,12 +154,13 @@ public class ShowsFragment extends Fragment implements  Taskable , GetShowsTask.
 
                 if (show instanceof UserShow) {
 
-                    if (show.getWatchStatus().equals(MyShowsApi.STATUS.watching) && ((UserShow) show).getTotalEpisodes() > ((UserShow) show).getWatchedEpisodes()) {
-                        int unwatched = ((UserShow) show).getTotalEpisodes() - ((UserShow) show).getWatchedEpisodes();
-                        TextView b = ((TextView) row.findViewById(R.id.unwatched_episodes));
-                        b.setVisibility(View.VISIBLE);
-                        b.setText(String.valueOf(unwatched));
-
+                    if (show.getWatchStatus().equals(MyShowsApi.STATUS.watching)) {
+                        int unwatched = getUnwatchedEpisodesCount(show.getShowId());
+                        if (unwatched > 0) {
+                            TextView b = ((TextView) row.findViewById(R.id.unwatched_episodes));
+                            b.setVisibility(View.VISIBLE);
+                            b.setText(String.valueOf(unwatched));
+                        }
                     }
                 }
 
@@ -186,6 +189,16 @@ public class ShowsFragment extends Fragment implements  Taskable , GetShowsTask.
     }
 
 
+    private int getUnwatchedEpisodesCount(Integer showId) {
+        if (MyShows.newEpisodes == null) return 0;
+        Map<Integer, List<Episode>> episodesByShows = new HashMap<Integer, List<Episode>>();
+        int count = 0;
+        for (Episode e : MyShows.newEpisodes) {
+            if (e.getShowId().equals(showId))
+                count++;
+        }
+        return count;
+    }
 
     public SectionedAdapter populateAdapter(int action, List<IShow> shows) {
         SectionedAdapter adapter = new SectionedAdapter(inflater);
@@ -225,15 +238,12 @@ public class ShowsFragment extends Fragment implements  Taskable , GetShowsTask.
                 List<IShow> finishedShows = Utils.getByWatchStatus(shows, MyShowsApi.STATUS.finished);
                 if (finishedShows.size() > 0)
                     adapter.addSection(remove + " (" + finishedShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, finishedShows, remove + " (" + finishedShows.size() + ")"));
-                System.out.println("Populate shows adapter complete!");
                 break;
             default:
                 adapter.notifyDataSetChanged();
         }
         return adapter;
     }
-
-
 
 
     //    @Override
@@ -244,9 +254,6 @@ public class ShowsFragment extends Fragment implements  Taskable , GetShowsTask.
 ////            app.setUserShowsChanged(false);
 ////        }
 //    }
-
-
-
 
 
 }

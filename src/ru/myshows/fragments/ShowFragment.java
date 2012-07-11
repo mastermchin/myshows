@@ -1,6 +1,7 @@
 package ru.myshows.fragments;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -137,76 +138,49 @@ public class ShowFragment extends Fragment implements ChangeShowStatusTask.Chang
         }
 
         yoursRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            ProgressDialog dialog = null;
-
-            Handler handler = new Handler() {
-                @Override
-                public void handleMessage(Message msg) {
-                    super.handleMessage(msg);
-                    if (dialog != null && dialog.isShowing())
-                        dialog.dismiss();
-                    if (msg.what != 0) {
-                        // update show rating in cache
-                        UserShow us = MyShows.getUserShow(show.getShowId());
-                        if (us != null) {
-                            us.setRating((double) msg.what);
-                            //app.setUserShowsChanged(true);
-                        }
-                    }
-                }
-            };
-
 
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-
-                final int r = (int) rating;
-                Runnable changeShowRatioTask = new Runnable() {
-                    @Override
-                    public void run() {
-                        boolean result = MyShows.client.changeShowRatio(show.getShowId(), r);
-                        handler.sendEmptyMessage(result ? r : 0);
-                    }
-                };
-
-
-                dialog = ProgressDialog.show(getActivity(), "", getResources().getString(R.string.loading));
-                handler.postDelayed(changeShowRatioTask, 500);
-
-
+                new ChangeShowRatioTask(getActivity()).execute(rating);
             }
         });
 
 
         //status buttons show if client is logged in otherwise remove view
         if (MyShows.isLoggedIn) {
-
             statusButtonsLayoyt.setVisibility(View.VISIBLE);
             updateStatusButtons();
-//
-//            if (watchStatus.equals(MyShowsApi.STATUS.watching) || watchStatus.equals(MyShowsApi.STATUS.finished)) {
-//                changeButtonStyleToActive(watchingButton);
-//                activeWatchButton = watchingButton;
-//            }
-//
-//            if (watchStatus.equals(MyShowsApi.STATUS.later)) {
-//                changeButtonStyleToActive(willWatchButton);
-//                activeWatchButton = willWatchButton;
-//            }
-//            if (watchStatus.equals(MyShowsApi.STATUS.cancelled)) {
-//                changeButtonStyleToActive(cancelledButton);
-//                activeWatchButton = cancelledButton;
-//            }
-//
-//            if (watchStatus.equals(MyShowsApi.STATUS.remove)) {
-//                changeButtonStyleToActive(removeButton);
-//                activeWatchButton = removeButton;
-//            }
-
         }
 
     }
 
+
+    public class ChangeShowRatioTask extends BaseTask<Boolean>{
+
+        public ChangeShowRatioTask(Context context) {
+            super(context);
+        }
+
+        @Override
+        public Boolean doWork(Object... objects) throws Exception {
+            Float rating = (Float) objects[0];
+            boolean result = MyShows.client.changeShowRatio(show.getShowId(), (int)rating.floatValue());
+            return result;
+        }
+
+        @Override
+        public void onResult(Boolean result) {
+               if (result)
+                   Toast.makeText(getActivity(), "Rating changed", Toast.LENGTH_SHORT).show();
+                else
+                   Toast.makeText(getActivity(), "Rating not changed", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onError(Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private void updateStatusButtons() {
         boolean isWatching = watchStatus.equals(MyShowsApi.STATUS.watching) || watchStatus.equals(MyShowsApi.STATUS.finished);
@@ -248,13 +222,8 @@ public class ShowFragment extends Fragment implements ChangeShowStatusTask.Chang
 
     }
 
-    private void changeButtonStyleToActive(Button button) {
-        button.setBackgroundDrawable(getResources().getDrawable(R.drawable.red_label));
-    }
-
     @Override
     public boolean onShowStatusChanged(boolean result) {
-        Log.d("MyShows", "result = " + result);
         if (result)
             updateStatusButtons();
         return true;

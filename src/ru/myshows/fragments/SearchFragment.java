@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import ru.myshows.activity.R;
 import ru.myshows.activity.SearchActivity;
+import ru.myshows.tasks.Taskable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -17,7 +18,7 @@ import ru.myshows.activity.SearchActivity;
  * Time: 2:05:10
  * To change this template use File | Settings | File Templates.
  */
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements Taskable{
 
     private LinearLayout favouritesLayout;
     private LinearLayout catalog_layout;
@@ -104,4 +105,11 @@ public class SearchFragment extends Fragment {
         getActivity().startActivity(intent);
     }
 
+    @Override
+    public void executeTask() {
+    }
+
+    @Override
+    public void executeUpdateTask() {
+    }
 }

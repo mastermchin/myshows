@@ -41,10 +41,10 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_alignParentRight="true"
-            android:textColor="@color/light_blue"
+            android:layout_centerVertical="true"
+            android:textColor="@color/very_light_blue"
             android:visibility="invisible"
-            android:gravity="center_vertical"
-
+            android:paddingRight="10dp"
             />
 
 

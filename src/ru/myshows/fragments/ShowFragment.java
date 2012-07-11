@@ -155,7 +155,7 @@ public class ShowFragment extends Fragment implements ChangeShowStatusTask.Chang
     }
 
 
-    public class ChangeShowRatioTask extends BaseTask<Boolean>{
+    public class ChangeShowRatioTask extends BaseTask<Boolean> {
 
         public ChangeShowRatioTask(Context context) {
             super(context);
@@ -164,16 +164,13 @@ public class ShowFragment extends Fragment implements ChangeShowStatusTask.Chang
         @Override
         public Boolean doWork(Object... objects) throws Exception {
             Float rating = (Float) objects[0];
-            boolean result = MyShows.client.changeShowRatio(show.getShowId(), (int)rating.floatValue());
+            boolean result = MyShows.client.changeShowRatio(show.getShowId(), (int) rating.floatValue());
             return result;
         }
 
         @Override
         public void onResult(Boolean result) {
-               if (result)
-                   Toast.makeText(getActivity(), "Rating changed", Toast.LENGTH_SHORT).show();
-                else
-                   Toast.makeText(getActivity(), "Rating not changed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -214,10 +211,10 @@ public class ShowFragment extends Fragment implements ChangeShowStatusTask.Chang
                 break;
         }
 
-          //  activeWatchButton = (Button) v;
-            ChangeShowStatusTask task = new ChangeShowStatusTask(getActivity());
-            task.setChangeShowStatusListener(this);
-            task.execute(show.getShowId(), watchStatus);
+        //  activeWatchButton = (Button) v;
+        ChangeShowStatusTask task = new ChangeShowStatusTask(getActivity());
+        task.setChangeShowStatusListener(this);
+        task.execute(show.getShowId(), watchStatus);
 
 
     }

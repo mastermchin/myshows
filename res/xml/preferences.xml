@@ -1,0 +1,16 @@
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.preference.PreferenceCategory android:title="@string/pref_title">
+
+        <CheckBoxPreference
+                android:key="show_news_key"
+                android:defaultValue="true"
+                android:title="@string/pref_show_news"
+                />
+
+
+
+    </android.preference.PreferenceCategory>
+
+</PreferenceScreen>

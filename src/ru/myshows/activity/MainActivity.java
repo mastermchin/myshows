@@ -64,7 +64,7 @@ public class MainActivity extends SherlockFragmentActivity {
         indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                if (!MyShows.isLoggedIn || position > TAB_PROFILE)
+                if (!MyShows.isLoggedIn)
                     return;
                 Fragment currentFragment = adapter.getItem(position);
                 ((Taskable) currentFragment).executeTask();
@@ -108,7 +108,7 @@ public class MainActivity extends SherlockFragmentActivity {
         switch (item.getItemId()) {
             case 1:
                 int position = pager.getCurrentItem();
-                if (!MyShows.isLoggedIn || position > TAB_PROFILE)
+                if (!MyShows.isLoggedIn )
                     break;
 
                 Fragment currentFragment = adapter.getItem(position);
@@ -130,7 +130,8 @@ public class MainActivity extends SherlockFragmentActivity {
 
         adapter.addFragment(new ShowsFragment(ShowsFragment.SHOWS_USER), getResources().getString(R.string.tab_shows_title));
         adapter.addFragment(new NewEpisodesFragment(), getResources().getString(R.string.tab_new));
-        adapter.addFragment(new NewsFragment(), getResources().getString(R.string.tab_news_title));
+        if (Settings.getBoolean(Settings.PREF_SHOW_NEWS))
+            adapter.addFragment(new NewsFragment(), getResources().getString(R.string.tab_news_title));
         adapter.addFragment(new ProfileFragment(), getResources().getString(R.string.tab_profile_title));
         adapter.addFragment(new SearchFragment(), getResources().getString(R.string.tab_search_title));
 

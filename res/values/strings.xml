@@ -51,7 +51,7 @@
 
 
 
-    <string name="changes_saved">Changes have been saved</string>
+    <string name="changes_saved">Changes has been saved</string>
     <string name="changes_not_saved">Changes not saved</string>
 
 
@@ -86,6 +86,11 @@
     <string name="episodes">episodes</string>
 
 
+    <string name="on">On</string>
+    <string name="off">Off</string>
+
+     <string name="pref_title">Settings</string>
+     <string name="pref_show_news">Show friends news</string>
 
 
 

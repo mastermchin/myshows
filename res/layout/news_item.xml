@@ -34,7 +34,7 @@
                 android:ellipsize="marquee"
                 android:scrollHorizontally="true"
                 android:layout_weight="4.5"
-                android:textSize="15sp"
+                android:textSize="12sp"
 
                 />
 

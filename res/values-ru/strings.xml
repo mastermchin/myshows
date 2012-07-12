@@ -62,6 +62,7 @@
     <string name="menu_settings">Настройки</string>
     <string name="menu_save">Сохранить</string>
     <string name="menu_search">Поиск</string>
+    <string name="menu_exit">Выход</string>
 
     <string name="episode_rating">Рейтинг эпизода</string>
     <string name="season">Сезон</string>

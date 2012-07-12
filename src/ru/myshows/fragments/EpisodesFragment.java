@@ -10,6 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.view.Menu;
 import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
 import ru.myshows.api.MyShowsApi;
@@ -17,6 +22,7 @@ import ru.myshows.domain.Episode;
 import ru.myshows.domain.Season;
 import ru.myshows.domain.Show;
 import ru.myshows.domain.UserShow;
+import ru.myshows.tasks.BaseTask;
 import ru.myshows.util.EpisodeComparator;
 
 import java.text.DateFormat;
@@ -30,13 +36,14 @@ import java.util.*;
  * Time: 1:44
  * To change this template use File | Settings | File Templates.
  */
-public class EpisodesFragment extends Fragment {
+public class EpisodesFragment extends SherlockFragment {
 
     private Show show;
     private LayoutInflater inflater;
     private ExpandableListView episodesList;
     private MyExpandableListAdapter adapter;
     private DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+    private ActionMode mMode;
 
     public EpisodesFragment(Show show) {
         this.show = show;
@@ -45,7 +52,7 @@ public class EpisodesFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-       this.inflater = inflater;
+        this.inflater = inflater;
         View view = inflater.inflate(R.layout.episodes, container, false);
         episodesList = (ExpandableListView) view.findViewById(R.id.episodes_list);
 
@@ -68,7 +75,7 @@ public class EpisodesFragment extends Fragment {
                 if (dialog != null && dialog.isShowing())
                     dialog.dismiss();
                 Toast.makeText(getActivity(), msg.what, Toast.LENGTH_SHORT).show();
-              //  removeSaveButton();
+                //  removeSaveButton();
             }
         };
 
@@ -113,6 +120,47 @@ public class EpisodesFragment extends Fragment {
         }
 
     };
+
+
+    public class CheckEpisodesTask extends BaseTask<Boolean> {
+
+
+        @Override
+        public Boolean doWork(Object... objects) throws Exception {
+            ArrayList<Episode> episodes = (ArrayList<Episode>) adapter.getAllChildrenAsList();
+            StringBuilder checkedIds = new StringBuilder();
+            StringBuilder uncheckedIds = new StringBuilder();
+            for (Episode e : episodes) {
+                if (e.isChecked()) checkedIds.append(e.getEpisodeId() + ",");
+                if (!e.isChecked()) uncheckedIds.append(e.getEpisodeId() + ",");
+            }
+
+            String checked = checkedIds.toString();
+            if (checked.endsWith(",")) checked = checked.substring(0, checked.length() - 1);
+            String unchecked = uncheckedIds.toString();
+            if (unchecked.endsWith(",")) unchecked = unchecked.substring(0, unchecked.length() - 1);
+            boolean result = MyShows.client.syncAllShowEpisodes(show.getShowId(), checked, unchecked);
+            if (result) {
+                // update watched episodes in cache
+                UserShow us = MyShows.getUserShow(show.getShowId());
+                if (us != null) {
+                    us.setWatchedEpisodes(checked.split(",").length);
+                    // app.setUserShowsChanged(true);
+                }
+            }
+            return result;
+        }
+
+        @Override
+        public void onResult(Boolean result) {
+            Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onError(Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
     public class MyExpandableListAdapter extends BaseExpandableListAdapter {
@@ -177,10 +225,6 @@ public class EpisodesFragment extends Fragment {
                 e.setChecked(true);
             }
             adapter.notifyDataSetChanged();
-//            if (!watchStatus.equals(MyShowsApi.STATUS.remove) && saveButton == null) {
-//                isSaveButtonShowing = true;
-//                addSaveButton();
-//            }
         }
 
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
@@ -212,11 +256,10 @@ public class EpisodesFragment extends Fragment {
                     for (Episode e : (List<Episode>) getGroupChildren(gp)) {
                         e.setChecked(isChecked);
                     }
+                    SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
+                    if (mMode == null)
+                        mMode = activity.startActionMode(new SaveEpisodesActionMode());
                     adapter.notifyDataSetChanged();
-//                    if (!watchStatus.equals(MyShowsApi.STATUS.remove) && saveButton == null) {
-//                        isSaveButtonShowing = true;
-//                        addSaveButton();
-//                    }
                 }
             });
             holder.checkBox.setChecked(season.isChecked());
@@ -278,10 +321,9 @@ public class EpisodesFragment extends Fragment {
             holder.checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    if (!watchStatus.equals(MyShowsApi.STATUS.remove) && saveButton == null) {
-//                        isSaveButtonShowing = true;
-//                        addSaveButton();
-//                    }
+                    SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
+                    if (mMode == null)
+                        mMode = activity.startActionMode(new SaveEpisodesActionMode());
                 }
             });
 
@@ -292,10 +334,6 @@ public class EpisodesFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     holder.checkBox.setChecked(!holder.checkBox.isChecked());
-//                    if (!watchStatus.equals(MyShowsApi.STATUS.remove) && saveButton == null) {
-//                        isSaveButtonShowing = true;
-//                        addSaveButton();
-//                    }
                 }
             });
 
@@ -326,4 +364,40 @@ public class EpisodesFragment extends Fragment {
 
 
     }
+
+
+    private final class SaveEpisodesActionMode implements ActionMode.Callback {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            //Used to put dark icons on light action bar
+            menu.add(0, 1, 1, "Save").setIcon(R.drawable.ic_save).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            menu.add(0, 2, 2, "Check All").setIcon(R.drawable.ic_check_all).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, com.actionbarsherlock.view.MenuItem item) {
+            switch (item.getItemId()) {
+                case 1:
+                    new CheckEpisodesTask().execute();
+                    mode.finish();
+                    break;
+                case 2:
+                    adapter.checkAll();
+                    break;
+            }
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            mMode = null;
+        }
+    }
+
 }

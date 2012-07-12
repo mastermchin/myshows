@@ -12,6 +12,7 @@ import android.view.*;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.widget.*;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.*;
 import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
@@ -38,23 +39,16 @@ public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.
 
     private SectionedAdapter adapter;
     private RelativeLayout rootView;
-    private Button saveButton;
     private List<Episode> localEpisodes = null;
     private ListView list;
     private ProgressBar progress;
     DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
-    MyShows app;
     private LayoutInflater inflater;
     private boolean isTaskExecuted = false;
+    private com.actionbarsherlock.view.ActionMode mMode;
+
 
     public NewEpisodesFragment() {
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        app = (MyShows) getActivity().getApplication();
-
     }
 
 
@@ -106,7 +100,6 @@ public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.
                 super.handleMessage(msg);
                 if (dialog != null && dialog.isShowing()) dialog.dismiss();
                 Toast.makeText(getActivity(), msg.what, Toast.LENGTH_SHORT).show();
-                removeSaveButton();
                 setUpdatedAdapter();
                 //new GetNewEpisodesTask(NewEpisodesFragment.this).execute();
 
@@ -136,7 +129,7 @@ public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.
                     final String episodesIds = entry.getValue();
                     new Thread() {
                         public void run() {
-                            UserShow userShow = app.getUserShow(showId);
+                            UserShow userShow = MyShows.getUserShow(showId);
                             userShow.setWatchedEpisodes(userShow.getWatchedEpisodes() + episodesIds.split(",").length);
                             //app.setUserShowsChanged(true);
                             MyShows.client.syncAllShowEpisodes(showId, episodesIds, null);
@@ -152,7 +145,6 @@ public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.
 
         @Override
         public void onClick(View v) {
-            saveButton.setEnabled(false);
             dialog = ProgressDialog.show(getActivity(), "", getResources().getString(R.string.loading));
             handler.postDelayed(checkEpisodesTask, 1000);
         }
@@ -166,39 +158,7 @@ public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.
         list.setAdapter(adapter);
     }
 
-    private Button getSaveButton() {
-        if (saveButton == null) {
-            saveButton = new Button(getActivity());
-            saveButton.setText(R.string.save);
-            saveButton.setId(1);
-            saveButton.setTextColor(Color.WHITE);
-            saveButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.red_button));
-            saveButton.setOnClickListener(saveButtonListener);
-
-        }
-        return saveButton;
-    }
-
-    private void addSaveButton() {
-
-        RelativeLayout.LayoutParams buttonParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        buttonParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        buttonParams.setMargins(5, 5, 5, 5);
-        rootView.addView(getSaveButton(), buttonParams);
-        // change list layout parameters
-        RelativeLayout.LayoutParams listParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        listParams.addRule(RelativeLayout.ABOVE, getSaveButton().getId());
-        listParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-        list.setLayoutParams(listParams);
-
-    }
-
-    private void removeSaveButton() {
-        rootView.removeView(saveButton);
-        saveButton = null;
-    }
-
-    private class EpisodesAdapter extends ArrayAdapter<Episode> {
+       private class EpisodesAdapter extends ArrayAdapter<Episode> {
 
         private List<Episode> episodes;
         private String showTitle;
@@ -245,9 +205,10 @@ public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.
                 holder.checkBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (saveButton == null)
-                            addSaveButton();
                         episode.setChecked(!episode.isChecked());
+                        SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
+                        if (mMode == null)
+                            mMode = activity.startActionMode(new CheckNewEpisodesActionMode());
                         notifyDataSetChanged();
                     }
                 });
@@ -300,8 +261,10 @@ public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.
                 e.setChecked(isCheked);
             }
             isCheked = !isCheked;
+            SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
+            if (mMode == null)
+                mMode = activity.startActionMode(new CheckNewEpisodesActionMode());
             adapter.notifyDataSetChanged();
-            if (saveButton == null) addSaveButton();
         }
     };
 
@@ -321,7 +284,7 @@ public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.
 
         for (Map.Entry<Integer, List<Episode>> entry : episodesByShows.entrySet()) {
             Integer showId = entry.getKey();
-            String title = app.getUserShow(showId) != null ? app.getUserShow(showId).getTitle() : "test";
+            String title = MyShows.getUserShow(showId) != null ? MyShows.getUserShow(showId).getTitle() : "";
             List<Episode> episodes = entry.getValue();
             Collections.sort(episodes, new EpisodeComparator("shortName"));
             adapter.addSection(title + "*", new EpisodesAdapter(getActivity(), R.layout.episode, episodes, title));
@@ -331,16 +294,58 @@ public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.
     }
 
 
+    private class CheckNewEpisodesTask extends BaseTask<Boolean>{
+
+        @Override
+        public Boolean doWork(Object... objects) throws Exception {
+            Map<Integer, String> paramsMap = new HashMap<Integer, String>();
+            for (SectionedAdapter.Section s : adapter.getSections()) {
+                List<Episode> episodes = ((EpisodesAdapter) s.adapter).episodes;
+                for (Episode e : episodes) {
+                    if (e.isChecked()) {
+                        String value = paramsMap.get(e.getShowId());
+                        if (value == null)
+                            paramsMap.put(e.getShowId(), e.getEpisodeId().toString());
+                        else
+                            paramsMap.put(e.getShowId(), value += "," + e.getEpisodeId().toString());
+                        MyShows.newEpisodes.remove(e);
+
+                    }
+                }
+            }
+
+            for (Map.Entry<Integer, String> entry : paramsMap.entrySet()) {
+                final Integer showId = entry.getKey();
+                final String episodesIds = entry.getValue();
+                new Thread() {
+                    public void run() {
+                        UserShow userShow = MyShows.getUserShow(showId);
+                        userShow.setWatchedEpisodes(userShow.getWatchedEpisodes() + episodesIds.split(",").length);
+                        //app.setUserShowsChanged(true);
+                        MyShows.client.syncAllShowEpisodes(showId, episodesIds, null);
+                    }
+                }.start();
+            }
+            return true;
+        }
+
+        @Override
+        public void onResult(Boolean result) {
+             Toast.makeText(getActivity(), exception == null ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onError(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     private final class CheckNewEpisodesActionMode implements com.actionbarsherlock.view.ActionMode.Callback {
         @Override
         public boolean onCreateActionMode(com.actionbarsherlock.view.ActionMode mode, com.actionbarsherlock.view.Menu menu) {
             //Used to put dark icons on light action bar
-
-
-            menu.add("Save")
-                    .setIcon(R.drawable.ic_save)
-                    .setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
+            menu.add(0, 1, 1, "Save").setIcon(R.drawable.ic_save).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
             return true;
         }
 
@@ -351,14 +356,20 @@ public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.
 
         @Override
         public boolean onActionItemClicked(com.actionbarsherlock.view.ActionMode mode, com.actionbarsherlock.view.MenuItem item) {
-            //Toast.makeText(ShowActivity.this, "Got click: " + item, Toast.LENGTH_SHORT).show();
+            switch (item.getItemId()) {
+                case 1:
+                    new CheckNewEpisodesTask().execute();
+                    break;
+            }
             mode.finish();
             return true;
         }
 
         @Override
         public void onDestroyActionMode(com.actionbarsherlock.view.ActionMode mode) {
+            mMode = null;
         }
     }
+
 
 }

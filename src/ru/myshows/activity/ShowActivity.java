@@ -58,9 +58,6 @@ public class ShowActivity extends SherlockFragmentActivity implements GetShowTas
     private Double yoursRating;
     private String title;
 
-    ActionMode mMode;
-
-
     private ViewPager pager;
     private TitlePageIndicator indicator;
     private MainActivity.TabsAdapter tabsAdapter;
@@ -72,7 +69,6 @@ public class ShowActivity extends SherlockFragmentActivity implements GetShowTas
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_info);
-
 
         tabsAdapter = new MainActivity.TabsAdapter(getSupportFragmentManager());
         pager = (ViewPager) findViewById(R.id.pager);
@@ -107,13 +103,6 @@ public class ShowActivity extends SherlockFragmentActivity implements GetShowTas
         getShowTask.execute(showId);
 
 
-//        UserShow u = app.getUserShow(showId);
-//        if (u != null) {
-//            watchStatus = u.getWatchStatus();
-//            yoursRating = u.getRating();
-//        }
-        //new GetShowInfoTask(this).execute(showId);
-
     }
 
     @Override
@@ -130,46 +119,11 @@ public class ShowActivity extends SherlockFragmentActivity implements GetShowTas
     }
 
 
-    // status buttons handler, defined in show.xml
-
-
-//    private Button getSaveButton() {
-//        if (saveButton == null) {
-//            saveButton = new Button(ShowActivity.this);
-//            saveButton.setText(R.string.save);
-//            saveButton.setId(1);
-//            saveButton.setTextColor(Color.WHITE);
-//            saveButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.red_button));
-//            saveButton.setOnClickListener(saveButtonListener);
-//
-//        }
-//        return saveButton;
-//    }
-
-//    private void addSaveButton() {
-//        rootView = (RelativeLayout) findViewById(R.id.show_root_view);
-//        RelativeLayout.LayoutParams buttonParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-//        buttonParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-//        rootView.addView(getSaveButton(), buttonParams);
-//        // change list layout parameters
-//        RelativeLayout.LayoutParams listParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-//        listParams.addRule(RelativeLayout.ABOVE, getSaveButton().getId());
-//        listParams.addRule(RelativeLayout.BELOW, R.id.show_status_buttons_layout);
-//        episodesList.setLayoutParams(listParams);
-//
-//    }
-
-//    private void removeSaveButton() {
-//        rootView.removeView(saveButton);
-//        saveButton = null;
-//        isSaveButtonShowing = false;
-//    }
-//
 
     public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
-
-        menu.add(0, 1, 1, "Refresh").setIcon(R.drawable.ic_navigation_refresh).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        menu.add(0, 2, 2, "Settings").setIcon(R.drawable.ic_action_settings).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        menu.add(0, 1, 1, R.string.menu_update).setIcon(R.drawable.ic_navigation_refresh).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        menu.add(0, 2, 2, R.string.menu_view_on_site).setIcon(R.drawable.ic_web_site).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        menu.add(0, 3, 3, R.string.menu_settings).setIcon(R.drawable.ic_action_settings).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -179,36 +133,26 @@ public class ShowActivity extends SherlockFragmentActivity implements GetShowTas
             case android.R.id.home:
                 finish();
                 break;
+            case 1:
+                GetShowTask getShowTask = new GetShowTask(this, true);
+                getShowTask.setShowLoadingListener(this);
+                progress.setVisibility(View.VISIBLE);
+                indicatorLayout.setVisibility(View.GONE);
+                tabsAdapter = new MainActivity.TabsAdapter(getSupportFragmentManager());
+                getShowTask.execute(showId);
+                break;
+            case 2:
+                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://myshows.ru/view/" + showId + "/"));
+                startActivity(i);
+                break;
+            case 3:
+                startActivity(new Intent(this, SettingsAcrivity.class));
+                break;
         }
         return true;
     }
 
-//
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.check_all:
-//                adapter.checkAll();
-//                return true;
-//            case R.id.view_on_site:
-//                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://myshows.ru/view/" + showId + "/"));
-//                startActivity(i);
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//    }
 
-
-    //
-//    private void changeButtonStyleToActive(Button button) {
-//        button.setBackgroundDrawable(getResources().getDrawable(R.drawable.red_label));
-//    }
-//
-//    private void changeButtonStyleToInactive(Button button) {
-//        button.setBackgroundDrawable(null);
-//
-//    }
-//
     private Object getBundleValue(Intent intent, String key, Object defaultValue) {
         if (intent == null) return defaultValue;
         if (intent.getExtras() == null) return defaultValue;
@@ -250,37 +194,5 @@ public class ShowActivity extends SherlockFragmentActivity implements GetShowTas
         showFragment.changeShowStatus(v);
     }
 
-    private final class AnActionModeOfEpicProportions implements ActionMode.Callback {
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            //Used to put dark icons on light action bar
 
-
-            menu.add("Search")
-                    .setIcon(R.drawable.ic_action_search)
-                    .setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
-            menu.add("Settings")
-                    .setIcon(R.drawable.ic_action_settings)
-                    .setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
-            return true;
-        }
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            return false;
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, com.actionbarsherlock.view.MenuItem item) {
-            Toast.makeText(ShowActivity.this, "Got click: " + item, Toast.LENGTH_SHORT).show();
-            mode.finish();
-            return true;
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {
-        }
-    }
 }

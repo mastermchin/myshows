@@ -58,9 +58,10 @@
 
     <string name="menu_check_all">Отметить все</string>
     <string name="menu_view_on_site">Просмотреть на сайте</string>
-    <string name="menu_about">О программе</string>
-    <string name="menu_switch_theme">Сменить тему</string>
     <string name="menu_update">Обновить</string>
+    <string name="menu_settings">Настройки</string>
+    <string name="menu_save">Сохранить</string>
+    <string name="menu_search">Поиск</string>
 
     <string name="episode_rating">Рейтинг эпизода</string>
     <string name="season">Сезон</string>

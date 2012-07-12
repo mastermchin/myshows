@@ -20,6 +20,7 @@
             android:layout_toRightOf="@id/show_logo"
             android:textColor="@color/white"
             android:paddingLeft="10dp"
+            android:textSize="15sp"
             />
 
     <RatingBar

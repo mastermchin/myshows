@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
+import ru.myshows.activity.MyShows;
 import ru.myshows.api.MyShowsApi;
 import ru.myshows.api.MyShowsClient;
 import ru.myshows.domain.IShow;
@@ -138,7 +139,7 @@ public class Utils {
 
 
     public static boolean isInternetAvailable(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) MyShows.context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         if (netInfo != null && netInfo.isConnectedOrConnecting()) {
             return true;

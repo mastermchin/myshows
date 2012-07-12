@@ -2,7 +2,7 @@
 <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:padding="15dp"
+        android:padding="10dp"
         xmlns:android="http://schemas.android.com/apk/res/android">
 
 
@@ -20,6 +20,7 @@
                 android:scrollHorizontally="true"
                 android:layout_weight="2.5"
                 android:textColor="@color/pink"
+                android:textSize="15sp"
 
                 />
 
@@ -33,7 +34,8 @@
                 android:ellipsize="marquee"
                 android:scrollHorizontally="true"
                 android:layout_weight="4.5"
-                android:textSize="12sp"
+                android:textSize="15sp"
+
                 />
 
         <ru.myshows.components.RobotoTextView
@@ -45,6 +47,7 @@
                 android:scrollHorizontally="true"
                 android:layout_weight="4"
                 android:textColor="@color/very_light_blue"
+                android:textSize="15sp"
 
                 />
 

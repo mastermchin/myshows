@@ -221,26 +221,6 @@ public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.
         }
     }
 
-//
-//    @Override
-//    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-//        super.onCreateContextMenu(menu, v, menuInfo);
-//        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-//        final Episode episode = (Episode) adapter.getItem(info.position);
-//
-//        if (episode != null) {
-//            Handler handler = new Handler() {
-//                @Override
-//                public void handleMessage(Message msg) {
-//                    MyShows.getClient().changeEpisodeRatio(msg.arg1, episode.getEpisodeId());
-//                }
-//            };
-//            RatingDialog rate = new RatingDialog(getActivity(), handler);
-//            rate.setTitle(R.string.episode_rating);
-//            rate.show();
-//
-//        }
-//    }
 
 
     private String composeShortTitle(Episode e) {
@@ -273,6 +253,10 @@ public class NewEpisodesFragment extends Fragment implements GetNewEpisodesTask.
         Map<Integer, List<Episode>> episodesByShows = new HashMap<Integer, List<Episode>>();
 
         for (Episode e : result) {
+            // exclude specials episodes
+            if (e.getEpisodeNumber() == 0)
+                continue;
+
             List<Episode> temp = episodesByShows.get(e.getShowId());
             if (temp == null) {
                 temp = new ArrayList<Episode>();

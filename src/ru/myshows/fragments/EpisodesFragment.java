@@ -57,6 +57,12 @@ public class EpisodesFragment extends SherlockFragment {
         episodesList = (ExpandableListView) view.findViewById(R.id.episodes_list);
 
         Collection<Episode> episodes = show.getEpisodes();
+        //exclude specials
+        Iterator<Episode> iterator = episodes.iterator();
+        while (iterator.hasNext()){
+            if (iterator.next().getEpisodeNumber() == 0)
+                iterator.remove();
+        }
         Episode o = (Episode) Collections.max(episodes, new EpisodeComparator());
         adapter = new MyExpandableListAdapter(episodes, o.getSeasonNumber());
         episodesList.setAdapter(adapter);

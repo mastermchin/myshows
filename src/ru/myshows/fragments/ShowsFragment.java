@@ -194,6 +194,9 @@ public class ShowsFragment extends Fragment implements Taskable, GetShowsTask.Sh
         Map<Integer, List<Episode>> episodesByShows = new HashMap<Integer, List<Episode>>();
         int count = 0;
         for (Episode e : MyShows.newEpisodes) {
+            // exclude special episodes
+            if (e.getEpisodeNumber() == 0)
+                continue;
             if (e.getShowId().equals(showId))
                 count++;
         }

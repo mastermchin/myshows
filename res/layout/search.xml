@@ -78,6 +78,7 @@
                     android:layout_height="wrap_content"
                     android:drawableTop="@drawable/ic_rating"
                     android:text="@string/favourites_text"
+                    android:textColor="@color/white"
                     android:background="@null"
                     android:padding="10dp"
                     />
@@ -90,6 +91,7 @@
                     android:layout_height="wrap_content"
                     android:drawableTop="@drawable/ic_catalog"
                     android:text="@string/catalog_text"
+                    android:textColor="@color/white"
                     android:padding="10dp"
                     android:background="@null"
                     />

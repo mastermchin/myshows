@@ -26,6 +26,7 @@ public class UserShow extends JsonEvaluator implements IShow, JsonSerializable {
     private Integer totalEpisodes;
     private Double rating;
     private String imageUrl;
+    private boolean isChecked;
 
     public UserShow() {
     }
@@ -58,6 +59,14 @@ public class UserShow extends JsonEvaluator implements IShow, JsonSerializable {
         }
     }
 
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
 
     public String getImageUrl() {
         return imageUrl;

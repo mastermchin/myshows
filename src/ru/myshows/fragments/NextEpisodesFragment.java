@@ -51,9 +51,9 @@ public class NextEpisodesFragment extends Fragment implements GetNextEpisodesTas
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.inflater = inflater;
-        rootView = (RelativeLayout) inflater.inflate(R.layout.new_episodes, container, false);
-        progress = (ProgressBar) rootView.findViewById(R.id.progress_new_episodes);
-        list = (ListView) rootView.findViewById(R.id.new_episodes_list);
+        rootView = (RelativeLayout) inflater.inflate(R.layout.next_episodes, container, false);
+        progress = (ProgressBar) rootView.findViewById(R.id.progress_next_episodes);
+        list = (ListView) rootView.findViewById(R.id.next_episodes_list);
         return rootView;
     }
 

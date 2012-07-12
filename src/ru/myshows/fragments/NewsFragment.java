@@ -10,11 +10,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.view.*;
 import android.widget.*;
-import ru.myshows.activity.MainActivity;
-import ru.myshows.activity.R;
+import ru.myshows.activity.*;
 import ru.myshows.adapters.SectionedAdapter;
 import ru.myshows.api.MyShowsClient;
 import ru.myshows.domain.UserNews;
+import ru.myshows.domain.UserShow;
 import ru.myshows.tasks.BaseTask;
 import ru.myshows.tasks.GetNewsTask;
 import ru.myshows.tasks.Taskable;
@@ -124,7 +124,7 @@ public class NewsFragment extends Fragment implements GetNewsTask.NewsLoadingLis
                     if (login != null && login.trim().length() > 0) {
                         Intent intent = new Intent();
                         intent.putExtra("login", login);
-                        intent.setClass(getActivity(), MainActivity.class);
+                        intent.setClass(getActivity(), ProfileActivity.class);
                         startActivity(intent);
                     }
                 }
@@ -138,7 +138,13 @@ public class NewsFragment extends Fragment implements GetNewsTask.NewsLoadingLis
                     if (showId != null) {
                         Intent intent = new Intent();
                         intent.putExtra("showId", showId);
-                        intent.setClass(getActivity(), MainActivity.class);
+                        intent.putExtra("title", n.getShow());
+                        UserShow userShow = MyShows.getUserShow(showId);
+                        if (userShow != null){
+                            intent.putExtra("watchStatus", userShow.getWatchStatus());
+                            intent.putExtra("yoursRating", userShow.getYoursRating());
+                        }
+                        intent.setClass(getActivity(), ShowActivity.class);
                         startActivity(intent);
                     }
 

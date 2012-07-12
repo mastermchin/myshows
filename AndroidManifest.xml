@@ -23,5 +23,6 @@
         <activity android:name=".ShowActivity" android:configChanges="keyboardHidden|orientation"/>
         <activity android:name=".SettingsAcrivity"/>
         <activity android:name=".SearchActivity"/>
+        <activity android:name=".ProfileActivity"/>
     </application>
 </manifest>

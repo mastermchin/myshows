@@ -125,16 +125,16 @@ public class ShowFragment extends Fragment implements ChangeShowStatusTask.Chang
         }
 
         // yours rating
+
+        yoursRatingLayoyt.setVisibility(View.VISIBLE);
+        yoursRatingBar = ((RatingBar) yoursRatingLayoyt.findViewById(R.id.show_rating_yours_value));
+
+        // disable rating changing if remove status
+        if (watchStatus.equals(MyShowsApi.STATUS.remove))
+            yoursRatingBar.setIsIndicator(true);
+
         if (yoursRating != null) {
-            yoursRatingLayoyt.setVisibility(View.VISIBLE);
-
-            yoursRatingBar = ((RatingBar) yoursRatingLayoyt.findViewById(R.id.show_rating_yours_value));
             yoursRatingBar.setRating((float) yoursRating.doubleValue());
-
-            // disable rating changing if remove status
-            if (watchStatus.equals(MyShowsApi.STATUS.remove))
-                yoursRatingBar.setIsIndicator(true);
-
         }
 
         yoursRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
@@ -221,8 +221,14 @@ public class ShowFragment extends Fragment implements ChangeShowStatusTask.Chang
 
     @Override
     public boolean onShowStatusChanged(boolean result) {
-        if (result)
+        Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
+        if (result) {
+            UserShow us = MyShows.getUserShow(show.getShowId());
+            if (us != null)
+                us.setWatchStatus(watchStatus);
             updateStatusButtons();
+            yoursRatingBar.setIsIndicator(watchStatus.equals(MyShowsApi.STATUS.remove));
+        }
         return true;
     }
 

@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import ru.myshows.fragments.ShowsFragment;
@@ -25,14 +26,17 @@ public class SearchActivity extends SherlockFragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_result);
 
+        String search = (String ) getBundleValue(getIntent(), "search", null);
+
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        getSupportActionBar().setTitle(search);
 
         BitmapDrawable bg = (BitmapDrawable) getResources().getDrawable(R.drawable.stripe_red);
         bg.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
         getSupportActionBar().setBackgroundDrawable(bg);
 
-        String search = (String ) getBundleValue(getIntent(), "search", null);
         ShowsFragment showsFragment = (ShowsFragment) getSupportFragmentManager().findFragmentById(R.id.shows_fragment);
         GetShowsTask task = null;
 

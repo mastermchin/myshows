@@ -85,7 +85,8 @@ public class ShowActivity extends SherlockFragmentActivity implements GetShowTas
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        getSupportActionBar().setTitle(title);
+        if (title != null)
+            getSupportActionBar().setTitle(title);
 
         BitmapDrawable bg = (BitmapDrawable) getResources().getDrawable(R.drawable.stripe_red);
         bg.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
@@ -93,7 +94,7 @@ public class ShowActivity extends SherlockFragmentActivity implements GetShowTas
 
 
         showId = (Integer) getBundleValue(getIntent(), "showId", null);
-        watchStatus = (MyShowsApi.STATUS) getBundleValue(getIntent(), "watchStatus", null);
+        watchStatus = (MyShowsApi.STATUS) getBundleValue(getIntent(), "watchStatus",  MyShowsApi.STATUS.remove);
         yoursRating = (Double) getBundleValue(getIntent(), "yoursRating", null);
 
 

@@ -140,6 +140,7 @@ public class MainActivity extends SherlockFragmentActivity {
                                 Settings.setString(Settings.KEY_PASSWORD, null);
                                 Settings.setBoolean(Settings.KEY_LOGGED_IN, false);
                                 MyShows.isLoggedIn = false;
+                                MyShows.invalidateUserData();
                                 finish();
                                 startActivity(new Intent(MainActivity.this, MainActivity.class));
                             }

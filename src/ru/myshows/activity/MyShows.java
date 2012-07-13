@@ -100,7 +100,6 @@ public class MyShows extends Application {
 
     }
 
-   
 
     public static  void removeUserShow(Integer showId) {
         if (userShows != null) {
@@ -113,7 +112,12 @@ public class MyShows extends Application {
         }
     }
 
-
+     public static void invalidateUserData(){
+         userShows = null;
+         newEpisodes = null;
+         nextEpisodes = null;
+         news = null;
+     }
 
 
 }

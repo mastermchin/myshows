@@ -11,7 +11,8 @@
     <string name="tab_new">Новые</string>
     <string name="tab_next">Скоро</string>
     <string name="tab_news_title">Новости</string>
-
+    <string name="tab_show">Сериал</string>
+    <string name="tab_episodes">Эпизоды</string>
 
     <string name="search">Искать сериал</string>
     <string name="search_button">Поиск</string>
@@ -88,4 +89,9 @@
 
     <string name="pref_title">Настройки</string>
     <string name="pref_show_news">Показывать новости</string>
+
+    <string name="request_exit">Хотите выйти?</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+
 </resources>

@@ -11,6 +11,8 @@
     <string name="tab_new">New Episodes</string>
     <string name="tab_next">Next Episodes</string>
     <string name="tab_news_title">News</string>
+    <string name="tab_show">Show</string>
+    <string name="tab_episodes">Episodes</string>
 
 
     <string name="search">Search</string>
@@ -95,6 +97,13 @@
 
      <string name="pref_title">Settings</string>
      <string name="pref_show_news">Show friends news</string>
+
+
+
+     <string name="request_exit">Are you want to exit?</string>
+     <string name="yes">Yes</string>
+     <string name="no">No</string>
+
 
 
 

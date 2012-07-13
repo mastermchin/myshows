@@ -111,8 +111,8 @@ public class ShowActivity extends SherlockFragmentActivity implements GetShowTas
         progress.setVisibility(View.GONE);
         indicatorLayout.setVisibility(View.VISIBLE);
 
-        tabsAdapter.addFragment(new ShowFragment(show, watchStatus, yoursRating), "Show");
-        tabsAdapter.addFragment(new EpisodesFragment(show), "Episodes");
+        tabsAdapter.addFragment(new ShowFragment(show, watchStatus, yoursRating), getResources().getString(R.string.tab_show));
+        tabsAdapter.addFragment(new EpisodesFragment(show), getResources().getString(R.string.tab_episodes));
         indicator.notifyDataSetChanged();
         tabsAdapter.notifyDataSetChanged();
 

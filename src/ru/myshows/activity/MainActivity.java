@@ -1,5 +1,7 @@
 package ru.myshows.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Shader;
@@ -13,6 +15,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.viewpagerindicator.TitlePageIndicator;
@@ -82,6 +85,8 @@ public class MainActivity extends SherlockFragmentActivity {
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+
 
         BitmapDrawable bg = (BitmapDrawable) getResources().getDrawable(R.drawable.stripe_red);
         bg.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
@@ -97,8 +102,9 @@ public class MainActivity extends SherlockFragmentActivity {
 
         menu.add(0, 1, 1, R.string.menu_update).setIcon(R.drawable.ic_navigation_refresh).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         menu.add(0, 2, 2, R.string.menu_settings).setIcon(R.drawable.ic_action_settings).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        menu.add(0, 3, 3, R.string.menu_search).setIcon(R.drawable.ic_action_search).setActionView(R.layout.action_search).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-        menu.add(0, 4, 4, R.string.menu_exit).setIcon(R.drawable.ic_exit).setActionView(R.layout.action_search).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+        menu.add(0, 3, 3, R.string.menu_exit).setIcon(R.drawable.ic_exit).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        menu.add(0, 4, 4, R.string.menu_search).setIcon(R.drawable.ic_action_search).setActionView(R.layout.action_search).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -119,17 +125,28 @@ public class MainActivity extends SherlockFragmentActivity {
             case 2:
                 startActivity(new Intent(this, SettingsAcrivity.class));
                 break;
-            case 3:
+            case 4:
                 search = (EditText) item.getActionView();
                 //search.addTextChangedListener(filterTextWatcher);
                 break;
-            case 4:
-                Settings.setString(Settings.KEY_LOGIN, null);
-                Settings.setString(Settings.KEY_PASSWORD, null);
-                Settings.setBoolean(Settings.KEY_LOGGED_IN, false);
-                MyShows.isLoggedIn = false;
-                finish();
-                startActivity(new Intent(this, MainActivity.class));
+            case 3:
+                final AlertDialog alert;
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
+                        .setTitle(R.string.request_exit)
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Settings.setString(Settings.KEY_LOGIN, null);
+                                Settings.setString(Settings.KEY_PASSWORD, null);
+                                Settings.setBoolean(Settings.KEY_LOGGED_IN, false);
+                                MyShows.isLoggedIn = false;
+                                finish();
+                                startActivity(new Intent(MainActivity.this, MainActivity.class));
+                            }
+                        })
+                        .setNegativeButton(R.string.no, null);
+                alert = builder.create();
+                alert.show();
                 break;
         }
         return true;

@@ -113,53 +113,52 @@ public class ShowsFragment extends Fragment implements Taskable, GetShowsTask.Sh
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             final int pos = position;
-            View row = convertView;
-            if (row == null) {
+            final ViewHolder holder;
+            if (convertView == null) {
                 LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                row = vi.inflate(R.layout.show_item, null);
+                convertView = vi.inflate(R.layout.show_item, null);
+                holder = new ViewHolder();
+                holder.logo = (ImageView) convertView.findViewById(R.id.show_logo);
+                holder.title = (TextView) convertView.findViewById(R.id.show_name);
+                holder.rating =  (RatingBar) convertView.findViewById(R.id.show_rating);
+                holder.unwatched = (TextView) convertView.findViewById(R.id.unwatched_episodes);
+                convertView.setTag(holder);
+            } else {
+                 holder = (ViewHolder) convertView.getTag();
             }
 
             IShow show = shows.get(position);
             if (show != null) {
 
-                final ImageView image = (ImageView) row.findViewById(R.id.show_logo);
-
-                ImageLoader.getInstance().displayImage(show.getImageUrl(), image, new ImageLoadingListener() {
+                ImageLoader.getInstance().displayImage(show.getImageUrl(), holder.logo, new ImageLoadingListener() {
                     @Override
                     public void onLoadingStarted() {
-                        image.setImageResource(R.drawable.ic_list_logo);
-                        image.setScaleType(ImageView.ScaleType.CENTER);
+                        holder.logo.setImageResource(R.drawable.ic_list_logo);
+                        holder.logo.setScaleType(ImageView.ScaleType.CENTER);
                     }
 
                     @Override
-                    public void onLoadingFailed(FailReason failReason) {
-
-                    }
+                    public void onLoadingFailed(FailReason failReason) {}
 
                     @Override
                     public void onLoadingComplete() {
-                        image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        holder.logo.setScaleType(ImageView.ScaleType.CENTER_CROP);
                     }
 
                     @Override
-                    public void onLoadingCancelled() {
-
-                    }
+                    public void onLoadingCancelled() {}
                 });
 
-                TextView title = (TextView) row.findViewById(R.id.show_name);
-                title.setText(show.getTitle());
-
-                ((RatingBar) row.findViewById(R.id.show_rating)).setRating(show.getRating().floatValue());
+                holder.title.setText(show.getTitle());
+                holder.rating .setRating(show.getRating().floatValue());
 
                 if (show instanceof UserShow) {
 
                     if (show.getWatchStatus().equals(MyShowsApi.STATUS.watching)) {
                         int unwatched = getUnwatchedEpisodesCount(show.getShowId());
                         if (unwatched > 0) {
-                            TextView b = ((TextView) row.findViewById(R.id.unwatched_episodes));
-                            b.setVisibility(View.VISIBLE);
-                            b.setText(String.valueOf(unwatched));
+                            holder.unwatched.setVisibility(View.VISIBLE);
+                            holder.unwatched.setText(String.valueOf(unwatched));
                         }
                     }
                 }
@@ -167,7 +166,7 @@ public class ShowsFragment extends Fragment implements Taskable, GetShowsTask.Sh
             }
 
 
-            row.setOnClickListener(new View.OnClickListener() {
+            convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
@@ -183,8 +182,16 @@ public class ShowsFragment extends Fragment implements Taskable, GetShowsTask.Sh
                 }
             });
 
-            return row;
+            return convertView;
         }
+
+        protected class ViewHolder {
+            protected ImageView logo;
+            protected TextView title;
+            protected RatingBar rating;
+            protected TextView unwatched;
+        }
+
 
     }
 

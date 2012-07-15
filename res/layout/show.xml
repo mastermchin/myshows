@@ -155,6 +155,7 @@
                 <LinearLayout android:id="@+id/show_rating_yours_layout"
                               android:layout_width="fill_parent"
                               android:layout_height="wrap_content"
+                              android:visibility="gone"
                         >
 
                     <ru.myshows.components.RobotoTextView

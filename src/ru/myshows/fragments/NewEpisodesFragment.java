@@ -220,7 +220,6 @@ public class NewEpisodesFragment extends SherlockFragment implements GetNewEpiso
 //    }
 
 
-
     public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 
         private ArrayList<UserShow> shows = new ArrayList<UserShow>();
@@ -228,7 +227,6 @@ public class NewEpisodesFragment extends SherlockFragment implements GetNewEpiso
 
 
         public MyExpandableListAdapter(Collection<Episode> eps) {
-
 
 
             Map<Integer, List<Episode>> episodesByShows = new HashMap<Integer, List<Episode>>();
@@ -491,13 +489,13 @@ public class NewEpisodesFragment extends SherlockFragment implements GetNewEpiso
 //    }
 
 
-    private class CheckNewEpisodesTask extends BaseTask<Boolean>{
+    private class CheckNewEpisodesTask extends BaseTask<Boolean> {
 
         @Override
         public Boolean doWork(Object... objects) throws Exception {
             Map<Integer, String> paramsMap = new HashMap<Integer, String>();
 
-            for (int i=0; i < adapter.getGroupCount(); i++){
+            for (int i = 0; i < adapter.getGroupCount(); i++) {
 
                 List<Episode> episodes = adapter.getGroupChildren(i);
                 for (Episode e : episodes) {
@@ -530,7 +528,9 @@ public class NewEpisodesFragment extends SherlockFragment implements GetNewEpiso
 
         @Override
         public void onResult(Boolean result) {
-             Toast.makeText(getActivity(), exception == null ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), exception == null ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
+            if (result)
+                executeUpdateTask();
         }
 
         @Override

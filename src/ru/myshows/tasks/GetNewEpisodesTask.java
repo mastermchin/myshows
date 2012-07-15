@@ -38,6 +38,7 @@ public class GetNewEpisodesTask extends BaseTask<List<Episode>> {
 
     @Override
     public void onResult(List<Episode> result) {
+        if (episodesLoadingListener != null)
         episodesLoadingListener.onNewEpisodesLoaded(result);
     }
 

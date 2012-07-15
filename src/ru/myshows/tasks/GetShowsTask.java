@@ -55,7 +55,7 @@ public class GetShowsTask extends BaseTask<List<IShow>> {
         List shows = null;
         switch (action) {
             case SHOWS_SEARCH:
-                String query = (String) objects[1];
+                String query = (String) objects[0];
                 shows = MyShows.client.search(query);
                 break;
             case SHOWS_TOP:

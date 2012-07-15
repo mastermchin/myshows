@@ -23,6 +23,7 @@ import ru.myshows.domain.Season;
 import ru.myshows.domain.Show;
 import ru.myshows.domain.UserShow;
 import ru.myshows.tasks.BaseTask;
+import ru.myshows.tasks.GetNewEpisodesTask;
 import ru.myshows.util.EpisodeComparator;
 
 import java.text.DateFormat;
@@ -59,7 +60,7 @@ public class EpisodesFragment extends SherlockFragment {
         Collection<Episode> episodes = show.getEpisodes();
         //exclude specials
         Iterator<Episode> iterator = episodes.iterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             if (iterator.next().getEpisodeNumber() == 0)
                 iterator.remove();
         }
@@ -71,69 +72,13 @@ public class EpisodesFragment extends SherlockFragment {
     }
 
 
-    View.OnClickListener saveButtonListener = new View.OnClickListener() {
-        ProgressDialog dialog = null;
-        Handler handler = new Handler() {
-
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                if (dialog != null && dialog.isShowing())
-                    dialog.dismiss();
-                Toast.makeText(getActivity(), msg.what, Toast.LENGTH_SHORT).show();
-                //  removeSaveButton();
-            }
-        };
-
-        Runnable checkEpisodesTask = new Runnable() {
-            public void run() {
-                ArrayList<Episode> episodes = (ArrayList<Episode>) adapter.getAllChildrenAsList();
-                StringBuilder checkedIds = new StringBuilder();
-                StringBuilder uncheckedIds = new StringBuilder();
-                for (Episode e : episodes) {
-                    if (e.isChecked()) checkedIds.append(e.getEpisodeId() + ",");
-                    if (!e.isChecked()) uncheckedIds.append(e.getEpisodeId() + ",");
-                }
-
-                String checked = checkedIds.toString();
-                if (checked.endsWith(",")) checked = checked.substring(0, checked.length() - 1);
-                String unchecked = uncheckedIds.toString();
-                if (unchecked.endsWith(",")) unchecked = unchecked.substring(0, unchecked.length() - 1);
-
-                boolean result = MyShows.client.syncAllShowEpisodes(show.getShowId(), checked, unchecked);
-                int message;
-                if (result) {
-                    message = R.string.changes_saved;
-                    // update watched episodes in cache
-                    UserShow us = MyShows.getUserShow(show.getShowId());
-                    if (us != null) {
-                        us.setWatchedEpisodes(checked.split(",").length);
-                        // app.setUserShowsChanged(true);
-                    }
-                } else {
-                    message = R.string.changes_not_saved;
-                }
-                handler.sendEmptyMessage(message);
-            }
-
-        };
-
-        @Override
-        public void onClick(View v) {
-            //saveButton.setEnabled(false);
-            dialog = ProgressDialog.show(getActivity(), "", getResources().getString(R.string.loading));
-            handler.postDelayed(checkEpisodesTask, 1000);
-        }
-
-    };
-
 
     public class CheckEpisodesTask extends BaseTask<Boolean> {
-
+        ArrayList<Episode> episodes = (ArrayList<Episode>) adapter.getAllChildrenAsList();
 
         @Override
         public Boolean doWork(Object... objects) throws Exception {
-            ArrayList<Episode> episodes = (ArrayList<Episode>) adapter.getAllChildrenAsList();
+
             StringBuilder checkedIds = new StringBuilder();
             StringBuilder uncheckedIds = new StringBuilder();
             for (Episode e : episodes) {
@@ -160,6 +105,10 @@ public class EpisodesFragment extends SherlockFragment {
         @Override
         public void onResult(Boolean result) {
             Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
+            if (result){
+                new GetNewEpisodesTask(getActivity(), true).execute();
+            }
+
         }
 
         @Override
@@ -248,27 +197,33 @@ public class EpisodesFragment extends SherlockFragment {
             }
 
             holder.title.setText(season.getTitle());
-            holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    season.setChecked(isChecked);
-                }
-            });
-            holder.checkBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    CheckBox checkBox = (CheckBox) v;
-                    boolean isChecked = checkBox.isChecked();
-                    for (Episode e : (List<Episode>) getGroupChildren(gp)) {
-                        e.setChecked(isChecked);
+
+            // show checkboxes only if user is logged in
+            if (MyShows.isLoggedIn) {
+                holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        season.setChecked(isChecked);
                     }
-                    SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
-                    if (mMode == null)
-                        mMode = activity.startActionMode(new SaveEpisodesActionMode());
-                    adapter.notifyDataSetChanged();
-                }
-            });
-            holder.checkBox.setChecked(season.isChecked());
+                });
+                holder.checkBox.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        CheckBox checkBox = (CheckBox) v;
+                        boolean isChecked = checkBox.isChecked();
+                        for (Episode e : (List<Episode>) getGroupChildren(gp)) {
+                            e.setChecked(isChecked);
+                        }
+                        SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
+                        if (mMode == null)
+                            mMode = activity.startActionMode(new SaveEpisodesActionMode());
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+                holder.checkBox.setChecked(season.isChecked());
+            }else {
+                holder.checkBox.setVisibility(View.INVISIBLE);
+            }
             return convertView;
         }
 
@@ -298,52 +253,56 @@ public class EpisodesFragment extends SherlockFragment {
             holder.shortTitle.setText(episode.getShortName() != null ? episode.getShortName() : "");
             holder.airDate.setText(episode.getAirDate() != null ? df.format(episode.getAirDate()) : "unknown");
 
-            holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    Season season = (Season) getGroup(gp);
-                    episode.setChecked(isChecked);
-                    if (!isChecked && season.isChecked()) {
-                        season.setChecked(isChecked);
-                        adapter.notifyDataSetChanged();
-                    }
-
-                    boolean isAllEpisodesChecked = true;
-                    for (Episode e : (List<Episode>) getGroupChildren(gp)) {
-                        if (!e.isChecked()) {
-                            isAllEpisodesChecked = false;
-                            break;
+            // show checkboxes only if user is logged in
+            if (MyShows.isLoggedIn) {
+                holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        Season season = (Season) getGroup(gp);
+                        episode.setChecked(isChecked);
+                        if (!isChecked && season.isChecked()) {
+                            season.setChecked(isChecked);
+                            adapter.notifyDataSetChanged();
                         }
+
+                        boolean isAllEpisodesChecked = true;
+                        for (Episode e : (List<Episode>) getGroupChildren(gp)) {
+                            if (!e.isChecked()) {
+                                isAllEpisodesChecked = false;
+                                break;
+                            }
+                        }
+                        if (isAllEpisodesChecked) {
+                            season.setChecked(true);
+                            notifyDataSetChanged();
+                        }
+
+
                     }
-                    if (isAllEpisodesChecked) {
-                        season.setChecked(true);
-                        notifyDataSetChanged();
+                });
+
+                holder.checkBox.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
+                        if (mMode == null)
+                            mMode = activity.startActionMode(new SaveEpisodesActionMode());
                     }
+                });
 
 
-                }
-            });
+                holder.checkBox.setChecked(episode.isChecked());
 
-            holder.checkBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
-                    if (mMode == null)
-                        mMode = activity.startActionMode(new SaveEpisodesActionMode());
-                }
-            });
+                convertView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        holder.checkBox.setChecked(!holder.checkBox.isChecked());
+                    }
+                });
+            }else {
+                holder.checkBox.setVisibility(View.INVISIBLE);
+            }
 
-
-            holder.checkBox.setChecked(episode.isChecked());
-
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    holder.checkBox.setChecked(!holder.checkBox.isChecked());
-                }
-            });
-
-            convertView.setOnCreateContextMenuListener(null);
 
             return convertView;
         }

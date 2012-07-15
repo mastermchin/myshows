@@ -22,20 +22,30 @@ import ru.myshows.tasks.GetShowsTask;
  */
 public class SearchActivity extends SherlockFragmentActivity {
 
+    private String search;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_result);
 
-        String search = (String ) getBundleValue(getIntent(), "search", null);
+        search = (String ) getBundleValue(getIntent(), "search", null);
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        getSupportActionBar().setTitle(search);
+        getSupportActionBar().setTitle(getResources().getString(R.string.search) + ": " + search);
 
         BitmapDrawable bg = (BitmapDrawable) getResources().getDrawable(R.drawable.stripe_red);
         bg.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
         getSupportActionBar().setBackgroundDrawable(bg);
+
+       if (search != null)
+           executeSearch(search);
+
+    }
+
+    private void executeSearch(String search){
 
         ShowsFragment showsFragment = (ShowsFragment) getSupportFragmentManager().findFragmentById(R.id.shows_fragment);
         GetShowsTask task = null;
@@ -43,31 +53,57 @@ public class SearchActivity extends SherlockFragmentActivity {
         if (search.equals("top")){
             task = new GetShowsTask(this, GetShowsTask.SHOWS_TOP);
             showsFragment.setAction(GetShowsTask.SHOWS_TOP);
+            task.setShowsLoadingListener(showsFragment);
+            task.execute();
         }
 
         if (search.equals("all")){
             task = new GetShowsTask(this, GetShowsTask.SHOWS_ALL);
             showsFragment.setAction(GetShowsTask.SHOWS_ALL);
-        }
-
-        if (task != null){
             task.setShowsLoadingListener(showsFragment);
             task.execute();
         }
 
-
-
+        if (task == null) {
+            task = new GetShowsTask(this, GetShowsTask.SHOWS_SEARCH);
+            showsFragment.setAction(GetShowsTask.SHOWS_SEARCH);
+            task.setShowsLoadingListener(showsFragment);
+            task.execute(search);
+        }
     }
 
     public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 
         menu.add(0, 1, 1, "Refresh").setIcon(R.drawable.ic_navigation_refresh).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        menu.add(0, 2, 2, "Settings").setIcon(R.drawable.ic_action_settings).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        if (MyShows.isLoggedIn)
+            menu.add(0, 2, 2, "Settings").setIcon(R.drawable.ic_action_settings).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         menu.add(0, 3, 3, "Search").setIcon(R.drawable.ic_action_search).setActionView(R.layout.action_search).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
         return super.onCreateOptionsMenu(menu);
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+            case 1:
+                if (search != null){
+                    finish();
+                    Intent intent = new Intent();
+                    intent.putExtra("search", search);
+                    intent.setClass(this, SearchActivity.class);
+                    startActivity(intent);
+                }
+                break;
+            case 2:
+                startActivity(new Intent(this, SettingsAcrivity.class));
+                break;
+        }
+        return true;
+    }
 
     private Object getBundleValue(Intent intent, String key, Object defaultValue) {
         if (intent == null) return defaultValue;

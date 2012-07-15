@@ -50,7 +50,9 @@ public class MyShowsApiImpl implements MyShowsApi {
 
     }
 
-    private InputStream execute(String url) {
+    private InputStream execute(String url, boolean isPublicRequest) {
+        if (isPublicRequest)
+            return execute(url,null,null);
         if (login == null || password == null) {
             String lgn = Settings.getString(Settings.KEY_LOGIN);
             String pwd = Settings.getString(Settings.KEY_PASSWORD);
@@ -127,7 +129,7 @@ public class MyShowsApiImpl implements MyShowsApi {
 
     private JSONObject toJson(String s) {
         if (s == null) return null;
-       Log.d("MyShows", "s = " + s);
+        Log.d("MyShows", "s = " + s);
         try {
             return new JSONObject(s);
         } catch (JSONException e) {
@@ -167,167 +169,166 @@ public class MyShowsApiImpl implements MyShowsApi {
     }
 
 
-
     @Override
     public JSONObject getShows() {
         String url = MyShowsApi.URL.URL_GET_SHOWS;
-        return toJson(executeWithStringResult(url));
+        return toJson(executeWithStringResult(url, false));
     }
 
     @Override
     public JSONObject getSeenEpisodes(Integer showId) {
         String url = String.format(MyShowsApi.URL.URL_GET_SEEN_EPISODES, showId);
-        return toJson(executeWithStringResult(url));
+        return toJson(executeWithStringResult(url, false));
     }
 
     @Override
     public JSONObject getNextEpisodes() {
         String url = MyShowsApi.URL.URL_GET_NEXT_EPISODES;
-        return toJson(executeWithStringResult(url));
+        return toJson(executeWithStringResult(url, false));
     }
 
     @Override
     public JSONObject getUnwatchedEpisodes() {
         String url = URL.URL_GET_UNWATCHED_EPISODES;
-        return toJson(executeWithStringResult(url));
+        return toJson(executeWithStringResult(url, false));
 
     }
 
     @Override
     public boolean checkEpisode(Integer episodeId) {
         String url = String.format(MyShowsApi.URL.URL_CHECK_EPISODE, episodeId);
-        return execute(url) != null ? true : false;
+        return execute(url, false) != null ? true : false;
     }
 
     @Override
     public boolean checkEpisode(Integer episodeId, RATIO ratio) {
         String url = String.format(MyShowsApi.URL.URL_CHECK_EPISODE_RATIO, episodeId, RATIO.getRatio(ratio));
-        return execute(url) != null ? true : false;
+        return execute(url, false) != null ? true : false;
     }
 
     @Override
     public boolean uncheckEpisode(Integer episodeId) {
         String url = String.format(MyShowsApi.URL.URL_UNCHECK_EPISODE, episodeId);
-        return execute(url) != null ? true : false;
+        return execute(url, false) != null ? true : false;
     }
 
     @Override
     public boolean syncWatchedEpisodes(Integer showsId, String ids) {
         String url = String.format(MyShowsApi.URL.URL_SYNC_WATCHED, showsId, ids);
-        return execute(url) != null ? true : false;
+        return execute(url, false) != null ? true : false;
     }
 
     @Override
     public boolean syncAllShowEpisodes(Integer showId, String watchedIds, String unwatchedIds) {
         String url = String.format(MyShowsApi.URL.URL_SYNC_ALL, showId, watchedIds, unwatchedIds);
-        return execute(url) != null ? true : false;
+        return execute(url, false) != null ? true : false;
     }
 
     @Override
     public boolean changeShowStatus(Integer showId, MyShowsApi.STATUS status) {
         System.out.println("Change show " + showId + " status to : " + status.toString());
         String url = String.format(MyShowsApi.URL.URL_CHANGE_SHOW_STATUS, showId, status.toString());
-        return execute(url) != null ? true : false;
+        return execute(url, false) != null ? true : false;
     }
 
     @Override
     public boolean changeShowRatio(Integer showId, int ratio) {
         String url = String.format(MyShowsApi.URL.URL_CHANGE_SHOW_RATIO, showId, ratio);
-        return execute(url) != null ? true : false;
+        return execute(url, false) != null ? true : false;
     }
 
     @Override
     public boolean changeEpisodeRatio(int ratio, Integer episodeId) {
         String url = String.format(MyShowsApi.URL.URL_CHANGE_EPISODE_RATIO, ratio, episodeId);
-        return execute(url) != null ? true : false;
+        return execute(url,false) != null ? true : false;
     }
 
     @Override
     public JSONArray getFavoritesEpisodes() {
         String url = MyShowsApi.URL.URL_FAVORITES_EPISODES;
-        return toJsonArray(executeWithStringResult(url));
+        return toJsonArray(executeWithStringResult(url, false));
     }
 
     @Override
     public boolean addFavoriteEpisode(Integer episodeId) {
         String url = String.format(MyShowsApi.URL.URL_ADD_FAVORITE_EPISODE, episodeId);
-        return execute(url) != null ? true : false;
+        return execute(url, false) != null ? true : false;
     }
 
     @Override
     public boolean removeFavoriteEpisode(Integer episodeId) {
         String url = String.format(MyShowsApi.URL.URL_REMOVE_FAVORITE_EPISODE, episodeId);
-        return execute(url) != null ? true : false;
+        return execute(url, false) != null ? true : false;
     }
 
     @Override
     public JSONArray getIgnoredEpisodes() {
         String url = MyShowsApi.URL.URL_GET_IGNORED_EPISODES;
-        return toJsonArray(executeWithStringResult(url));
+        return toJsonArray(executeWithStringResult(url, false));
     }
 
     @Override
     public boolean addIgnoredEpisode(Integer episodeId) {
         String url = String.format(MyShowsApi.URL.URL_ADD_IGNORED_EPISODE, episodeId);
-        return execute(url) != null ? true : false;
+        return execute(url, false) != null ? true : false;
     }
 
     @Override
     public boolean removeIgnoredEpisode(Integer episodeId) {
         String url = String.format(MyShowsApi.URL.URL_REMOVE_IGNORED_EPISODE, episodeId);
-        return execute(url) != null ? true : false;
+        return execute(url, false) != null ? true : false;
     }
 
     @Override
     public JSONObject getNews() {
         String url = MyShowsApi.URL.URL_GET_NEWS;
-        return toJson(executeWithStringResult(url));
+        return toJson(executeWithStringResult(url, false));
     }
 
     @Override
     public JSONObject search(String searchString) {
         String url = String.format(MyShowsApi.URL.URL_SEARCH, searchString);
-        return toJson(executeWithStringResult(url));
+        return toJson(executeWithStringResult(url, true));
     }
 
     @Override
     public JSONObject searchByFile(String file) {
         String url = String.format(MyShowsApi.URL.URL_SEARCH_BY_FILE, file);
-        return toJson(executeWithStringResult(url));
+        return toJson(executeWithStringResult(url, true));
     }
 
     @Override
     public JSONObject getShowInfo(Integer showId) {
         String url = String.format(MyShowsApi.URL.URL_GET_SHOW_INFO, showId);
-        return toJson(executeWithStringResult(url));
+        return toJson(executeWithStringResult(url, true));
     }
 
     @Override
     public JSONObject getGenresList() {
         String url = MyShowsApi.URL.URL_GET_GENRES_LIST;
-        return toJson(executeWithStringResult(url));
+        return toJson(executeWithStringResult(url, true));
     }
 
     @Override
     public JSONArray getTopShows(GENDER gender) {
         if (gender == null) gender = GENDER.a;
         String url = String.format(MyShowsApi.URL.URL_GET_TOP_SHOWS, GENDER.getGender(gender));
-        return toJsonArray(executeWithStringResult(url));
+        return toJsonArray(executeWithStringResult(url, true));
     }
 
     @Override
     public JSONObject getProfile(String login) {
         String url = String.format(MyShowsApi.URL.URL_PROFILE, login);
-        return toJson(executeWithStringResult(url));
+        return toJson(executeWithStringResult(url, true));
     }
 
 
     @Override
     public InputStream getImage(String url) {
-        return execute(url);
+        return execute(url , true);
     }
 
-    private String executeWithStringResult(String url) {
-        return convertStreamToString(execute(url));
+    private String executeWithStringResult(String url, boolean isPublicRequest) {
+        return convertStreamToString(execute(url, isPublicRequest));
     }
 }

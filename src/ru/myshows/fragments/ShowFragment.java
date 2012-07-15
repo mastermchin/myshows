@@ -124,30 +124,31 @@ public class ShowFragment extends Fragment implements ChangeShowStatusTask.Chang
             myShowsRatingBar.setRating((float) show.getRating().doubleValue());
         }
 
-        // yours rating
-
-        yoursRatingLayoyt.setVisibility(View.VISIBLE);
-        yoursRatingBar = ((RatingBar) yoursRatingLayoyt.findViewById(R.id.show_rating_yours_value));
-
-        // disable rating changing if remove status
-        if (watchStatus.equals(MyShowsApi.STATUS.remove))
-            yoursRatingBar.setIsIndicator(true);
-
-        if (yoursRating != null) {
-            yoursRatingBar.setRating((float) yoursRating.doubleValue());
-        }
-
-        yoursRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                new ChangeShowRatioTask(getActivity()).execute(rating);
-            }
-        });
 
 
-        //status buttons show if client is logged in otherwise remove view
         if (MyShows.isLoggedIn) {
+
+            // yours rating
+            yoursRatingLayoyt.setVisibility(View.VISIBLE);
+            yoursRatingBar = ((RatingBar) yoursRatingLayoyt.findViewById(R.id.show_rating_yours_value));
+
+            // disable rating changing if remove status
+            if (watchStatus.equals(MyShowsApi.STATUS.remove))
+                yoursRatingBar.setIsIndicator(true);
+
+            if (yoursRating != null) {
+                yoursRatingBar.setRating((float) yoursRating.doubleValue());
+            }
+
+            yoursRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+
+                @Override
+                public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                    new ChangeShowRatioTask(getActivity()).execute(rating);
+                }
+            });
+
+            // show status buttons
             statusButtonsLayoyt.setVisibility(View.VISIBLE);
             updateStatusButtons();
         }

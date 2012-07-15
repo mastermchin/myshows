@@ -44,7 +44,6 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:textColor="@color/very_light_blue"
-            android:visibility="invisible"
             android:paddingRight="10dp"
             />
 

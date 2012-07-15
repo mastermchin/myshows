@@ -47,6 +47,7 @@ public class ShowsFragment extends Fragment implements Taskable, GetShowsTask.Sh
     private ProgressBar progress;
     private LayoutInflater inflater;
     private boolean isTaskExecuted = false;
+    private SectionedAdapter adapter;
 
     public ShowsFragment() {
     }
@@ -81,8 +82,10 @@ public class ShowsFragment extends Fragment implements Taskable, GetShowsTask.Sh
 
     @Override
     public void executeTask() {
-        if (isTaskExecuted)
+        if (isTaskExecuted){
+            adapter.notifyDataSetChanged();
             return;
+        }
         GetShowsTask task = new GetShowsTask(getActivity(), GetShowsTask.SHOWS_USER);
         task.setShowsLoadingListener(this);
         task.execute();
@@ -150,16 +153,16 @@ public class ShowsFragment extends Fragment implements Taskable, GetShowsTask.Sh
                 });
 
                 holder.title.setText(show.getTitle());
-                holder.rating .setRating(show.getRating().floatValue());
+                holder.rating.setRating(show.getRating().floatValue());
 
                 if (show instanceof UserShow) {
 
                     if (show.getWatchStatus().equals(MyShowsApi.STATUS.watching)) {
                         int unwatched = getUnwatchedEpisodesCount(show.getShowId());
-                        if (unwatched > 0) {
-                            holder.unwatched.setVisibility(View.VISIBLE);
-                            holder.unwatched.setText(String.valueOf(unwatched));
-                        }
+                        String value = "";
+                        if (unwatched > 0)
+                             value = String.valueOf(unwatched);
+                        holder.unwatched.setText(value);
                     }
                 }
 
@@ -211,7 +214,11 @@ public class ShowsFragment extends Fragment implements Taskable, GetShowsTask.Sh
     }
 
     public SectionedAdapter populateAdapter(int action, List<IShow> shows) {
-        SectionedAdapter adapter = new SectionedAdapter(inflater);
+        adapter = new SectionedAdapter(inflater);
+
+        // hack to avoid FC, sometimes getActivity is null
+        if (getActivity() == null) return adapter;
+
         Resources res = getActivity().getResources();
         switch (action) {
 
@@ -256,14 +263,12 @@ public class ShowsFragment extends Fragment implements Taskable, GetShowsTask.Sh
     }
 
 
-    //    @Override
-//    public void onResume() {
-//        super.onResume();
-////        if (app.isUserShowsChanged() && lastAction == SHOWS_USER) {
-////            new GetShowsTask(getActivity()).execute(lastAction, search);
-////            app.setUserShowsChanged(false);
-////        }
-//    }
+        @Override
+    public void onResume() {
+        super.onResume();
+        if (adapter != null)
+            adapter.notifyDataSetChanged();
+    }
 
 
 }

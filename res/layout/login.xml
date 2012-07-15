@@ -8,6 +8,7 @@
               android:paddingTop="20dip"
               android:paddingLeft="40dp"
               android:paddingRight="40dp"
+              android:background="@drawable/gradient_background"
         >
 
     <ImageView
@@ -20,14 +21,6 @@
 
             />
 
-    <TextView
-            android:id="@+id/slogan"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="сериалы, которые я смотрю"
-            android:textSize="18sp"
-            android:gravity="top|center_horizontal"
-            />
 
     <LinearLayout android:orientation="vertical"
                   android:layout_width="fill_parent"

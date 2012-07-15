@@ -20,20 +20,16 @@ import ru.myshows.tasks.Taskable;
  */
 public class SearchFragment extends Fragment implements Taskable{
 
-    private LinearLayout favouritesLayout;
-    private LinearLayout catalog_layout;
     private EditText searchField;
     private Button searchButton;
     private Button favourites;
     private Button catalog;
-    private LayoutInflater inflater;
 
     public SearchFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.inflater = inflater;
         View view = inflater.inflate(R.layout.search, container, false);
         searchField = (EditText) view.findViewById(R.id.search_box);
         searchButton = (Button) view.findViewById(R.id.search_button);
@@ -50,29 +46,6 @@ public class SearchFragment extends Fragment implements Taskable{
                 searchButton.setEnabled(true);
             }
         });
-
-
-//        favouritesLayout = (LinearLayout) view.findViewById(R.id.favourites_layout);
-//        favouritesLayout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                favouritesLayout.setEnabled(false);
-//                startShowsActivity("top");
-//                favouritesLayout.setEnabled(true);
-//            }
-//        });
-//
-//
-//        catalog_layout = (LinearLayout) view.findViewById(R.id.catalog_layout);
-//        catalog_layout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                catalog_layout.setEnabled(false);
-//                startShowsActivity("all");
-//                catalog_layout.setEnabled(true);
-//
-//            }
-//        });
 
         catalog = (Button) view.findViewById(R.id.catalog_image);
         catalog.setOnClickListener(new View.OnClickListener() {

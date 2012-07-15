@@ -12,7 +12,7 @@ import java.util.Collection;
  * Time: 17:41:23
  * To change this template use File | Settings | File Templates.
  */
-public interface IShow extends Serializable {
+public interface IShow extends Serializable, Filterable{
 
     public Integer getShowId();
     public String getTitle();
@@ -21,4 +21,6 @@ public interface IShow extends Serializable {
     public MyShowsApi.STATUS getWatchStatus();
     public String getImageUrl();
 
+    @Override
+    String getFilterString();
 }

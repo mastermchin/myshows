@@ -14,7 +14,7 @@ import java.util.Collection;
  * To change this template use File | Settings | File Templates.
  */
 
-public class UserShow extends JsonEvaluator implements IShow, JsonSerializable {
+public class UserShow extends JsonEvaluator implements IShow, JsonSerializable{
 
     private Integer showId;
     private String title;
@@ -59,6 +59,10 @@ public class UserShow extends JsonEvaluator implements IShow, JsonSerializable {
         }
     }
 
+    @Override
+    public String getFilterString() {
+        return title;
+    }
 
     public boolean isChecked() {
         return isChecked;

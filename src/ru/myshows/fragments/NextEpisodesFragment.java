@@ -16,6 +16,7 @@ import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
 import ru.myshows.adapters.SectionedAdapter;
 import ru.myshows.domain.Episode;
+import ru.myshows.domain.Searchable;
 import ru.myshows.domain.UserShow;
 import ru.myshows.tasks.GetNewEpisodesTask;
 import ru.myshows.tasks.GetNextEpisodesTask;
@@ -34,14 +35,13 @@ import java.util.*;
  * Time: 1:10
  * To change this template use File | Settings | File Templates.
  */
-public class NextEpisodesFragment extends Fragment implements GetNextEpisodesTask.NextEpisodesLoadingListener, Taskable {
+public class NextEpisodesFragment extends Fragment implements GetNextEpisodesTask.NextEpisodesLoadingListener, Taskable, Searchable {
 
     private SectionedAdapter adapter;
     private RelativeLayout rootView;
     private ListView list;
     private ProgressBar progress;
-    DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
-    private LayoutInflater inflater;
+    private static DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
     private boolean isTaskExecuted = false;
 
     public NextEpisodesFragment() {
@@ -50,7 +50,6 @@ public class NextEpisodesFragment extends Fragment implements GetNextEpisodesTas
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.inflater = inflater;
         rootView = (RelativeLayout) inflater.inflate(R.layout.next_episodes, container, false);
         progress = (ProgressBar) rootView.findViewById(R.id.progress_next_episodes);
         list = (ListView) rootView.findViewById(R.id.next_episodes_list);
@@ -78,9 +77,8 @@ public class NextEpisodesFragment extends Fragment implements GetNextEpisodesTas
 
     @Override
     public void onNextEpisodesLoaded(List<Episode> episodes) {
-        adapter = new SectionedAdapter(inflater, clickListener);
-        populateAdapter(episodes);
-        list.setAdapter(adapter);
+        // populateAdapter(episodes);
+        list.setAdapter(populateAdapter(episodes));
         progress.setVisibility(View.GONE);
         progress.setIndeterminate(false);
         list.setVisibility(View.VISIBLE);
@@ -88,18 +86,15 @@ public class NextEpisodesFragment extends Fragment implements GetNextEpisodesTas
     }
 
 
-    private class EpisodesAdapter extends ArrayAdapter<Episode> {
-
+    public static class EpisodesAdapter extends ArrayAdapter<Episode> {
+        private Context context;
         private List<Episode> episodes;
-        private String showTitle;
-        private Episode last;
 
 
-        private EpisodesAdapter(Context context, int textViewResourceId, List<Episode> objects, String showTitle) {
+        public EpisodesAdapter(Context context, int textViewResourceId, List<Episode> objects) {
             super(context, textViewResourceId, objects);
+            this.context = context;
             this.episodes = objects;
-            this.showTitle = showTitle;
-            this.last = objects.get(objects.size() - 1);
         }
 
         protected class ViewHolder {
@@ -116,6 +111,7 @@ public class NextEpisodesFragment extends Fragment implements GetNextEpisodesTas
 
             if (episode != null) {
                 if (convertView == null) {
+                    LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     convertView = inflater.inflate(R.layout.episode, null);
                     holder = new ViewHolder();
                     holder.title = (TextView) convertView.findViewById(R.id.episode_title);
@@ -128,7 +124,7 @@ public class NextEpisodesFragment extends Fragment implements GetNextEpisodesTas
                 }
 
                 holder.title.setText(MyShows.getUserShow(episode.getShowId()).getTitle());
-                holder.shortTitle.setText(episode.getShortName() != null ? episode.getShortName() : composeShortTitle(episode) + " " +  episode.getTitle());
+                holder.shortTitle.setText(episode.getShortName() != null ? episode.getShortName() : composeShortTitle(episode) + " " + episode.getTitle());
                 holder.airDate.setText(episode.getAirDate() != null ? df.format(episode.getAirDate()) : "unknown");
 
                 holder.checkBox.setVisibility(View.GONE);
@@ -136,13 +132,15 @@ public class NextEpisodesFragment extends Fragment implements GetNextEpisodesTas
             return convertView;
 
         }
+
+        private String composeShortTitle(Episode e) {
+            int season = e.getSeasonNumber();
+            int episode = e.getEpisodeNumber();
+            return ("s" + String.format("%1$02d", season) + "e" + String.format("%1$02d", episode));
+        }
+
     }
 
-    private String composeShortTitle(Episode e) {
-        int season = e.getSeasonNumber();
-        int episode = e.getEpisodeNumber();
-        return ("s" + String.format("%1$02d", season) + "e" + String.format("%1$02d", episode));
-    }
 
 
     View.OnClickListener clickListener = new View.OnClickListener() {
@@ -161,8 +159,13 @@ public class NextEpisodesFragment extends Fragment implements GetNextEpisodesTas
         }
     };
 
-    private void populateAdapter(List<Episode> result) {
-        if (result == null) return;
+    private SectionedAdapter populateAdapter(List<Episode> result) {
+
+        if (result == null) {
+            adapter = new SectionedAdapter(getActivity(), R.layout.header, null);
+            return adapter;
+        }
+
         Map<Integer, List<Episode>> episodesByMonth = new TreeMap<Integer, List<Episode>>();
 
         for (Episode e : result) {
@@ -177,16 +180,23 @@ public class NextEpisodesFragment extends Fragment implements GetNextEpisodesTas
             }
             temp.add(e);
         }
+        List<SectionedAdapter.Section> sectionList = new ArrayList<SectionedAdapter.Section>();
 
         for (Map.Entry<Integer, List<Episode>> entry : episodesByMonth.entrySet()) {
             Integer month = entry.getKey();
             List<Episode> episodes = entry.getValue();
             Collections.sort(episodes, new EpisodeComparator("date"));
-            adapter.addSection(new DateFormatSymbols().getMonths()[month], new EpisodesAdapter(getActivity(), R.layout.episode, episodes, new DateFormatSymbols().getMonths()[month]));
+            String m = new DateFormatSymbols().getMonths()[month];
+            sectionList.add(new SectionedAdapter.Section(m, new EpisodesAdapter(getActivity(), R.layout.episode, episodes)));
         }
+        adapter = new SectionedAdapter(getActivity(), R.layout.header, sectionList);
+        return adapter;
 
     }
 
 
-
+    @Override
+    public ArrayAdapter getAdapter() {
+        return adapter;
+    }
 }

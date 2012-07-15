@@ -1,48 +1,110 @@
 package ru.myshows.adapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
+import android.widget.*;
 import ru.myshows.activity.R;
+import ru.myshows.domain.*;
+import ru.myshows.domain.Filterable;
+import ru.myshows.fragments.NewsFragment;
+import ru.myshows.fragments.NextEpisodesFragment;
+import ru.myshows.fragments.ShowsFragment;
+import ru.myshows.util.SearchFilter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SectionedAdapter extends BaseAdapter implements Serializable {
+public class SectionedAdapter extends ArrayAdapter implements Serializable {
 
-    private LayoutInflater inflater;
-    private List<Section> sections = new ArrayList<Section>();
     private static int TYPE_SECTION_HEADER = 0;
-    private View.OnClickListener clickListener;
 
-    public SectionedAdapter(LayoutInflater inflater, View.OnClickListener clickListener) {
-        this.inflater = inflater;
-        this.clickListener = clickListener;
+    private Context context;
+    private List<Section> sections;
+    private List<Section> original;
+    private Filter filter;
+
+    public SectionedAdapter(Context context, int textViewResourceId, List objects) {
+        super(context, textViewResourceId, objects);
+        this.context = context;
+        this.sections = (List<Section>) objects;
+        if (objects != null)
+            this.original = new ArrayList<Section>(objects);
     }
 
-    public SectionedAdapter(LayoutInflater inflater) {
-        this.inflater = inflater;
-    }
 
     protected View getHeaderView(String caption, int index, View convertView, ViewGroup parent) {
         TextView result = (TextView) convertView;
         if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             result = (TextView) inflater.inflate(R.layout.header, null);
         }
         result.setText(caption);
-        if (clickListener != null) {
-            result.setOnClickListener(clickListener);
-        }
         return (result);
     }
 
 
-    public SectionedAdapter() {
-        super();
+    private class ShowsFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            constraint = constraint.toString().toLowerCase();
+            FilterResults result = new FilterResults();
+            if (constraint != null && constraint.toString().length() > 0) {
+                List<Section> founded = new ArrayList<Section>();
+                for (Section s : original) {
+                    ArrayAdapter<Filterable> arrayAdapter = (ArrayAdapter<Filterable>) s.adapter;
+                    List foundedObjects = new ArrayList();
+                    for (int i = 0; i < arrayAdapter.getCount(); i++) {
+                        Filterable f = arrayAdapter.getItem(i);
+                        if (f.getFilterString().toLowerCase().contains(constraint))
+                            foundedObjects.add(f);
+                    }
+
+                    if (!foundedObjects.isEmpty()) {
+                        // shows and search
+                        if (s.adapter instanceof ShowsFragment.ShowsAdapter)
+                            founded.add(new Section(s.caption, new ShowsFragment.ShowsAdapter(context, R.layout.show_item, (List<IShow>) foundedObjects)));
+                        // news
+                        if (s.adapter instanceof NewsFragment.NewsAdapter)
+                            founded.add(new Section(s.caption, new NewsFragment.NewsAdapter(context, R.layout.show_item, (List<UserNews>) foundedObjects)));
+                        // next episodes
+                        if (s.adapter instanceof NextEpisodesFragment.EpisodesAdapter)
+                            founded.add(new Section(s.caption, new NextEpisodesFragment.EpisodesAdapter(context, R.layout.show_item, (List<Episode>) foundedObjects)));
+
+                    }
+
+                }
+
+                result.values = founded;
+                result.count = founded.size();
+
+            } else {
+                result.values = original;
+                result.count = original.size();
+            }
+            return result;
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            clear();
+            if (filterResults.values != null && filterResults.count > 0) {
+                List<Section> sectionList = (List<Section>) filterResults.values;
+                setSections(sectionList);
+            } else {
+                setSections(null);
+            }
+            notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public Filter getFilter() {
+        if (filter == null)
+            filter = new ShowsFilter();
+        return filter;
     }
 
     public void addSection(String caption, Adapter adapter) {
@@ -79,22 +141,20 @@ public class SectionedAdapter extends BaseAdapter implements Serializable {
 
     public int getCount() {
         int total = 0;
-
-        for (Section section : this.sections) {
-            total += section.adapter.getCount() + 1; // add one for header
+        if (sections != null) {
+            for (Section section : this.sections) {
+                total += section.adapter.getCount() + 1; // add one for header
+            }
         }
-
-        return (total);
+        return total;
     }
 
     public int getViewTypeCount() {
         int total = 1;    // one for the header, plus those from sections
-
         for (Section section : this.sections) {
             total += section.adapter.getViewTypeCount();
         }
-
-        return (total);
+        return total;
     }
 
     public int getItemViewType(int position) {
@@ -155,11 +215,11 @@ public class SectionedAdapter extends BaseAdapter implements Serializable {
         return (position);
     }
 
-    public class Section {
-       public String caption;
-       public Adapter adapter;
+    public static class Section {
+        public String caption;
+        public Adapter adapter;
 
-        Section(String caption, Adapter adapter) {
+        public Section(String caption, Adapter adapter) {
             this.caption = caption;
             this.adapter = adapter;
         }
@@ -173,21 +233,18 @@ public class SectionedAdapter extends BaseAdapter implements Serializable {
         this.sections = sections;
     }
 
-    public Section getSection(String caption){
-        for(Section s: sections){
-            if(s.caption.equals(caption)) return s;
+    public Section getSection(String caption) {
+        for (Section s : sections) {
+            if (s.caption.equals(caption)) return s;
         }
         return null;
     }
 
-    public void removeSection(String caption){
-        for(Section s: sections){
-            if(s.caption.equals(caption)) sections.remove(s);
+    public void removeSection(String caption) {
+        for (Section s : sections) {
+            if (s.caption.equals(caption)) sections.remove(s);
         }
     }
-
-
-
 
 
 }

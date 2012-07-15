@@ -13,6 +13,7 @@ import android.widget.*;
 import ru.myshows.activity.*;
 import ru.myshows.adapters.SectionedAdapter;
 import ru.myshows.api.MyShowsClient;
+import ru.myshows.domain.Searchable;
 import ru.myshows.domain.UserNews;
 import ru.myshows.domain.UserShow;
 import ru.myshows.tasks.BaseTask;
@@ -31,7 +32,7 @@ import java.util.*;
  * Time: 15:19:10
  * To change this template use File | Settings | File Templates.
  */
-public class NewsFragment extends Fragment implements GetNewsTask.NewsLoadingListener, Taskable {
+public class NewsFragment extends Fragment implements GetNewsTask.NewsLoadingListener, Taskable, Searchable {
 
 
     private SectionedAdapter adapter;
@@ -51,9 +52,7 @@ public class NewsFragment extends Fragment implements GetNewsTask.NewsLoadingLis
 
     @Override
     public void onNewsLoaded(Map<String, List<UserNews>> news) {
-        adapter = new SectionedAdapter(inflater);
-        populateAdapter(news);
-        list.setAdapter(adapter);
+        list.setAdapter( populateAdapter(news));
         progress.setVisibility(View.GONE);
         progress.setIndeterminate(false);
         list.setVisibility(View.VISIBLE);
@@ -79,18 +78,16 @@ public class NewsFragment extends Fragment implements GetNewsTask.NewsLoadingLis
         newsTask.execute();
     }
 
-    private class NewsAdapter extends ArrayAdapter<UserNews> {
+    public static class NewsAdapter extends ArrayAdapter<UserNews> {
 
+        private Context context;
         private List<UserNews> news;
-        private String section;
-        private UserNews last;
 
 
-        private NewsAdapter(Context context, int textViewResourceId, List<UserNews> shows, String section) {
+        public NewsAdapter(Context context, int textViewResourceId, List<UserNews> shows) {
             super(context, textViewResourceId, shows);
+            this.context = context;
             this.news = shows;
-            this.section = section;
-            this.last = shows.get(shows.size() - 1);
         }
 
 
@@ -99,7 +96,7 @@ public class NewsFragment extends Fragment implements GetNewsTask.NewsLoadingLis
             final int pos = position;
             final ViewHolder holder;
             if (convertView == null) {
-                LayoutInflater vi = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = vi.inflate(R.layout.news_item, null);
                 holder = new ViewHolder();
                 holder.login = (TextView) convertView.findViewById(R.id.news_login);
@@ -124,8 +121,8 @@ public class NewsFragment extends Fragment implements GetNewsTask.NewsLoadingLis
                     if (login != null && login.trim().length() > 0) {
                         Intent intent = new Intent();
                         intent.putExtra("login", login);
-                        intent.setClass(getActivity(), ProfileActivity.class);
-                        startActivity(intent);
+                        intent.setClass(context, ProfileActivity.class);
+                        context.startActivity(intent);
                     }
                 }
             });
@@ -140,12 +137,12 @@ public class NewsFragment extends Fragment implements GetNewsTask.NewsLoadingLis
                         intent.putExtra("showId", showId);
                         intent.putExtra("title", n.getShow());
                         UserShow userShow = MyShows.getUserShow(showId);
-                        if (userShow != null){
+                        if (userShow != null) {
                             intent.putExtra("watchStatus", userShow.getWatchStatus());
                             intent.putExtra("yoursRating", userShow.getYoursRating());
                         }
-                        intent.setClass(getActivity(), ShowActivity.class);
-                        startActivity(intent);
+                        intent.setClass(context, ShowActivity.class);
+                        context.startActivity(intent);
                     }
 
 
@@ -158,7 +155,7 @@ public class NewsFragment extends Fragment implements GetNewsTask.NewsLoadingLis
         private String composeAction(UserNews news) {
             String action = "";
             if (news.getAction() != null && news.getAction().equals("watch"))
-                action = getResources().getString(R.string.action_watched) + " ";
+                action = context.getResources().getString(R.string.action_watched) + " ";
             else
                 action = news.getAction() + " ";
 
@@ -179,16 +176,32 @@ public class NewsFragment extends Fragment implements GetNewsTask.NewsLoadingLis
     }
 
 
-    private void populateAdapter(Map<String, List<UserNews>> news) {
+    private SectionedAdapter populateAdapter(Map<String, List<UserNews>> news) {
+
+        if (news == null || news.isEmpty()) {
+            adapter = new SectionedAdapter(getActivity(), R.layout.header, null);
+            return adapter;
+        }
+
+        List<SectionedAdapter.Section> sectionList = new ArrayList<SectionedAdapter.Section>();
+
         TreeMap<String, List<UserNews>> m = new TreeMap<String, List<UserNews>>(new NewsComparator());
         m.putAll(news);
         for (Map.Entry<String, List<UserNews>> entry : m.entrySet()) {
             String key = entry.getKey();
             List<UserNews> value = entry.getValue();
 
-            adapter.addSection(key, new NewsAdapter(getActivity(), R.layout.news_item, value, key));
+            sectionList.add(new SectionedAdapter.Section(key, new NewsAdapter(getActivity(), R.layout.news_item, value)));
 
         }
-
+        adapter = new SectionedAdapter(getActivity(), R.layout.header, sectionList);
+        return adapter;
     }
+
+
+    @Override
+    public ArrayAdapter getAdapter() {
+        return adapter;
+    }
+
 }

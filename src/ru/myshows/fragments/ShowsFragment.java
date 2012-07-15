@@ -18,6 +18,7 @@ import ru.myshows.adapters.SectionedAdapter;
 import ru.myshows.api.MyShowsApi;
 import ru.myshows.domain.Episode;
 import ru.myshows.domain.IShow;
+import ru.myshows.domain.Searchable;
 import ru.myshows.domain.UserShow;
 import ru.myshows.tasks.BaseTask;
 import ru.myshows.tasks.GetShowsTask;
@@ -34,7 +35,7 @@ import java.util.*;
  * Time: 15:19:35
  * To change this template use File | Settings | File Templates.
  */
-public class ShowsFragment extends Fragment implements Taskable, GetShowsTask.ShowsLoadingListener {
+public class ShowsFragment extends Fragment implements Taskable, GetShowsTask.ShowsLoadingListener, Searchable {
 
     public static final int SHOWS_SEARCH = 1;
     public static final int SHOWS_TOP = 2;
@@ -45,7 +46,6 @@ public class ShowsFragment extends Fragment implements Taskable, GetShowsTask.Sh
     private int action;
     private ListView list;
     private ProgressBar progress;
-    private LayoutInflater inflater;
     private boolean isTaskExecuted = false;
     private SectionedAdapter adapter;
 
@@ -61,12 +61,12 @@ public class ShowsFragment extends Fragment implements Taskable, GetShowsTask.Sh
         this.action = action;
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.shows, container, false);
         list = (ListView) view.findViewById(R.id.shows_list);
         progress = (ProgressBar) view.findViewById(R.id.progress_shows);
-        this.inflater = inflater;
         return view;
     }
 
@@ -100,17 +100,15 @@ public class ShowsFragment extends Fragment implements Taskable, GetShowsTask.Sh
         task.execute();
     }
 
-    public class ShowsAdapter extends ArrayAdapter<IShow> {
+    public static class ShowsAdapter extends ArrayAdapter<IShow> {
 
         private List<IShow> shows;
-        private String section;
         private Context context;
 
-        public ShowsAdapter(Context context, int textViewResourceId, List<IShow> shows, String section) {
+        public ShowsAdapter(Context context, int textViewResourceId, List<IShow> shows) {
             super(context, textViewResourceId, shows);
             this.context = context;
             this.shows = shows;
-            this.section = section;
         }
 
         @Override
@@ -195,70 +193,76 @@ public class ShowsFragment extends Fragment implements Taskable, GetShowsTask.Sh
             protected TextView unwatched;
         }
 
-
-    }
-
-
-    private int getUnwatchedEpisodesCount(Integer showId) {
-        if (MyShows.newEpisodes == null) return 0;
-        Map<Integer, List<Episode>> episodesByShows = new HashMap<Integer, List<Episode>>();
-        int count = 0;
-        for (Episode e : MyShows.newEpisodes) {
-            // exclude special episodes
-            if (e.getEpisodeNumber() == 0)
-                continue;
-            if (e.getShowId().equals(showId))
-                count++;
+        public List<IShow> getShows() {
+            return shows;
         }
-        return count;
+
+        private int getUnwatchedEpisodesCount(Integer showId) {
+            if (MyShows.newEpisodes == null) return 0;
+            Map<Integer, List<Episode>> episodesByShows = new HashMap<Integer, List<Episode>>();
+            int count = 0;
+            for (Episode e : MyShows.newEpisodes) {
+                // exclude special episodes
+                if (e.getEpisodeNumber() == 0)
+                    continue;
+                if (e.getShowId().equals(showId))
+                    count++;
+            }
+            return count;
+        }
     }
+
+
+
 
     public SectionedAdapter populateAdapter(int action, List<IShow> shows) {
-        adapter = new SectionedAdapter(inflater);
+        //adapter = new SectionedAdapter(getActivity(), R.layout.header, null);
 
         // hack to avoid FC, sometimes getActivity is null
-        if (getActivity() == null) return adapter;
+       // if (getActivity() == null) return adapter;
+
+        List<SectionedAdapter.Section> sectionList = new ArrayList<SectionedAdapter.Section>();
 
         Resources res = getActivity().getResources();
         switch (action) {
 
             case SHOWS_SEARCH:
                 String search = res.getString(R.string.search_results);
-                adapter.addSection(search, new ShowsAdapter(getActivity(), R.layout.show_item, shows, search));
+                sectionList.add(new SectionedAdapter.Section(search, new ShowsAdapter(getActivity(), R.layout.show_item, shows)));
                 break;
             case SHOWS_TOP:
                 String top = res.getString(R.string.top);
-                adapter.addSection(top, new ShowsAdapter(getActivity(), R.layout.show_item, shows, top));
+                sectionList.add(new SectionedAdapter.Section(top, new ShowsAdapter(getActivity(), R.layout.show_item, shows)));
                 break;
 
             case SHOWS_ALL:
                 String all = res.getString(R.string.all);
-                adapter.addSection(all, new ShowsAdapter(getActivity(), R.layout.show_item, shows, all));
+                sectionList.add(new SectionedAdapter.Section(all, new ShowsAdapter(getActivity(), R.layout.show_item, shows)));
                 break;
             case SHOWS_USER:
                 String watching = res.getString(R.string.status_watching);
                 List<IShow> watchingShows = Utils.getByWatchStatus(shows, MyShowsApi.STATUS.watching);
                 if (watchingShows.size() > 0)
-                    adapter.addSection(watching + " (" + watchingShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, watchingShows, watching + " (" + watchingShows.size() + ")"));
+                    sectionList.add(new SectionedAdapter.Section(watching + " (" + watchingShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, watchingShows)));
 
                 String willWatch = res.getString(R.string.status_will_watch);
                 List<IShow> willWatchShows = Utils.getByWatchStatus(shows, MyShowsApi.STATUS.later);
                 if (willWatchShows.size() > 0)
-                    adapter.addSection(willWatch + " (" + willWatchShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, willWatchShows, willWatch + " (" + willWatchShows.size() + ")"));
+                    sectionList.add(new SectionedAdapter.Section(willWatch + " (" + willWatchShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, willWatchShows)));
 
                 String cancelled = res.getString(R.string.status_cancelled);
                 List<IShow> cancelledShows = Utils.getByWatchStatus(shows, MyShowsApi.STATUS.cancelled);
                 if (cancelledShows.size() > 0)
-                    adapter.addSection(cancelled + " (" + cancelledShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, cancelledShows, cancelled + " (" + cancelledShows.size() + ")"));
+                    sectionList.add(new SectionedAdapter.Section(cancelled + " (" + cancelledShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, cancelledShows)));
 
                 String remove = res.getString(R.string.status_finished);
                 List<IShow> finishedShows = Utils.getByWatchStatus(shows, MyShowsApi.STATUS.finished);
                 if (finishedShows.size() > 0)
-                    adapter.addSection(remove + " (" + finishedShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, finishedShows, remove + " (" + finishedShows.size() + ")"));
+                    sectionList.add(new SectionedAdapter.Section(remove + " (" + finishedShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, finishedShows)));
                 break;
-            default:
-                adapter.notifyDataSetChanged();
         }
+        adapter = new SectionedAdapter(getActivity(), R.layout.header, sectionList);
+        adapter.notifyDataSetChanged();
         return adapter;
     }
 
@@ -270,5 +274,11 @@ public class ShowsFragment extends Fragment implements Taskable, GetShowsTask.Sh
             adapter.notifyDataSetChanged();
     }
 
+
+
+    @Override
+    public ArrayAdapter getAdapter() {
+        return adapter;
+    }
 
 }

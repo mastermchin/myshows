@@ -15,7 +15,7 @@ import java.util.Collection;
  * To change this template use File | Settings | File Templates.
  */
 
-public class Show extends  JsonEvaluator implements IShow,JsonSerializable {
+public class Show extends  JsonEvaluator implements IShow,JsonSerializable{
 
 
     private Integer showId;
@@ -42,6 +42,11 @@ public class Show extends  JsonEvaluator implements IShow,JsonSerializable {
 
 
     public Show() {
+    }
+
+    @Override
+    public String getFilterString() {
+        return title;
     }
 
     public String getImageUrl() {

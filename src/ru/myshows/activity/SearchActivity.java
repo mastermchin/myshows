@@ -6,7 +6,11 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
@@ -23,12 +27,13 @@ import ru.myshows.tasks.GetShowsTask;
 public class SearchActivity extends SherlockFragmentActivity {
 
     private String search;
+    private EditText searchField;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_result);
 
-        search = (String ) getBundleValue(getIntent(), "search", null);
+        search = (String) getBundleValue(getIntent(), "search", null);
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
@@ -40,24 +45,24 @@ public class SearchActivity extends SherlockFragmentActivity {
         bg.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
         getSupportActionBar().setBackgroundDrawable(bg);
 
-       if (search != null)
-           executeSearch(search);
+        if (search != null)
+            executeSearch(search);
 
     }
 
-    private void executeSearch(String search){
+    private void executeSearch(String search) {
 
         ShowsFragment showsFragment = (ShowsFragment) getSupportFragmentManager().findFragmentById(R.id.shows_fragment);
         GetShowsTask task = null;
 
-        if (search.equals("top")){
+        if (search.equals("top")) {
             task = new GetShowsTask(this, GetShowsTask.SHOWS_TOP);
             showsFragment.setAction(GetShowsTask.SHOWS_TOP);
             task.setShowsLoadingListener(showsFragment);
             task.execute();
         }
 
-        if (search.equals("all")){
+        if (search.equals("all")) {
             task = new GetShowsTask(this, GetShowsTask.SHOWS_ALL);
             showsFragment.setAction(GetShowsTask.SHOWS_ALL);
             task.setShowsLoadingListener(showsFragment);
@@ -90,7 +95,7 @@ public class SearchActivity extends SherlockFragmentActivity {
                 finish();
                 break;
             case 1:
-                if (search != null){
+                if (search != null) {
                     finish();
                     Intent intent = new Intent();
                     intent.putExtra("search", search);
@@ -101,9 +106,28 @@ public class SearchActivity extends SherlockFragmentActivity {
             case 2:
                 startActivity(new Intent(this, SettingsAcrivity.class));
                 break;
+            case 3:
+                searchField = (EditText) item.getActionView();
+                searchField.addTextChangedListener(filterTextWatcher);
+                break;
         }
         return true;
     }
+
+
+    private TextWatcher filterTextWatcher = new TextWatcher() {
+        public void afterTextChanged(Editable s) {
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            ShowsFragment showsFragment = (ShowsFragment) getSupportFragmentManager().findFragmentById(R.id.shows_fragment);
+            showsFragment.getAdapter().getFilter().filter(s);
+        }
+
+    };
 
     private Object getBundleValue(Intent intent, String key, Object defaultValue) {
         if (intent == null) return defaultValue;

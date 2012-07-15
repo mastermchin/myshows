@@ -74,11 +74,6 @@ public class NewEpisodesFragment extends SherlockFragment implements GetNewEpiso
 
     @Override
     public void onNewEpisodesLoaded(List<Episode> episodes) {
-        //adapter = new SectionedAdapter(inflater, clickListener);
-
-        //populateAdapter(episodes);
-        //list.setAdapter(adapter);
-
         adapter = new MyExpandableListAdapter(episodes);
         list.setAdapter(adapter);
 
@@ -89,135 +84,7 @@ public class NewEpisodesFragment extends SherlockFragment implements GetNewEpiso
 
     }
 
-//    View.OnClickListener saveButtonListener = new View.OnClickListener() {
-//        ProgressDialog dialog = null;
-//
-//        Handler handler = new Handler() {
-//            @Override
-//            public void handleMessage(Message msg) {
-//                super.handleMessage(msg);
-//                if (dialog != null && dialog.isShowing()) dialog.dismiss();
-//                Toast.makeText(getActivity(), msg.what, Toast.LENGTH_SHORT).show();
-//                setUpdatedAdapter();
-//                //new GetNewEpisodesTask(NewEpisodesFragment.this).execute();
-//
-//            }
-//        };
-//
-//        Runnable checkEpisodesTask = new Runnable() {
-//            public void run() {
-//                Map<Integer, String> paramsMap = new HashMap<Integer, String>();
-//                for (SectionedAdapter.Section s : adapter.getSections()) {
-//                    List<Episode> episodes = ((EpisodesAdapter) s.adapter).episodes;
-//                    for (Episode e : episodes) {
-//                        if (e.isChecked()) {
-//                            String value = paramsMap.get(e.getShowId());
-//                            if (value == null)
-//                                paramsMap.put(e.getShowId(), e.getEpisodeId().toString());
-//                            else
-//                                paramsMap.put(e.getShowId(), value += "," + e.getEpisodeId().toString());
-//                            MyShows.newEpisodes.remove(e);
-//
-//                        }
-//                    }
-//                }
-//
-//                for (Map.Entry<Integer, String> entry : paramsMap.entrySet()) {
-//                    final Integer showId = entry.getKey();
-//                    final String episodesIds = entry.getValue();
-//                    new Thread() {
-//                        public void run() {
-//                            UserShow userShow = MyShows.getUserShow(showId);
-//                            userShow.setWatchedEpisodes(userShow.getWatchedEpisodes() + episodesIds.split(",").length);
-//                            //app.setUserShowsChanged(true);
-//                            MyShows.client.syncAllShowEpisodes(showId, episodesIds, null);
-//                        }
-//                    }.start();
-//                }
-//
-//                int message = R.string.changes_saved;
-//                handler.sendEmptyMessage(message);
-//            }
-//
-//        };
-//
-//        @Override
-//        public void onClick(View v) {
-//            dialog = ProgressDialog.show(getActivity(), "", getResources().getString(R.string.loading));
-//            handler.postDelayed(checkEpisodesTask, 1000);
-//        }
-//
-//    };
-//
-//
-//    private void setUpdatedAdapter() {
-//        adapter = new SectionedAdapter(inflater, clickListener);
-//        populateAdapter(localEpisodes);
-//        list.setAdapter(adapter);
-//    }
 
-//       private class EpisodesAdapter extends ArrayAdapter<Episode> {
-//
-//        private List<Episode> episodes;
-//        private String showTitle;
-//        private Episode last;
-//
-//
-//        private EpisodesAdapter(Context context, int textViewResourceId, List<Episode> objects, String showTitle) {
-//            super(context, textViewResourceId, objects);
-//            this.episodes = objects;
-//            this.showTitle = showTitle;
-//            this.last = objects.get(objects.size() - 1);
-//        }
-//
-//        protected class ViewHolder {
-//            protected TextView title;
-//            protected CheckBox checkBox;
-//            protected TextView shortTitle;
-//            private TextView airDate;
-//        }
-//
-//        @Override
-//        public View getView(int position, View convertView, ViewGroup parent) {
-//            final ViewHolder holder;
-//            final Episode episode = episodes.get(position);
-//
-//            if (episode != null) {
-//                if (convertView == null) {
-//                    convertView = inflater.inflate(R.layout.episode, null);
-//                    holder = new ViewHolder();
-//                    holder.title = (TextView) convertView.findViewById(R.id.episode_title);
-//                    holder.checkBox = (CheckBox) convertView.findViewById(R.id.episode_check_box);
-//                    holder.shortTitle = (TextView) convertView.findViewById(R.id.episode_short_title);
-//                    holder.airDate = (TextView) convertView.findViewById(R.id.episode_air_date);
-//                    convertView.setTag(holder);
-//                } else {
-//                    holder = (ViewHolder) convertView.getTag();
-//                }
-//
-//                holder.title.setText(episode.getTitle());
-//                holder.shortTitle.setText(episode.getShortName() != null ? episode.getShortName() : composeShortTitle(episode));
-//                holder.airDate.setText(episode.getAirDate() != null ? df.format(episode.getAirDate()) : "unknown");
-//
-//
-//                holder.checkBox.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        episode.setChecked(!episode.isChecked());
-//                        SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
-//                        if (mMode == null)
-//                            mMode = activity.startActionMode(new CheckNewEpisodesActionMode());
-//                        notifyDataSetChanged();
-//                    }
-//                });
-//
-//                holder.checkBox.setChecked(episode.isChecked());
-//                convertView.setOnCreateContextMenuListener(null);
-//            }
-//            return convertView;
-//
-//        }
-//    }
 
 
     public class MyExpandableListAdapter extends BaseExpandableListAdapter {
@@ -433,60 +300,6 @@ public class NewEpisodesFragment extends SherlockFragment implements GetNewEpiso
 
     }
 
-//
-//    private String composeShortTitle(Episode e) {
-//        int season = e.getSeasonNumber();
-//        int episode = e.getEpisodeNumber();
-//        return ("s" + String.format("%1$02d", season) + "e" + String.format("%1$02d", episode));
-//    }
-
-//
-//    View.OnClickListener clickListener = new View.OnClickListener() {
-//        boolean isCheked = true;
-//
-//        @Override
-//        public void onClick(View view) {
-//            TextView header = (TextView) view;
-//            SectionedAdapter.Section s = adapter.getSection(header.getText().toString());
-//            for (Episode e : ((EpisodesAdapter) s.adapter).episodes) {
-//                e.setChecked(isCheked);
-//            }
-//            isCheked = !isCheked;
-//            SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
-//            if (mMode == null)
-//                mMode = activity.startActionMode(new CheckNewEpisodesActionMode());
-//            adapter.notifyDataSetChanged();
-//        }
-//    };
-
-//    private void populateAdapter(List<Episode> result) {
-//        if (result == null) return;
-//        Map<Integer, List<Episode>> episodesByShows = new HashMap<Integer, List<Episode>>();
-//
-//        for (Episode e : result) {
-//            // exclude specials episodes
-//            if (e.getEpisodeNumber() == 0)
-//                continue;
-//
-//            List<Episode> temp = episodesByShows.get(e.getShowId());
-//            if (temp == null) {
-//                temp = new ArrayList<Episode>();
-//                episodesByShows.put(e.getShowId(), temp);
-//
-//            }
-//            temp.add(e);
-//        }
-//
-//        for (Map.Entry<Integer, List<Episode>> entry : episodesByShows.entrySet()) {
-//            Integer showId = entry.getKey();
-//            String title = MyShows.getUserShow(showId) != null ? MyShows.getUserShow(showId).getTitle() : "";
-//            List<Episode> episodes = entry.getValue();
-//            Collections.sort(episodes, new EpisodeComparator("shortName"));
-//            adapter.addSection(title + "*", new EpisodesAdapter(getActivity(), R.layout.episode, episodes, title));
-//        }
-//
-//
-//    }
 
 
     private class CheckNewEpisodesTask extends BaseTask<Boolean> {

@@ -12,6 +12,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -20,6 +22,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.viewpagerindicator.TitlePageIndicator;
 import ru.myshows.adapters.SectionedAdapter;
+import ru.myshows.domain.Searchable;
 import ru.myshows.fragments.*;
 import ru.myshows.tasks.*;
 import ru.myshows.util.Settings;
@@ -115,7 +118,7 @@ public class MainActivity extends SherlockFragmentActivity {
         switch (item.getItemId()) {
             case 1:
                 int position = pager.getCurrentItem();
-                if (!MyShows.isLoggedIn )
+                if (!MyShows.isLoggedIn)
                     break;
 
                 Fragment currentFragment = adapter.getItem(position);
@@ -127,7 +130,7 @@ public class MainActivity extends SherlockFragmentActivity {
                 break;
             case 4:
                 search = (EditText) item.getActionView();
-                //search.addTextChangedListener(filterTextWatcher);
+                search.addTextChangedListener(filterTextWatcher);
                 break;
             case 3:
                 final AlertDialog alert;
@@ -152,6 +155,22 @@ public class MainActivity extends SherlockFragmentActivity {
         }
         return true;
     }
+
+    private TextWatcher filterTextWatcher = new TextWatcher() {
+        public void afterTextChanged(Editable s) {
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            Fragment fragment = adapter.getItem(pager.getCurrentItem());
+            if (fragment instanceof Searchable) {
+                ((Searchable) fragment).getAdapter().getFilter().filter(s);
+            }
+        }
+
+    };
 
     private void getPrivateTabs() {
 

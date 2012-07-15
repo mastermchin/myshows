@@ -16,7 +16,7 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 
-public class Episode extends JsonEvaluator implements JsonSerializable {
+public class Episode extends JsonEvaluator implements JsonSerializable, Filterable {
 
     private static final DateFormat DF = new SimpleDateFormat("dd.MM.yyyy");
 
@@ -36,6 +36,11 @@ public class Episode extends JsonEvaluator implements JsonSerializable {
     private boolean isChecked;
     private UserShow show;
 
+
+    @Override
+    public String getFilterString() {
+        return title;
+    }
 
     public UserShow getShow() {
         return show;

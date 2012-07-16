@@ -151,8 +151,10 @@ public class SectionedAdapter extends ArrayAdapter implements Serializable {
 
     public int getViewTypeCount() {
         int total = 1;    // one for the header, plus those from sections
-        for (Section section : this.sections) {
-            total += section.adapter.getViewTypeCount();
+        if (sections != null) {
+            for (Section section : this.sections) {
+                total += section.adapter.getViewTypeCount();
+            }
         }
         return total;
     }

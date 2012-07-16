@@ -151,7 +151,8 @@ public class ShowsFragment extends Fragment implements Taskable, GetShowsTask.Sh
                 });
 
                 holder.title.setText(show.getTitle());
-                holder.rating.setRating(show.getRating().floatValue());
+                UserShow userShow = MyShows.getUserShow(show.getShowId());
+                holder.rating.setRating(userShow != null ? userShow.getRating().floatValue() :show.getRating().floatValue());
 
                 if (show instanceof UserShow) {
 

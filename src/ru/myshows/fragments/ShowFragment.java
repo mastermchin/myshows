@@ -149,6 +149,7 @@ public class ShowFragment extends Fragment implements ChangeShowStatusTask.Chang
 
 
     public class ChangeShowRatioTask extends BaseTask<Boolean> {
+        Float rating;
 
         public ChangeShowRatioTask(Context context) {
             super(context);
@@ -156,7 +157,7 @@ public class ShowFragment extends Fragment implements ChangeShowStatusTask.Chang
 
         @Override
         public Boolean doWork(Object... objects) throws Exception {
-            Float rating = (Float) objects[0];
+            rating = (Float) objects[0];
             boolean result = MyShows.client.changeShowRatio(show.getShowId(), (int) rating.floatValue());
             return result;
         }
@@ -164,6 +165,12 @@ public class ShowFragment extends Fragment implements ChangeShowStatusTask.Chang
         @Override
         public void onResult(Boolean result) {
             Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
+            if (result) {
+                UserShow us = MyShows.getUserShow(show.getShowId());
+                if (us != null)
+                    us.setRating((double)rating);
+            }
+
         }
 
         @Override

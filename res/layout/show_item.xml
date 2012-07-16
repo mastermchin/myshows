@@ -8,8 +8,8 @@
 
     <ImageView
             android:id="@+id/show_logo"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
             android:scaleType="centerCrop"
             />
 
@@ -20,7 +20,7 @@
             android:layout_toRightOf="@id/show_logo"
             android:textColor="@color/white"
             android:paddingLeft="10dp"
-            android:textSize="15sp"
+            android:textSize="17sp"
             />
 
     <RatingBar
@@ -30,9 +30,9 @@
             android:numStars="5"
             android:stepSize="0.25"
             android:isIndicator="true"
-            style="@style/DarkRatingBar"
+            style="@style/showsRatingBar"
             android:layout_toRightOf="@id/show_logo"
-            android:layout_below="@id/show_name"
+            android:layout_alignParentBottom="true"
             android:paddingBottom="7dp"
             android:layout_marginLeft="10dp"
             />

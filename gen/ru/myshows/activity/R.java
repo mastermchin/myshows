@@ -8,6 +8,9 @@
 package ru.myshows.activity;
 
 public final class R {
+    public static final class array {
+        public static final int months=0x7f0c0000;
+    }
     public static final class attr {
         /**  Specified if we are forcing an action item overflow menu. 
          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
@@ -1140,29 +1143,33 @@ containing a value of this type.
         public static final int ic_save=0x7f02006f;
         public static final int ic_search=0x7f020070;
         public static final int ic_star_gray=0x7f020071;
-        public static final int ic_star_yellow=0x7f020072;
-        public static final int ic_star_yellow_half=0x7f020073;
-        public static final int ic_stop=0x7f020074;
-        public static final int ic_volume=0x7f020075;
-        public static final int ic_web_site=0x7f020076;
-        public static final int indicator=0x7f020077;
-        public static final int my_shows_logo=0x7f020078;
-        public static final int my_shows_logo_dark=0x7f020079;
-        public static final int progress_bar_blue=0x7f02007a;
-        public static final int progress_bar_green=0x7f02007b;
-        public static final int progress_bar_red=0x7f02007c;
-        public static final int red_button=0x7f02007d;
-        public static final int red_label=0x7f02007e;
-        public static final int stripe_red=0x7f02007f;
-        public static final int tiled_background=0x7f020080;
-        public static final int vpi__tab_indicator=0x7f020081;
-        public static final int vpi__tab_selected_focused_holo=0x7f020082;
-        public static final int vpi__tab_selected_holo=0x7f020083;
-        public static final int vpi__tab_selected_pressed_holo=0x7f020084;
-        public static final int vpi__tab_unselected_focused_holo=0x7f020085;
-        public static final int vpi__tab_unselected_holo=0x7f020086;
-        public static final int vpi__tab_unselected_pressed_holo=0x7f020087;
-        public static final int yellow_big_rating_bar=0x7f020088;
+        public static final int ic_star_small=0x7f020072;
+        public static final int ic_star_small_full=0x7f020073;
+        public static final int ic_star_small_half=0x7f020074;
+        public static final int ic_star_yellow=0x7f020075;
+        public static final int ic_star_yellow_half=0x7f020076;
+        public static final int ic_stop=0x7f020077;
+        public static final int ic_volume=0x7f020078;
+        public static final int ic_web_site=0x7f020079;
+        public static final int indicator=0x7f02007a;
+        public static final int my_shows_logo=0x7f02007b;
+        public static final int my_shows_logo_dark=0x7f02007c;
+        public static final int progress_bar_blue=0x7f02007d;
+        public static final int progress_bar_green=0x7f02007e;
+        public static final int progress_bar_red=0x7f02007f;
+        public static final int red_button=0x7f020080;
+        public static final int red_label=0x7f020081;
+        public static final int shows_rating_bar=0x7f020082;
+        public static final int stripe_red=0x7f020083;
+        public static final int tiled_background=0x7f020084;
+        public static final int vpi__tab_indicator=0x7f020085;
+        public static final int vpi__tab_selected_focused_holo=0x7f020086;
+        public static final int vpi__tab_selected_holo=0x7f020087;
+        public static final int vpi__tab_selected_pressed_holo=0x7f020088;
+        public static final int vpi__tab_unselected_focused_holo=0x7f020089;
+        public static final int vpi__tab_unselected_holo=0x7f02008a;
+        public static final int vpi__tab_unselected_pressed_holo=0x7f02008b;
+        public static final int yellow_big_rating_bar=0x7f02008c;
     }
     public static final class id {
         public static final int abs__action_bar=0x7f050025;
@@ -1195,10 +1202,10 @@ containing a value of this type.
         public static final int abs__titleDivider=0x7f05001f;
         public static final int abs__up=0x7f05000e;
         public static final int avatar=0x7f050048;
-        public static final int button_cancelled=0x7f05007a;
-        public static final int button_remove=0x7f05007b;
-        public static final int button_watching=0x7f050078;
-        public static final int button_will_watch=0x7f050079;
+        public static final int button_cancelled=0x7f050078;
+        public static final int button_remove=0x7f050079;
+        public static final int button_watching=0x7f050076;
+        public static final int button_will_watch=0x7f050077;
         public static final int cancel_button=0x7f05005a;
         public static final int catalog_image=0x7f050060;
         public static final int days_bar=0x7f050050;
@@ -1222,7 +1229,7 @@ containing a value of this type.
         public static final int homeAsUp=0x7f050009;
         public static final int hours_bar=0x7f05004e;
         public static final int indicator=0x7f050038;
-        public static final int indicator_layout=0x7f05007d;
+        public static final int indicator_layout=0x7f05007b;
         public static final int listMode=0x7f050005;
         public static final int login_button=0x7f050036;
         public static final int login_field=0x7f050034;
@@ -1250,8 +1257,8 @@ containing a value of this type.
         public static final int progress_news=0x7f05003d;
         public static final int progress_next_episodes=0x7f050044;
         public static final int progress_profile=0x7f050046;
-        public static final int progress_show=0x7f05007c;
-        public static final int progress_shows=0x7f050081;
+        public static final int progress_show=0x7f05007a;
+        public static final int progress_shows=0x7f05007f;
         public static final int register_button=0x7f050037;
         public static final int scroll_layout=0x7f050047;
         public static final int search=0x7f05005b;
@@ -1263,34 +1270,32 @@ containing a value of this type.
         public static final int showCustom=0x7f05000b;
         public static final int showHome=0x7f050008;
         public static final int showTitle=0x7f05000a;
-        public static final int show_date_label=0x7f050069;
-        public static final int show_date_layout=0x7f050068;
-        public static final int show_date_value=0x7f05006a;
-        public static final int show_genres_label=0x7f05006c;
-        public static final int show_genres_layout=0x7f05006b;
-        public static final int show_genres_valye=0x7f05006d;
-        public static final int show_info=0x7f050067;
-        public static final int show_logo=0x7f050066;
-        public static final int show_name=0x7f05007e;
-        public static final int show_rating=0x7f05007f;
-        public static final int show_rating_myshows_label=0x7f050072;
-        public static final int show_rating_myshows_layout=0x7f050071;
-        public static final int show_rating_myshows_value=0x7f050073;
-        public static final int show_rating_yours=0x7f050075;
-        public static final int show_rating_yours_layout=0x7f050074;
-        public static final int show_rating_yours_value=0x7f050076;
-        public static final int show_root_view=0x7f050064;
-        public static final int show_status_buttons_layout=0x7f050077;
-        public static final int show_title=0x7f050065;
-        public static final int show_watching_label=0x7f05006f;
-        public static final int show_watching_layout=0x7f05006e;
-        public static final int show_watching_value=0x7f050070;
+        public static final int show_date_label=0x7f050067;
+        public static final int show_date_layout=0x7f050066;
+        public static final int show_date_value=0x7f050068;
+        public static final int show_genres_label=0x7f05006a;
+        public static final int show_genres_layout=0x7f050069;
+        public static final int show_genres_valye=0x7f05006b;
+        public static final int show_info=0x7f050065;
+        public static final int show_logo=0x7f050064;
+        public static final int show_name=0x7f05007c;
+        public static final int show_rating=0x7f05007d;
+        public static final int show_rating_myshows_label=0x7f050070;
+        public static final int show_rating_myshows_layout=0x7f05006f;
+        public static final int show_rating_myshows_value=0x7f050071;
+        public static final int show_rating_yours=0x7f050073;
+        public static final int show_rating_yours_layout=0x7f050072;
+        public static final int show_rating_yours_value=0x7f050074;
+        public static final int show_status_buttons_layout=0x7f050075;
+        public static final int show_watching_label=0x7f05006d;
+        public static final int show_watching_layout=0x7f05006c;
+        public static final int show_watching_value=0x7f05006e;
         public static final int shows_fragment=0x7f050061;
-        public static final int shows_list=0x7f050082;
+        public static final int shows_list=0x7f050080;
         public static final int tabMode=0x7f050006;
         public static final int triangle=0x7f050001;
         public static final int underline=0x7f050002;
-        public static final int unwatched_episodes=0x7f050080;
+        public static final int unwatched_episodes=0x7f05007e;
         public static final int useLogo=0x7f050007;
         public static final int watched_days_time=0x7f05004f;
         public static final int watched_episodes_time=0x7f05004b;
@@ -1567,7 +1572,7 @@ Tabs titles
         public static final int Widget_Sherlock_Spinner_DropDown_ActionBar=0x7f0a0027;
         public static final int Widget_Sherlock_TextView_SpinnerItem=0x7f0a0035;
         public static final int Widget_TabPageIndicator=0x7f0a0002;
-        public static final int bigDarkRatingBar=0x7f0a0060;
+        public static final int showsRatingBar=0x7f0a0060;
     }
     public static final class xml {
         public static final int preferences=0x7f040000;

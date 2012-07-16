@@ -95,6 +95,9 @@ public class NewEpisodesFragment extends SherlockFragment implements GetNewEpiso
 
         public MyExpandableListAdapter(Collection<Episode> eps) {
 
+            if (eps == null || eps.isEmpty())
+                return;
+
 
             Map<Integer, List<Episode>> episodesByShows = new HashMap<Integer, List<Episode>>();
 

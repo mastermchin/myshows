@@ -45,10 +45,10 @@
         
     </style>
 
-    <style name="bigDarkRatingBar" >
-        <item name="android:progressDrawable">@drawable/yellow_big_rating_bar</item>
-        <item name="android:minHeight">32dip</item>
-        <item name="android:maxHeight">32dip</item>
+    <style name="showsRatingBar" >
+        <item name="android:progressDrawable">@drawable/shows_rating_bar</item>
+        <item name="android:minHeight">20dip</item>
+        <item name="android:maxHeight">20dip</item>
     </style>
 
 

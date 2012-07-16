@@ -186,7 +186,8 @@ public class NextEpisodesFragment extends Fragment implements GetNextEpisodesTas
             Integer month = entry.getKey();
             List<Episode> episodes = entry.getValue();
             Collections.sort(episodes, new EpisodeComparator("date"));
-            String m = new DateFormatSymbols().getMonths()[month];
+            //String m = new DateFormatSymbols().getMonths()[month];
+            String m = getResources().getStringArray(R.array.months)[month];
             sectionList.add(new SectionedAdapter.Section(m, new EpisodesAdapter(getActivity(), R.layout.episode, episodes)));
         }
         adapter = new SectionedAdapter(getActivity(), R.layout.header, sectionList);

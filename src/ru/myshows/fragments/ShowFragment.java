@@ -39,7 +39,6 @@ import java.util.Map;
 public class ShowFragment extends Fragment implements ChangeShowStatusTask.ChangeShowStatusListener {
 
 
-    private TextView showTitle;
     private ImageView showLogo;
     private LinearLayout dateLayout;
     private LinearLayout genresLayoyt;
@@ -48,7 +47,6 @@ public class ShowFragment extends Fragment implements ChangeShowStatusTask.Chang
     private LinearLayout yoursRatingLayoyt;
     private RatingBar myShowsRatingBar;
     private RatingBar yoursRatingBar;
-    private Button activeWatchButton;
     private Button watchingButton;
     private Button willWatchButton;
     private Button cancelledButton;
@@ -76,7 +74,6 @@ public class ShowFragment extends Fragment implements ChangeShowStatusTask.Chang
 
     private void populateUI(View view) {
         showLogo = (ImageView) view.findViewById(R.id.show_logo);
-        showTitle = (TextView) view.findViewById(R.id.show_title);
         dateLayout = (LinearLayout) view.findViewById(R.id.show_date_layout);
         genresLayoyt = (LinearLayout) view.findViewById(R.id.show_genres_layout);
         watchingLayoyt = (LinearLayout) view.findViewById(R.id.show_watching_layout);
@@ -90,11 +87,6 @@ public class ShowFragment extends Fragment implements ChangeShowStatusTask.Chang
 
 
         ImageLoader.getInstance().displayImage(show.getImageUrl(), showLogo);
-
-
-        if (show.getTitle() != null) {
-            showTitle.setText(show.getTitle());
-        }
 
         // date
         if (show.getStartedAt() != null) {

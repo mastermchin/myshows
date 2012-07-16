@@ -125,6 +125,9 @@ public class EpisodesFragment extends SherlockFragment {
 
 
         public MyExpandableListAdapter(Collection<Episode> eps, int totalSeasons) {
+            if (eps == null || eps.isEmpty())
+                return;
+
             for (int i = 1; i <= totalSeasons; i++) {
                 boolean isAllEpisodesWatched = true;
                 ArrayList<Episode> seasonEpisodes = new ArrayList<Episode>();

@@ -27,10 +27,7 @@ import ru.myshows.fragments.*;
 import ru.myshows.tasks.*;
 import ru.myshows.util.Settings;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -95,6 +92,9 @@ public class MainActivity extends SherlockFragmentActivity {
         bg.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
         getSupportActionBar().setBackgroundDrawable(bg);
 
+        Log.d("MyShows", "Default Country  = " + Locale.getDefault().getDisplayCountry());
+        Log.d("MyShows", "Default Language  = " + Locale.getDefault().getDisplayLanguage());
+        Log.d("MyShows", "Language  = " + Locale.getDefault().getLanguage());
 
         new LoginTask().execute();
 

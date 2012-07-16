@@ -6,6 +6,7 @@ import ru.myshows.api.MyShowsApi;
 import ru.myshows.util.JsonUtil;
 
 import java.util.Collection;
+import java.util.Locale;
 
 /**
  * Created by IntelliJ IDEA.
@@ -71,6 +72,8 @@ public class Show extends  JsonEvaluator implements IShow,JsonSerializable{
     }
 
     public String getTitle() {
+        if (Locale.getDefault().getLanguage().equals("ru") && getRuTitle() != null && getRuTitle().length() > 0)
+            return getRuTitle();
         return title;
     }
 

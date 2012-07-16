@@ -4,6 +4,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import ru.myshows.api.MyShowsApi;
 
+import java.util.Locale;
+
 /**
  * Created by IntelliJ IDEA.
  * User: GGobozov

@@ -184,7 +184,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
         // fire first task manually
         GetShowsTask task = new GetShowsTask(MainActivity.this, GetShowsTask.SHOWS_USER);
-        task.setShowsLoadingListener((GetShowsTask.ShowsLoadingListener) adapter.getItem(0));
+        task.setTaskListener((TaskListener) adapter.getItem(0));
         task.execute();
     }
 

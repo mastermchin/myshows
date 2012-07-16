@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class GetNewsTask extends BaseTask<Map<String, List<UserNews>>> {
 
-    private NewsLoadingListener newsLoadingListener;
+    private TaskListener taskListener;
 
     public GetNewsTask(Context context) {
         super(context);
@@ -37,20 +37,17 @@ public class GetNewsTask extends BaseTask<Map<String, List<UserNews>>> {
 
     @Override
     public void onResult(Map<String, List<UserNews>> result) {
-        newsLoadingListener.onNewsLoaded(result);
+        taskListener.onTaskComplete(result);
     }
 
     @Override
     public void onError(Exception e) {
         e.printStackTrace();
+        taskListener.onTaskFailed(e);
     }
 
 
-    public static interface NewsLoadingListener {
-        public void onNewsLoaded(Map<String, List<UserNews>> news);
-    }
-
-    public void setNewsLoadingListener(NewsLoadingListener newsLoadingListener) {
-        this.newsLoadingListener = newsLoadingListener;
+    public void setTaskListener(TaskListener taskListener) {
+        this.taskListener = taskListener;
     }
 }

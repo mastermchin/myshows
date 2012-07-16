@@ -1,6 +1,7 @@
 package ru.myshows.tasks;
 
 import android.content.Context;
+import android.widget.Toast;
 import ru.myshows.activity.MyShows;
 import ru.myshows.domain.IShow;
 import ru.myshows.util.ShowsComparator;
@@ -15,15 +16,16 @@ import java.util.List;
  * Time: 18:05
  * To change this template use File | Settings | File Templates.
  */
-public class GetShowsTask extends BaseTask<List<IShow>> {
+public class GetShowsTask extends BaseTask<List<IShow>>  {
 
     public static final int SHOWS_SEARCH = 1;
     public static final int SHOWS_TOP = 2;
     public static final int SHOWS_USER = 3;
     public static final int SHOWS_ALL = 4;
 
-    private ShowsLoadingListener showsLoadingListener;
+    private TaskListener taskListener;
     private int action;
+    private Context context;
 
     public GetShowsTask(Context context) {
         super(context);
@@ -32,6 +34,7 @@ public class GetShowsTask extends BaseTask<List<IShow>> {
 
     public GetShowsTask(Context context, int action) {
         super(context);
+        this.context = context;
         this.action = action;
     }
 
@@ -40,18 +43,9 @@ public class GetShowsTask extends BaseTask<List<IShow>> {
         this.action = action;
     }
 
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-    }
 
     @Override
     public List<IShow> doWork(Object... objects) throws Exception {
-        if (!isOnline){
-            this.cancel(true);
-            return null;
-        }
-
         List shows = null;
         switch (action) {
             case SHOWS_SEARCH:
@@ -86,25 +80,18 @@ public class GetShowsTask extends BaseTask<List<IShow>> {
 
     @Override
     public void onResult(List<IShow> shows) {
-        showsLoadingListener.onShowsLoaded(shows);
+        taskListener.onTaskComplete(shows);
 
     }
 
     @Override
     public void onError(Exception e) {
         e.printStackTrace();
+        Toast.makeText(context, "Not Internnet Available!", Toast.LENGTH_LONG).show();
+        taskListener.onTaskFailed(e);
     }
 
-
-    public void setShowsLoadingListener(ShowsLoadingListener showsLoadingListener) {
-        this.showsLoadingListener = showsLoadingListener;
-    }
-
-
-
-    public interface ShowsLoadingListener{
-
-        public void onShowsLoaded(List<IShow> shows);
-
+    public void setTaskListener(TaskListener taskListener) {
+        this.taskListener = taskListener;
     }
 }

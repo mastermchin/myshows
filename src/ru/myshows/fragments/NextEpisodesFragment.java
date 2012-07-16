@@ -20,6 +20,7 @@ import ru.myshows.domain.Searchable;
 import ru.myshows.domain.UserShow;
 import ru.myshows.tasks.GetNewEpisodesTask;
 import ru.myshows.tasks.GetNextEpisodesTask;
+import ru.myshows.tasks.TaskListener;
 import ru.myshows.tasks.Taskable;
 import ru.myshows.util.EpisodeComparator;
 
@@ -35,7 +36,7 @@ import java.util.*;
  * Time: 1:10
  * To change this template use File | Settings | File Templates.
  */
-public class NextEpisodesFragment extends Fragment implements GetNextEpisodesTask.NextEpisodesLoadingListener, Taskable, Searchable {
+public class NextEpisodesFragment extends Fragment implements TaskListener<List<Episode>>, Taskable, Searchable {
 
     private SectionedAdapter adapter;
     private RelativeLayout rootView;
@@ -62,28 +63,33 @@ public class NextEpisodesFragment extends Fragment implements GetNextEpisodesTas
         if (isTaskExecuted)
             return;
         GetNextEpisodesTask episodesTask = new GetNextEpisodesTask(getActivity());
-        episodesTask.setNextEpisodesLoadingListener(this);
+        episodesTask.setTaskListener(this);
         episodesTask.execute();
     }
 
     @Override
     public void executeUpdateTask() {
         GetNextEpisodesTask episodesTask = new GetNextEpisodesTask(getActivity(), true);
-        episodesTask.setNextEpisodesLoadingListener(this);
+        episodesTask.setTaskListener(this);
         list.setVisibility(View.GONE);
         progress.setVisibility(View.VISIBLE);
         episodesTask.execute();
     }
 
     @Override
-    public void onNextEpisodesLoaded(List<Episode> episodes) {
-        // populateAdapter(episodes);
-        list.setAdapter(populateAdapter(episodes));
+    public void onTaskComplete(List<Episode> result) {
+        list.setAdapter(populateAdapter(result));
         progress.setVisibility(View.GONE);
         progress.setIndeterminate(false);
         list.setVisibility(View.VISIBLE);
         isTaskExecuted = true;
     }
+
+    @Override
+    public void onTaskFailed(Exception e) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
 
 
     public static class EpisodesAdapter extends ArrayAdapter<Episode> {

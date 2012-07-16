@@ -20,6 +20,7 @@ import ru.myshows.components.TextProgressBar;
 import ru.myshows.domain.*;
 import ru.myshows.tasks.BaseTask;
 import ru.myshows.tasks.GetProfileTask;
+import ru.myshows.tasks.TaskListener;
 import ru.myshows.tasks.Taskable;
 import ru.myshows.util.Settings;
 import ru.myshows.util.Utils;
@@ -34,7 +35,7 @@ import java.util.List;
  * Time: 15:19:22
  * To change this template use File | Settings | File Templates.
  */
-public class ProfileFragment extends Fragment implements GetProfileTask.ProfileLoadingListener, Taskable {
+public class ProfileFragment extends Fragment implements TaskListener<Profile>, Taskable {
 
 
     private Button logoutButton;
@@ -61,8 +62,8 @@ public class ProfileFragment extends Fragment implements GetProfileTask.ProfileL
 
 
     @Override
-    public void onProfileLoaded(Profile profile) {
-        populateUI(profile, profile.getStats());
+    public void onTaskComplete(Profile result) {
+        populateUI(result, result.getStats());
         progress.setIndeterminate(false);
         progress.setVisibility(View.GONE);
         scrollView.setVisibility(View.VISIBLE);
@@ -70,18 +71,25 @@ public class ProfileFragment extends Fragment implements GetProfileTask.ProfileL
     }
 
     @Override
+    public void onTaskFailed(Exception e) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+
+
+    @Override
     public void executeTask() {
         if (isTaskExecuted)
             return;
         GetProfileTask profileTask = new GetProfileTask(getActivity());
-        profileTask.setProfileLoadingListener(this);
+        profileTask.setTaskListener(this);
         profileTask.execute(Settings.getString(Settings.KEY_LOGIN));
     }
 
     @Override
     public void executeUpdateTask() {
         GetProfileTask profileTask = new GetProfileTask(getActivity(), true);
-        profileTask.setProfileLoadingListener(this);
+        profileTask.setTaskListener(this);
         scrollView.setVisibility(View.GONE);
         progress.setVisibility(View.VISIBLE);
         profileTask.execute(Settings.getString(Settings.KEY_LOGIN));

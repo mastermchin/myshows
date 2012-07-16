@@ -32,7 +32,7 @@ public class ProfileActivity extends SherlockFragmentActivity {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.add(android.R.id.content, profileFragment).commit();
                 GetProfileTask getProfileTask = new GetProfileTask(this);
-                getProfileTask.setProfileLoadingListener(profileFragment);
+                getProfileTask.setTaskListener(profileFragment);
                 getProfileTask.execute(login);
             }
         } else {

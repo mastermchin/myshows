@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class GetNextEpisodesTask extends BaseTask<List<Episode>> {
 
-    private NextEpisodesLoadingListener nextEpisodesLoadingListener;
+    private TaskListener taskListener;
 
     public GetNextEpisodesTask(Context context) {
         super(context);
@@ -36,22 +36,16 @@ public class GetNextEpisodesTask extends BaseTask<List<Episode>> {
 
     @Override
     public void onResult(List<Episode> result) {
-           nextEpisodesLoadingListener.onNextEpisodesLoaded(result);
+        taskListener.onTaskComplete(result);
     }
 
     @Override
     public void onError(Exception e) {
         e.printStackTrace();
+        taskListener.onTaskFailed(e);
     }
 
-    public void setNextEpisodesLoadingListener(NextEpisodesLoadingListener nextEpisodesLoadingListener) {
-        this.nextEpisodesLoadingListener = nextEpisodesLoadingListener;
+    public void setTaskListener(TaskListener taskListener) {
+        this.taskListener = taskListener;
     }
-
-    public interface NextEpisodesLoadingListener{
-
-        public void onNextEpisodesLoaded(List<Episode> episodes);
-
-    }
-
 }

@@ -1,6 +1,8 @@
 package ru.myshows.fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -22,8 +24,10 @@ import ru.myshows.domain.Searchable;
 import ru.myshows.domain.UserShow;
 import ru.myshows.tasks.BaseTask;
 import ru.myshows.tasks.GetShowsTask;
+import ru.myshows.tasks.TaskListener;
 import ru.myshows.tasks.Taskable;
 import ru.myshows.util.EpisodeComparator;
+import ru.myshows.util.Settings;
 import ru.myshows.util.Utils;
 
 import java.util.*;
@@ -35,7 +39,7 @@ import java.util.*;
  * Time: 15:19:35
  * To change this template use File | Settings | File Templates.
  */
-public class ShowsFragment extends Fragment implements Taskable, GetShowsTask.ShowsLoadingListener, Searchable {
+public class ShowsFragment extends Fragment implements Taskable, Searchable, TaskListener<List<IShow>> {
 
     public static final int SHOWS_SEARCH = 1;
     public static final int SHOWS_TOP = 2;
@@ -71,13 +75,22 @@ public class ShowsFragment extends Fragment implements Taskable, GetShowsTask.Sh
     }
 
     @Override
-    public void onShowsLoaded(List<IShow> shows) {
-        list.setAdapter(populateAdapter(action, shows));
+    public void onTaskComplete(List<IShow> result) {
+        list.setAdapter(populateAdapter(action, result));
         progress.setVisibility(View.GONE);
         progress.setIndeterminate(false);
         list.setVisibility(View.VISIBLE);
         isTaskExecuted = true;
     }
+
+    @Override
+    public void onTaskFailed(Exception e) {
+        if (e != null){
+            progress.setVisibility(View.GONE);
+        }
+        //Toast.makeText(getActivity(), "Not Internnet Available!", Toast.LENGTH_LONG).show();
+    }
+
 
 
     @Override
@@ -87,14 +100,14 @@ public class ShowsFragment extends Fragment implements Taskable, GetShowsTask.Sh
             return;
         }
         GetShowsTask task = new GetShowsTask(getActivity(), GetShowsTask.SHOWS_USER);
-        task.setShowsLoadingListener(this);
+        task.setTaskListener(this);
         task.execute();
     }
 
     @Override
     public void executeUpdateTask() {
         GetShowsTask task = new GetShowsTask(getActivity(), true, GetShowsTask.SHOWS_USER);
-        task.setShowsLoadingListener(this);
+        task.setTaskListener(this);
         list.setVisibility(View.GONE);
         progress.setVisibility(View.VISIBLE);
         task.execute();

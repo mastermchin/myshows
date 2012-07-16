@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class GetShowTask extends BaseTask<Show> {
 
-    private ShowLoadingListener showLoadingListener;
+    private TaskListener taskListener;
 
     public GetShowTask(Context context) {
         super(context);
@@ -42,17 +42,16 @@ public class GetShowTask extends BaseTask<Show> {
 
     @Override
     public void onResult(Show result) {
-         showLoadingListener.onShowLoaded(result);
+        taskListener.onTaskComplete(result);
     }
 
     @Override
     public void onError(Exception e) {
         e.printStackTrace();
+        taskListener.onTaskFailed(e);
     }
 
-    public void setShowLoadingListener(ShowLoadingListener showLoadingListener) {
-        this.showLoadingListener = showLoadingListener;
-    }
+
 
     private void populateWatchedEpisodes(Show show, List<WatchedEpisode> episodes) {
         if (episodes == null || episodes.size() == 0) return;
@@ -85,8 +84,8 @@ public class GetShowTask extends BaseTask<Show> {
 
     }
 
-    public interface ShowLoadingListener{
-        public boolean onShowLoaded(Show show);
-    }
 
+    public void setTaskListener(TaskListener taskListener) {
+        this.taskListener = taskListener;
+    }
 }

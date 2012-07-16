@@ -1,12 +1,8 @@
 package ru.myshows.fragments;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,19 +11,9 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
 import ru.myshows.api.MyShowsApi;
-import ru.myshows.domain.Episode;
-import ru.myshows.domain.Genre;
 import ru.myshows.domain.Show;
 import ru.myshows.domain.UserShow;
 import ru.myshows.tasks.BaseTask;
-import ru.myshows.tasks.ChangeShowStatusTask;
-import ru.myshows.util.EpisodeComparator;
-import ru.myshows.util.Settings;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,7 +22,7 @@ import java.util.Map;
  * Time: 1:04
  * To change this template use File | Settings | File Templates.
  */
-public class ShowFragment extends Fragment implements ChangeShowStatusTask.ChangeShowStatusListener {
+public class ShowFragment extends Fragment  {
 
 
     private ImageView showLogo;
@@ -213,24 +199,50 @@ public class ShowFragment extends Fragment implements ChangeShowStatusTask.Chang
 
         //  activeWatchButton = (Button) v;
         ChangeShowStatusTask task = new ChangeShowStatusTask(getActivity());
-        task.setChangeShowStatusListener(this);
         task.execute(show.getShowId(), watchStatus);
 
 
     }
 
-    @Override
-    public boolean onShowStatusChanged(boolean result) {
-        Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
-        if (result) {
-            UserShow us = MyShows.getUserShow(show.getShowId());
-            if (us != null)
-                us.setWatchStatus(watchStatus);
-            updateStatusButtons();
-            yoursRatingBar.setIsIndicator(watchStatus.equals(MyShowsApi.STATUS.remove));
+
+    public class ChangeShowStatusTask extends BaseTask<Boolean> {
+
+
+        public ChangeShowStatusTask(Context context) {
+            super(context);
         }
-        return true;
+
+        public ChangeShowStatusTask(Context context, boolean forceUpdate) {
+            super(context, forceUpdate);
+        }
+
+        @Override
+        public Boolean doWork(Object... objects) throws Exception {
+
+            int showId = (Integer) objects[0];
+            MyShowsApi.STATUS status = (MyShowsApi.STATUS) objects[1];
+            return MyShows.client.changeShowStatus(showId, status);
+        }
+
+        @Override
+        public void onResult(Boolean result) {
+            Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
+            if (result) {
+                UserShow us = MyShows.getUserShow(show.getShowId());
+                if (us != null)
+                    us.setWatchStatus(watchStatus);
+                updateStatusButtons();
+                yoursRatingBar.setIsIndicator(watchStatus.equals(MyShowsApi.STATUS.remove));
+            }
+        }
+
+        @Override
+        public void onError(Exception e) {
+            e.printStackTrace();
+        }
+
     }
+
 
 
 }

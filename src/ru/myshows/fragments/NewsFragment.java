@@ -18,6 +18,7 @@ import ru.myshows.domain.UserNews;
 import ru.myshows.domain.UserShow;
 import ru.myshows.tasks.BaseTask;
 import ru.myshows.tasks.GetNewsTask;
+import ru.myshows.tasks.TaskListener;
 import ru.myshows.tasks.Taskable;
 import ru.myshows.util.NewsComparator;
 
@@ -32,7 +33,7 @@ import java.util.*;
  * Time: 15:19:10
  * To change this template use File | Settings | File Templates.
  */
-public class NewsFragment extends Fragment implements GetNewsTask.NewsLoadingListener, Taskable, Searchable {
+public class NewsFragment extends Fragment implements TaskListener<Map<String, List<UserNews>>>, Taskable, Searchable {
 
 
     private SectionedAdapter adapter;
@@ -51,12 +52,17 @@ public class NewsFragment extends Fragment implements GetNewsTask.NewsLoadingLis
     }
 
     @Override
-    public void onNewsLoaded(Map<String, List<UserNews>> news) {
-        list.setAdapter( populateAdapter(news));
+    public void onTaskComplete(Map<String, List<UserNews>> result) {
+        list.setAdapter( populateAdapter(result));
         progress.setVisibility(View.GONE);
         progress.setIndeterminate(false);
         list.setVisibility(View.VISIBLE);
         isTaskExecuted = true;
+    }
+
+    @Override
+    public void onTaskFailed(Exception e) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
 
@@ -65,14 +71,14 @@ public class NewsFragment extends Fragment implements GetNewsTask.NewsLoadingLis
         if (isTaskExecuted)
             return;
         GetNewsTask newsTask = new GetNewsTask(getActivity());
-        newsTask.setNewsLoadingListener(this);
+        newsTask.setTaskListener(this);
         newsTask.execute();
     }
 
     @Override
     public void executeUpdateTask() {
         GetNewsTask newsTask = new GetNewsTask(getActivity(), true);
-        newsTask.setNewsLoadingListener(this);
+        newsTask.setTaskListener(this);
         list.setVisibility(View.GONE);
         progress.setVisibility(View.VISIBLE);
         newsTask.execute();

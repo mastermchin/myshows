@@ -13,6 +13,7 @@ import ru.myshows.domain.Season;
 import ru.myshows.domain.UserShow;
 import ru.myshows.tasks.BaseTask;
 import ru.myshows.tasks.GetNewEpisodesTask;
+import ru.myshows.tasks.TaskListener;
 import ru.myshows.tasks.Taskable;
 import ru.myshows.util.EpisodeComparator;
 
@@ -27,7 +28,7 @@ import java.util.*;
  * Time: 1:10
  * To change this template use File | Settings | File Templates.
  */
-public class NewEpisodesFragment extends SherlockFragment implements GetNewEpisodesTask.NewEpisodesLoadingListener, Taskable {
+public class NewEpisodesFragment extends SherlockFragment implements TaskListener<List<Episode>>, Taskable {
 
     private MyExpandableListAdapter adapter;
     private RelativeLayout rootView;
@@ -59,31 +60,34 @@ public class NewEpisodesFragment extends SherlockFragment implements GetNewEpiso
         if (isTaskExecuted)
             return;
         GetNewEpisodesTask episodesTask = new GetNewEpisodesTask(getActivity());
-        episodesTask.setEpisodesLoadingListener(this);
+        episodesTask.setTaskListener(this);
         episodesTask.execute();
     }
 
     @Override
     public void executeUpdateTask() {
         GetNewEpisodesTask episodesTask = new GetNewEpisodesTask(getActivity(), true);
-        episodesTask.setEpisodesLoadingListener(this);
+        episodesTask.setTaskListener(this);
         list.setVisibility(View.GONE);
         progress.setVisibility(View.VISIBLE);
         episodesTask.execute();
     }
 
     @Override
-    public void onNewEpisodesLoaded(List<Episode> episodes) {
-        adapter = new MyExpandableListAdapter(episodes);
+    public void onTaskComplete(List<Episode> result) {
+        adapter = new MyExpandableListAdapter(result);
         list.setAdapter(adapter);
 
         progress.setVisibility(View.GONE);
         progress.setIndeterminate(false);
         list.setVisibility(View.VISIBLE);
         isTaskExecuted = true;
-
     }
 
+    @Override
+    public void onTaskFailed(Exception e) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 
 
 

@@ -42,6 +42,7 @@ public class Utils {
 
     public static List<IShow> getByWatchStatus(List<IShow> shows, MyShowsApi.STATUS status) {
         List<IShow> list = new ArrayList<IShow>();
+        if (shows == null) return list;
         for (IShow show : shows) {
             if (show.getWatchStatus().equals(status)) {
                 list.add(show);

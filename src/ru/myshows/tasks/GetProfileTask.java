@@ -13,7 +13,7 @@ import ru.myshows.domain.Profile;
  */
 public class GetProfileTask extends BaseTask<Profile> {
 
-    private ProfileLoadingListener profileLoadingListener;
+    private TaskListener taskListener;
 
     public GetProfileTask(Context context) {
         super(context);
@@ -35,19 +35,16 @@ public class GetProfileTask extends BaseTask<Profile> {
 
     @Override
     public void onResult(Profile result) {
-        profileLoadingListener.onProfileLoaded(result);
+        taskListener.onTaskComplete(result);
     }
 
     @Override
     public void onError(Exception e) {
         e.printStackTrace();
+        taskListener.onTaskFailed(e);
     }
 
-    public void setProfileLoadingListener(ProfileLoadingListener profileLoadingListener) {
-        this.profileLoadingListener = profileLoadingListener;
-    }
-
-    public static interface ProfileLoadingListener {
-        public void onProfileLoaded(Profile profile);
+    public void setTaskListener(TaskListener taskListener) {
+        this.taskListener = taskListener;
     }
 }

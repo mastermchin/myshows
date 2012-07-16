@@ -1,47 +1,22 @@
 package ru.myshows.activity;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.view.*;
-import android.view.MenuItem;
 import android.widget.*;
-import android.widget.Button;
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.*;
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.viewpagerindicator.TitlePageIndicator;
 import ru.myshows.api.MyShowsApi;
-import ru.myshows.api.MyShowsClient;
-import ru.myshows.components.RatingDialog;
 import ru.myshows.domain.*;
 import ru.myshows.fragments.EpisodesFragment;
 import ru.myshows.fragments.ShowFragment;
-import ru.myshows.tasks.ChangeShowStatusTask;
 import ru.myshows.tasks.GetShowTask;
-import ru.myshows.util.Settings;
-import ru.myshows.util.EpisodeComparator;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.List;
+import ru.myshows.tasks.TaskListener;
 
 /**
  * Created by IntelliJ IDEA.
@@ -50,7 +25,7 @@ import java.util.List;
  * Time: 17:53:42
  * To change this template use File | Settings | File Templates.
  */
-public class ShowActivity extends SherlockFragmentActivity implements GetShowTask.ShowLoadingListener {
+public class ShowActivity extends SherlockFragmentActivity implements TaskListener<Show> {
 
 
     private Integer showId;
@@ -100,23 +75,27 @@ public class ShowActivity extends SherlockFragmentActivity implements GetShowTas
 
 
         GetShowTask getShowTask = new GetShowTask(this);
-        getShowTask.setShowLoadingListener(this);
+        getShowTask.setTaskListener(this);
         getShowTask.execute(showId);
 
 
     }
 
+
     @Override
-    public boolean onShowLoaded(Show show) {
+    public void onTaskComplete(Show result) {
         progress.setVisibility(View.GONE);
         indicatorLayout.setVisibility(View.VISIBLE);
 
-        tabsAdapter.addFragment(new ShowFragment(show, watchStatus, yoursRating), getResources().getString(R.string.tab_show));
-        tabsAdapter.addFragment(new EpisodesFragment(show), getResources().getString(R.string.tab_episodes));
+        tabsAdapter.addFragment(new ShowFragment(result, watchStatus, yoursRating), getResources().getString(R.string.tab_show));
+        tabsAdapter.addFragment(new EpisodesFragment(result), getResources().getString(R.string.tab_episodes));
         indicator.notifyDataSetChanged();
         tabsAdapter.notifyDataSetChanged();
+    }
 
-        return true;
+    @Override
+    public void onTaskFailed(Exception e) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
 
@@ -137,7 +116,7 @@ public class ShowActivity extends SherlockFragmentActivity implements GetShowTas
                 break;
             case 1:
                 GetShowTask getShowTask = new GetShowTask(this, true);
-                getShowTask.setShowLoadingListener(this);
+                getShowTask.setTaskListener(this);
                 progress.setVisibility(View.VISIBLE);
                 indicatorLayout.setVisibility(View.GONE);
                 tabsAdapter = new MainActivity.TabsAdapter(getSupportFragmentManager());

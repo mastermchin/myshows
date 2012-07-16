@@ -41,6 +41,10 @@ public abstract class BaseTask<T> extends AsyncTask<Object, Void, T> {
     protected void onPreExecute() {
         if (!Utils.isInternetAvailable(context))
             isOnline = false;
+        if (!isOnline){
+            cancel(true);
+            onError(new Exception("No Internet available"));
+        }
     }
 
     @Override

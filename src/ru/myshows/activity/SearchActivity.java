@@ -58,21 +58,21 @@ public class SearchActivity extends SherlockFragmentActivity {
         if (search.equals("top")) {
             task = new GetShowsTask(this, GetShowsTask.SHOWS_TOP);
             showsFragment.setAction(GetShowsTask.SHOWS_TOP);
-            task.setShowsLoadingListener(showsFragment);
+            task.setTaskListener(showsFragment);
             task.execute();
         }
 
         if (search.equals("all")) {
             task = new GetShowsTask(this, GetShowsTask.SHOWS_ALL);
             showsFragment.setAction(GetShowsTask.SHOWS_ALL);
-            task.setShowsLoadingListener(showsFragment);
+            task.setTaskListener(showsFragment);
             task.execute();
         }
 
         if (task == null) {
             task = new GetShowsTask(this, GetShowsTask.SHOWS_SEARCH);
             showsFragment.setAction(GetShowsTask.SHOWS_SEARCH);
-            task.setShowsLoadingListener(showsFragment);
+            task.setTaskListener(showsFragment);
             task.execute(search);
         }
     }

@@ -230,7 +230,8 @@ public class EpisodesFragment extends SherlockFragment {
             holder.title.setText(season.getTitle());
 
             // show checkboxes only if user is logged in
-            if (MyShows.isLoggedIn) {
+            if (MyShows.isLoggedIn  &&  MyShows.getUserShow(show.getShowId()) != null) {
+                holder.checkBox.setVisibility(View.VISIBLE);
                 holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -285,7 +286,8 @@ public class EpisodesFragment extends SherlockFragment {
             holder.airDate.setText(episode.getAirDate() != null ? df.format(episode.getAirDate()) : "unknown");
 
             // show checkboxes only if user is logged in
-            if (MyShows.isLoggedIn) {
+            if (MyShows.isLoggedIn && MyShows.getUserShow(show.getShowId()) != null) {
+                holder.checkBox.setVisibility(View.VISIBLE);
                 holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -400,4 +402,7 @@ public class EpisodesFragment extends SherlockFragment {
         }
     }
 
+    public MyExpandableListAdapter getAdapter() {
+        return adapter;
+    }
 }

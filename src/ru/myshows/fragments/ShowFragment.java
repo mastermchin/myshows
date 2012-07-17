@@ -45,9 +45,9 @@ public class ShowFragment extends Fragment  {
     private View view;
 
 
-    public ShowFragment(Show show, MyShowsApi.STATUS watchStatus, Double yoursRating) {
+    public ShowFragment(Show show, Double yoursRating) {
         this.show = show;
-        this.watchStatus = watchStatus;
+        this.watchStatus = show.getWatchStatus();
         this.yoursRating = yoursRating;
 
     }
@@ -235,8 +235,17 @@ public class ShowFragment extends Fragment  {
             Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
             if (result) {
                 UserShow us = MyShows.getUserShow(show.getShowId());
-                if (us != null)
-                    us.setWatchStatus(watchStatus);
+                if (us != null){
+                    if (watchStatus.equals(MyShowsApi.STATUS.remove))
+                        MyShows.userShows.remove(us);
+                    else
+                        us.setWatchStatus(watchStatus);
+                } else {
+                    if (!watchStatus.equals(MyShowsApi.STATUS.remove)){
+                        MyShows.userShows.add(new UserShow(show, watchStatus));
+                    }
+                }
+
                 updateStatusButtons();
                 yoursRatingBar.setIsIndicator(watchStatus.equals(MyShowsApi.STATUS.remove));
             }

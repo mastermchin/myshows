@@ -321,4 +321,5 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
         return adapter;
     }
 
+
 }

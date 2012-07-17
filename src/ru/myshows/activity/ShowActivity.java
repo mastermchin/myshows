@@ -79,20 +79,42 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
         yoursRating = (Double) getBundleValue(getIntent(), "yoursRating", null);
 
 
-
         GetShowTask getShowTask = new GetShowTask(this);
         getShowTask.setTaskListener(this);
         getShowTask.execute(showId);
 
+        pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {}
+
+            @Override
+            public void onPageSelected(int i) {
+                if (i == 1){
+                    EpisodesFragment episodesFragment = (EpisodesFragment) tabsAdapter.getItem(1);
+                    if (episodesFragment.getAdapter() != null)
+                        episodesFragment.getAdapter().notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {}
+        });
 
     }
 
 
     @Override
     public void onTaskComplete(Show result) {
+
+        UserShow us = MyShows.getUserShow(showId);
+        if (us != null)
+            watchStatus = us.getWatchStatus();
+
+
+        result.setWatchStatus(watchStatus);
         progress.setVisibility(View.GONE);
         indicatorLayout.setVisibility(View.VISIBLE);
-        tabsAdapter.addFragment(new ShowFragment(result, watchStatus, yoursRating), getResources().getString(R.string.tab_show));
+        tabsAdapter.addFragment(new ShowFragment(result, yoursRating), getResources().getString(R.string.tab_show));
         tabsAdapter.addFragment(new EpisodesFragment(result), getResources().getString(R.string.tab_episodes));
         indicator.notifyDataSetChanged();
         tabsAdapter.notifyDataSetChanged();
@@ -145,6 +167,9 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
                 getShowTask.setTaskListener(new TaskListener<Show>() {
                     @Override
                     public void onTaskComplete(Show result) {
+                        UserShow us = MyShows.getUserShow(showId);
+                        if (us != null)
+                            watchStatus = us.getWatchStatus();
                         progress.setVisibility(View.GONE);
                         indicatorLayout.setVisibility(View.VISIBLE);
                         ShowFragment showFragment = (ShowFragment) tabsAdapter.getItem(0);

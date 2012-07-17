@@ -56,12 +56,14 @@ public class GetShowsTask extends BaseTask<List<IShow>>  {
                 if (isForceUpdate)
                     MyShows.topShows = null;
                 shows = MyShows.topShows != null ? MyShows.topShows : MyShows.client.getTopShows(null);
+                MyShows.topShows = shows;
                 Collections.sort(shows, new ShowsComparator());
                 break;
             case SHOWS_ALL:
                 if (isForceUpdate)
-                    MyShows.allShows  = null ;
-                shows = MyShows.allShows != null ? MyShows.allShows : MyShows.client.getTopShows(null);
+                    MyShows.topShows  = null ;
+                shows = MyShows.topShows != null ? MyShows.topShows : MyShows.client.getTopShows(null);
+                MyShows.topShows = shows;
                 Collections.sort(shows, new ShowsComparator("title"));
                 break;
             case SHOWS_USER:

@@ -180,7 +180,8 @@ public class Show extends  JsonEvaluator implements IShow,JsonSerializable{
 
     @Override
     public MyShowsApi.STATUS getWatchStatus() {
-        return MyShowsApi.STATUS.remove;
+        //return MyShowsApi.STATUS.remove;
+        return watchStatus;
     }
 
     public void setRating(Double rating) {

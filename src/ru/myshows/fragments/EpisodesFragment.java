@@ -51,12 +51,8 @@ public class EpisodesFragment extends SherlockFragment {
     }
 
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.inflater = inflater;
-        View view = inflater.inflate(R.layout.episodes, container, false);
-        episodesList = (ExpandableListView) view.findViewById(R.id.episodes_list);
 
+    public void refresh(Show show){
         Collection<Episode> episodes = show.getEpisodes();
         //exclude specials
         Iterator<Episode> iterator = episodes.iterator();
@@ -67,7 +63,15 @@ public class EpisodesFragment extends SherlockFragment {
         Episode o = (Episode) Collections.max(episodes, new EpisodeComparator());
         adapter = new MyExpandableListAdapter(episodes, o.getSeasonNumber());
         episodesList.setAdapter(adapter);
+    }
 
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.inflater = inflater;
+        View view = inflater.inflate(R.layout.episodes, container, false);
+        episodesList = (ExpandableListView) view.findViewById(R.id.episodes_list);
+        refresh(show);
         return view;
     }
 
@@ -362,8 +366,9 @@ public class EpisodesFragment extends SherlockFragment {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             //Used to put dark icons on light action bar
-            menu.add(0, 1, 1, "Save").setIcon(R.drawable.ic_save).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
-            menu.add(0, 2, 2, "Check All").setIcon(R.drawable.ic_check_all).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            menu.add(0, 1, 1, R.string.save).setIcon(R.drawable.ic_save).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            menu.add(0, 2, 2, R.string.menu_check_all).setIcon(R.drawable.ic_check_all).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            menu.add(0, 3, 3, R.string.episode_rating).setIcon(R.drawable.ic_rating_important).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
             return true;
         }
 

@@ -42,6 +42,8 @@ public class ShowFragment extends Fragment  {
     private Show show;
     private MyShowsApi.STATUS watchStatus;
     private Double yoursRating;
+    private View view;
+
 
     public ShowFragment(Show show, MyShowsApi.STATUS watchStatus, Double yoursRating) {
         this.show = show;
@@ -50,15 +52,19 @@ public class ShowFragment extends Fragment  {
 
     }
 
+    public void refresh(Show show){
+        populateUI(show);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.show, container, false);
-        populateUI(view);
+        view = inflater.inflate(R.layout.show, container, false);
+        populateUI(show);
         return view;
     }
 
 
-    private void populateUI(View view) {
+    private void populateUI(Show show) {
         showLogo = (ImageView) view.findViewById(R.id.show_logo);
         dateLayout = (LinearLayout) view.findViewById(R.id.show_date_layout);
         genresLayoyt = (LinearLayout) view.findViewById(R.id.show_genres_layout);

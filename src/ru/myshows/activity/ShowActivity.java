@@ -13,6 +13,7 @@ import android.widget.*;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.viewpagerindicator.TitlePageIndicator;
+import ru.myshows.adapters.TabsAdapter;
 import ru.myshows.api.MyShowsApi;
 import ru.myshows.domain.*;
 import ru.myshows.fragments.EpisodesFragment;
@@ -37,7 +38,7 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
 
     private ViewPager pager;
     private TitlePageIndicator indicator;
-    private MainActivity.TabsAdapter tabsAdapter;
+    private TabsAdapter tabsAdapter;
     private LinearLayout indicatorLayout;
     private ProgressBar progress;
 
@@ -50,7 +51,7 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_info);
 
-        tabsAdapter = new MainActivity.TabsAdapter(getSupportFragmentManager());
+        tabsAdapter = new TabsAdapter(getSupportFragmentManager(), true);
         pager = (ViewPager) findViewById(R.id.pager);
         indicator = (TitlePageIndicator) findViewById(R.id.indicator);
         pager.setAdapter(tabsAdapter);
@@ -91,7 +92,6 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
     public void onTaskComplete(Show result) {
         progress.setVisibility(View.GONE);
         indicatorLayout.setVisibility(View.VISIBLE);
-
         tabsAdapter.addFragment(new ShowFragment(result, watchStatus, yoursRating), getResources().getString(R.string.tab_show));
         tabsAdapter.addFragment(new EpisodesFragment(result), getResources().getString(R.string.tab_episodes));
         indicator.notifyDataSetChanged();
@@ -136,11 +136,32 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
                 finish();
                 break;
             case 1:
+
+                //http://code.google.com/p/android/issues/detail?id=19211#makechanges
+                //http://stackoverflow.com/questions/9727173/support-fragmentpageradapter-holds-reference-to-old-fragments/9744146#9744146
+                //http://stackoverflow.com/questions/10022179/fragmentpageradapter-with-two-fragments-go-to-the-first-from-the-second-and-upd
+
                 GetShowTask getShowTask = new GetShowTask(ShowActivity.this, true);
-                getShowTask.setTaskListener(ShowActivity.this);
+                getShowTask.setTaskListener(new TaskListener<Show>() {
+                    @Override
+                    public void onTaskComplete(Show result) {
+                        progress.setVisibility(View.GONE);
+                        indicatorLayout.setVisibility(View.VISIBLE);
+                        ShowFragment showFragment = (ShowFragment) tabsAdapter.getItem(0);
+                        showFragment.refresh(result);
+                        EpisodesFragment episodesFragment = (EpisodesFragment) tabsAdapter.getItem(1);
+                        episodesFragment.refresh(result);
+                        tabsAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onTaskFailed(Exception e) {
+
+                    }
+                });
                 progress.setVisibility(View.VISIBLE);
                 indicatorLayout.setVisibility(View.GONE);
-                tabsAdapter = new MainActivity.TabsAdapter(getSupportFragmentManager());
+                //tabsAdapter = new TabsAdapter(getSupportFragmentManager(), true);
                 getShowTask.execute(showId);
                 break;
             case 2:

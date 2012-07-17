@@ -22,6 +22,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.viewpagerindicator.TitlePageIndicator;
 import ru.myshows.adapters.SectionedAdapter;
+import ru.myshows.adapters.TabsAdapter;
 import ru.myshows.domain.Searchable;
 import ru.myshows.fragments.*;
 import ru.myshows.tasks.*;
@@ -57,8 +58,9 @@ public class MainActivity extends SherlockFragmentActivity {
         setContentView(R.layout.main);
         // Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler("/sdcard/MyShows", null));
 
-        adapter = new TabsAdapter(getSupportFragmentManager());
+        adapter = new TabsAdapter(getSupportFragmentManager(), false);
         pager = (ViewPager) findViewById(R.id.pager);
+        pager.setOffscreenPageLimit(6);
         indicator = (TitlePageIndicator) findViewById(R.id.indicator);
         pager.setAdapter(adapter);
         indicator.setViewPager(pager);
@@ -192,46 +194,6 @@ public class MainActivity extends SherlockFragmentActivity {
         adapter.notifyDataSetChanged();
     }
 
-
-    public static class TabsAdapter extends FragmentPagerAdapter {
-
-        public List<Fragment> fragments;
-        public List<String> titles;
-
-        public TabsAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return fragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            if (fragments == null) return 0;
-            return fragments.size();
-        }
-
-        public void addFragment(Fragment fragment, String title) {
-            if (fragments == null)
-                fragments = new ArrayList<Fragment>();
-            if (titles == null)
-                titles = new ArrayList<String>();
-            fragments.add(fragment);
-            titles.add(title);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return titles.get(position);
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            //super.destroyItem(container, position, object);
-        }
-    }
 
 
     private class LoginTask extends AsyncTask<Object, Void, Boolean> {

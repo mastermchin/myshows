@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.view.*;
@@ -88,7 +89,19 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
         if (e != null){
             progress.setVisibility(View.GONE);
         }
-        //Toast.makeText(getActivity(), "Not Internnet Available!", Toast.LENGTH_LONG).show();
+       final AlertDialog alert;
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.something_wrong)
+                .setMessage(R.string.try_again)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        executeUpdateTask();
+                    }
+                })
+                .setNegativeButton(R.string.no, null);
+        alert = builder.create();
+        alert.show();
     }
 
 
@@ -255,22 +268,22 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
                 break;
             case SHOWS_USER:
                 String watching = res.getString(R.string.status_watching);
-                List<IShow> watchingShows = Utils.getByWatchStatus(shows, MyShowsApi.STATUS.watching);
+                List<IShow> watchingShows = getByWatchStatus(shows, MyShowsApi.STATUS.watching);
                 if (watchingShows.size() > 0)
                     sectionList.add(new SectionedAdapter.Section(watching + " (" + watchingShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, watchingShows)));
 
                 String willWatch = res.getString(R.string.status_will_watch);
-                List<IShow> willWatchShows = Utils.getByWatchStatus(shows, MyShowsApi.STATUS.later);
+                List<IShow> willWatchShows = getByWatchStatus(shows, MyShowsApi.STATUS.later);
                 if (willWatchShows.size() > 0)
                     sectionList.add(new SectionedAdapter.Section(willWatch + " (" + willWatchShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, willWatchShows)));
 
                 String cancelled = res.getString(R.string.status_cancelled);
-                List<IShow> cancelledShows = Utils.getByWatchStatus(shows, MyShowsApi.STATUS.cancelled);
+                List<IShow> cancelledShows = getByWatchStatus(shows, MyShowsApi.STATUS.cancelled);
                 if (cancelledShows.size() > 0)
                     sectionList.add(new SectionedAdapter.Section(cancelled + " (" + cancelledShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, cancelledShows)));
 
                 String remove = res.getString(R.string.status_finished);
-                List<IShow> finishedShows = Utils.getByWatchStatus(shows, MyShowsApi.STATUS.finished);
+                List<IShow> finishedShows = getByWatchStatus(shows, MyShowsApi.STATUS.finished);
                 if (finishedShows.size() > 0)
                     sectionList.add(new SectionedAdapter.Section(remove + " (" + finishedShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, finishedShows)));
                 break;
@@ -280,6 +293,19 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
         return adapter;
     }
 
+
+
+    public static List<IShow> getByWatchStatus(List<IShow> shows, MyShowsApi.STATUS status) {
+        List<IShow> list = new ArrayList<IShow>();
+        if (shows == null) return list;
+        for (IShow show : shows) {
+            if (show.getWatchStatus().equals(status)) {
+                list.add(show);
+            }
+        }
+        return list;
+
+    }
 
         @Override
     public void onResume() {

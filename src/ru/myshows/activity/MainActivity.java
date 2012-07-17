@@ -91,11 +91,6 @@ public class MainActivity extends SherlockFragmentActivity {
         BitmapDrawable bg = (BitmapDrawable) getResources().getDrawable(R.drawable.stripe_red);
         bg.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
         getSupportActionBar().setBackgroundDrawable(bg);
-
-        Log.d("MyShows", "Default Country  = " + Locale.getDefault().getDisplayCountry());
-        Log.d("MyShows", "Default Language  = " + Locale.getDefault().getDisplayLanguage());
-        Log.d("MyShows", "Language  = " + Locale.getDefault().getLanguage());
-
         new LoginTask().execute();
 
     }
@@ -105,9 +100,8 @@ public class MainActivity extends SherlockFragmentActivity {
 
         menu.add(0, 1, 1, R.string.menu_update).setIcon(R.drawable.ic_navigation_refresh).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         menu.add(0, 2, 2, R.string.menu_settings).setIcon(R.drawable.ic_action_settings).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        menu.add(0, 3, 3, R.string.menu_exit).setIcon(R.drawable.ic_exit).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        menu.add(0, 4, 4, R.string.menu_search).setIcon(R.drawable.ic_action_search).setActionView(R.layout.action_search).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-
+        menu.add(0, 3, 3, R.string.menu_search).setIcon(R.drawable.ic_action_search).setActionView(R.layout.action_search).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+        menu.add(0, 4, 4, R.string.menu_exit).setIcon(R.drawable.ic_exit).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -128,11 +122,11 @@ public class MainActivity extends SherlockFragmentActivity {
             case 2:
                 startActivity(new Intent(this, SettingsAcrivity.class));
                 break;
-            case 4:
+            case 3:
                 search = (EditText) item.getActionView();
                 search.addTextChangedListener(filterTextWatcher);
                 break;
-            case 3:
+            case 4:
                 final AlertDialog alert;
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
                         .setTitle(R.string.request_exit)
@@ -182,6 +176,9 @@ public class MainActivity extends SherlockFragmentActivity {
         adapter.addFragment(new ProfileFragment(), getResources().getString(R.string.tab_profile_title));
         adapter.addFragment(new SearchFragment(), getResources().getString(R.string.tab_search_title));
 
+        indicator.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
+
         // fire first task manually
         GetShowsTask task = new GetShowsTask(MainActivity.this, GetShowsTask.SHOWS_USER);
         task.setTaskListener((TaskListener) adapter.getItem(0));
@@ -191,6 +188,8 @@ public class MainActivity extends SherlockFragmentActivity {
     private void getPublicTabs() {
         adapter.addFragment(new SearchFragment(), getResources().getString(R.string.tab_search_title));
         adapter.addFragment(new LoginFragment(), getResources().getString(R.string.tab_login_title));
+        indicator.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
     }
 
 
@@ -256,9 +255,7 @@ public class MainActivity extends SherlockFragmentActivity {
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) getPrivateTabs();
-            else getPublicTabs();
-            indicator.notifyDataSetChanged();
-            adapter.notifyDataSetChanged();
+            else        getPublicTabs();
         }
 
     }

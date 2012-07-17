@@ -1,5 +1,7 @@
 package ru.myshows.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
@@ -86,7 +88,22 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
 
     @Override
     public void onTaskFailed(Exception e) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (e != null){
+            progress.setVisibility(View.GONE);
+        }
+        final AlertDialog alert;
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.something_wrong)
+                .setMessage(R.string.try_again)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        executeUpdateTask();
+                    }
+                })
+                .setNegativeButton(R.string.no, null);
+        alert = builder.create();
+        alert.show();
     }
 
 

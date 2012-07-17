@@ -1433,6 +1433,7 @@ Register
         public static final int search_query=0x7f0b0022;
         public static final int search_results=0x7f0b0029;
         public static final int season=0x7f0b003d;
+        public static final int something_wrong=0x7f0b0050;
         public static final int status_cancelled=0x7f0b002f;
         public static final int status_finished=0x7f0b002e;
         public static final int status_remove=0x7f0b0030;
@@ -1451,6 +1452,7 @@ Tabs titles
         public static final int tab_show=0x7f0b0013;
         public static final int tab_shows_title=0x7f0b000f;
         public static final int top=0x7f0b002a;
+        public static final int try_again=0x7f0b0051;
         public static final int username=0x7f0b001a;
         public static final int users_text=0x7f0b0019;
         public static final int watched_days=0x7f0b0045;

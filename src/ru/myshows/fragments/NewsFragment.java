@@ -1,7 +1,9 @@
 package ru.myshows.fragments;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -62,7 +64,22 @@ public class NewsFragment extends Fragment implements TaskListener<Map<String, L
 
     @Override
     public void onTaskFailed(Exception e) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (e != null){
+            progress.setVisibility(View.GONE);
+        }
+        final AlertDialog alert;
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.something_wrong)
+                .setMessage(R.string.try_again)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        executeUpdateTask();
+                    }
+                })
+                .setNegativeButton(R.string.no, null);
+        alert = builder.create();
+        alert.show();
     }
 
 

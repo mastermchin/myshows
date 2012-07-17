@@ -87,7 +87,6 @@ public class GetShowsTask extends BaseTask<List<IShow>>  {
     @Override
     public void onError(Exception e) {
         e.printStackTrace();
-        Toast.makeText(context, "Not Internnet Available!", Toast.LENGTH_LONG).show();
         taskListener.onTaskFailed(e);
     }
 

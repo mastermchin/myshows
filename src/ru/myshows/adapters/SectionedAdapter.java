@@ -11,7 +11,6 @@ import ru.myshows.domain.Filterable;
 import ru.myshows.fragments.NewsFragment;
 import ru.myshows.fragments.NextEpisodesFragment;
 import ru.myshows.fragments.ShowsFragment;
-import ru.myshows.util.SearchFilter;
 
 import java.io.Serializable;
 import java.util.ArrayList;

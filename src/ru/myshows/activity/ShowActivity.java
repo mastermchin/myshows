@@ -1,5 +1,7 @@
 package ru.myshows.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
@@ -95,9 +97,25 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
 
     @Override
     public void onTaskFailed(Exception e) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (e != null){
+            progress.setVisibility(View.GONE);
+        }
+        final AlertDialog alert;
+        AlertDialog.Builder builder = new AlertDialog.Builder(ShowActivity.this)
+                .setTitle(R.string.something_wrong)
+                .setMessage(R.string.try_again)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        GetShowTask getShowTask = new GetShowTask(ShowActivity.this);
+                        getShowTask.setTaskListener(ShowActivity.this);
+                        getShowTask.execute(showId);
+                    }
+                })
+                .setNegativeButton(R.string.no, null);
+        alert = builder.create();
+        alert.show();
     }
-
 
 
     public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
@@ -115,8 +133,8 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
                 finish();
                 break;
             case 1:
-                GetShowTask getShowTask = new GetShowTask(this, true);
-                getShowTask.setTaskListener(this);
+                GetShowTask getShowTask = new GetShowTask(ShowActivity.this, true);
+                getShowTask.setTaskListener(ShowActivity.this);
                 progress.setVisibility(View.VISIBLE);
                 indicatorLayout.setVisibility(View.GONE);
                 tabsAdapter = new MainActivity.TabsAdapter(getSupportFragmentManager());

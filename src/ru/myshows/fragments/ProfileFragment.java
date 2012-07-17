@@ -1,7 +1,9 @@
 package ru.myshows.fragments;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,6 +27,7 @@ import ru.myshows.tasks.Taskable;
 import ru.myshows.util.Settings;
 import ru.myshows.util.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -72,7 +75,22 @@ public class ProfileFragment extends Fragment implements TaskListener<Profile>, 
 
     @Override
     public void onTaskFailed(Exception e) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (e != null){
+            progress.setVisibility(View.GONE);
+        }
+        final AlertDialog alert;
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.something_wrong)
+                .setMessage(R.string.try_again)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        executeUpdateTask();
+                    }
+                })
+                .setNegativeButton(R.string.no, null);
+        alert = builder.create();
+        alert.show();
     }
 
 
@@ -134,20 +152,20 @@ public class ProfileFragment extends Fragment implements TaskListener<Profile>, 
                 TextView label = (TextView) mainView.findViewById(R.id.profile_watching_label);
                 label.setText
                         (getResources().getString(R.string.status_watching) + " " +
-                                Utils.getUserShowsByWatchStatus(shows, MyShowsApi.STATUS.watching).size());
+                                getUserShowsByWatchStatus(shows, MyShowsApi.STATUS.watching).size());
 
                 ((TextView) mainView.findViewById(R.id.profile_will_watch_label)).setText
                         (getResources().getString(R.string.status_will_watch) + " " +
-                                Utils.getUserShowsByWatchStatus(shows, MyShowsApi.STATUS.later).size());
+                                getUserShowsByWatchStatus(shows, MyShowsApi.STATUS.later).size());
 
 
                 ((TextView) mainView.findViewById(R.id.profile_cancelled_label)).setText
                         (getResources().getString(R.string.status_cancelled) + " " +
-                                Utils.getUserShowsByWatchStatus(shows, MyShowsApi.STATUS.cancelled).size());
+                                getUserShowsByWatchStatus(shows, MyShowsApi.STATUS.cancelled).size());
 
                 ((TextView) mainView.findViewById(R.id.profile_finished_label)).setText(
                         getResources().getString(R.string.status_finished) + " " +
-                                Utils.getUserShowsByWatchStatus(shows, MyShowsApi.STATUS.finished).size());
+                                getUserShowsByWatchStatus(shows, MyShowsApi.STATUS.finished).size());
             }
 
         } else {
@@ -155,15 +173,16 @@ public class ProfileFragment extends Fragment implements TaskListener<Profile>, 
         }
     }
 
-//    @Override
-//    protected void onNewIntent(Intent intent) {
-//        super.onNewIntent(intent);
-//        String login = getBundleValue(intent, "login", Settings.getString(Settings.KEY_LOGIN));
-//        if (currentUser != null && !currentUser.equals(login)) {
-//            currentUser = login;
-//            new GetProfileTask(this).execute(login);
-//        }
-//    }
+    public static List<IShow> getUserShowsByWatchStatus(List<UserShow> shows, MyShowsApi.STATUS status) {
+        List<IShow> list = new ArrayList<IShow>();
+        for (UserShow show : shows) {
+            if (show.getWatchStatus().equals(status)) {
+                list.add(show);
+            }
+        }
+        return list;
+
+    }
 
 
 }

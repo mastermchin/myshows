@@ -185,6 +185,30 @@ public class EpisodesFragment extends SherlockFragment {
             adapter.notifyDataSetChanged();
         }
 
+        public void uncheckAll() {
+            for (Season s : groups) {
+                s.setChecked(false);
+            }
+            for (Episode e : (List<Episode>) getAllChildrenAsList()) {
+                e.setChecked(false);
+            }
+            adapter.notifyDataSetChanged();
+        }
+
+        public boolean isAllChecked(){
+            for (int i=0; i < getGroupCount(); i++){
+                Season s = (Season)getGroup(i);
+                if (!s.isChecked())
+                    return false;
+                for (int j = 0; j < getChildrenCount(i); j++){
+                    Episode e = (Episode) getChild(i, j);
+                    if (!e.isChecked())
+                        return false;
+                }
+            }
+            return true;
+        }
+
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
             final int gp = groupPosition;
             final ViewHolder holder;
@@ -356,7 +380,10 @@ public class EpisodesFragment extends SherlockFragment {
                     mode.finish();
                     break;
                 case 2:
-                    adapter.checkAll();
+                    if (adapter.isAllChecked())
+                        adapter.uncheckAll();
+                    else
+                        adapter.checkAll();
                     break;
             }
             return true;

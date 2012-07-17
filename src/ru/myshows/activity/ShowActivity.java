@@ -42,6 +42,9 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
     private ProgressBar progress;
 
 
+    public ShowActivity() {
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

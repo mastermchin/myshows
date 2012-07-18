@@ -64,6 +64,7 @@
                 android:text="@string/tab_login_title"
                 android:background="@drawable/red_button"
                 android:textColor="@color/white"
+                android:textSize="12sp"
                 android:layout_weight="0.5"
 
                 />
@@ -72,6 +73,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/register_action"
+                android:textSize="12sp"
                 android:background="@drawable/red_button"
                 android:textColor="@color/white"
                 android:layout_weight="0.5"

@@ -78,8 +78,7 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
 
     @Override
     public void onTaskComplete(List<IShow> result) {
-        List shows = MyShows.userShows != null ? MyShows.userShows : result;
-        list.setAdapter(populateAdapter(action, shows));
+        list.setAdapter(populateAdapter(action, result));
         progress.setVisibility(View.GONE);
         progress.setIndeterminate(false);
         list.setVisibility(View.VISIBLE);

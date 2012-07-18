@@ -106,7 +106,7 @@ public class SectionedAdapter extends ArrayAdapter implements Serializable {
         return filter;
     }
 
-    public void addSection(String caption, Adapter adapter) {
+    public void addSection(String caption, ArrayAdapter adapter) {
         sections.add(new Section(caption, adapter));
     }
 
@@ -218,9 +218,9 @@ public class SectionedAdapter extends ArrayAdapter implements Serializable {
 
     public static class Section {
         public String caption;
-        public Adapter adapter;
+        public ArrayAdapter adapter;
 
-        public Section(String caption, Adapter adapter) {
+        public Section(String caption, ArrayAdapter adapter) {
             this.caption = caption;
             this.adapter = adapter;
         }

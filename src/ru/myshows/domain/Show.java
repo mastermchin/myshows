@@ -72,7 +72,10 @@ public class Show extends  JsonEvaluator implements IShow,JsonSerializable{
     }
 
     public String getTitle() {
-        if (Locale.getDefault().getLanguage().equals("ru") && getRuTitle() != null && getRuTitle().length() > 0)
+        if (Locale.getDefault().getLanguage().equals("ru") &&
+                getRuTitle() != null &&
+                !getRuTitle().equals("null") &&
+                getRuTitle().length() > 0)
             return getRuTitle();
         return title;
     }

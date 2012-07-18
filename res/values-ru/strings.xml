@@ -89,6 +89,10 @@
 
     <string name="pref_title">Настройки</string>
     <string name="pref_show_news">Показывать новости</string>
+    <string name="pref_show_sort">Сортировка сериалов</string>
+    <string name="pref_sort_status">По статусу</string>
+    <string name="pref_sort_alph">По алфавиту</string>
+
 
     <string name="request_exit">Хотите выйти?</string>
     <string name="yes">Да</string>
@@ -112,5 +116,11 @@
         <item>Ноябрь</item>
         <item>Декабрь</item>
     </string-array>
+
+    <string-array name="pref_sort_options">
+        <item>Статус просмотра</item>
+        <item>Алфавит</item>
+    </string-array>
+
 
 </resources>

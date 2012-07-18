@@ -19,6 +19,7 @@ public class Settings {
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_LOGGED_IN = "loggedIn";
     public static final String PREF_SHOW_NEWS = "show_news_key";
+    public static final String PREF_SHOW_SORT = "shows_sort_key";
 
 
     public  static SharedPreferences getPreferences() {

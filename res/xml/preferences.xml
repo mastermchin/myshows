@@ -10,7 +10,15 @@
                 />
 
 
+         <android.preference.ListPreference
+               android:key="shows_sort_key"
+               android:defaultValue="status"
+               android:title="@string/pref_show_sort"
+               android:entries="@array/pref_sort_options"
+               android:entryValues="@array/pref_sort_options_values"
+               android:dialogTitle="@string/pref_show_sort"/>
 
+             />
     </android.preference.PreferenceCategory>
 
 </PreferenceScreen>

@@ -97,7 +97,9 @@
 
      <string name="pref_title">Settings</string>
      <string name="pref_show_news">Show friends news</string>
-
+     <string name="pref_show_sort">Shows sort options</string>
+    <string name="pref_sort_status">By watch status</string>
+    <string name="pref_sort_alph">By alphabet</string>
 
 
      <string name="request_exit">Are you want to exit?</string>
@@ -121,6 +123,17 @@
         <item>October</item>
         <item>November</item>
         <item>December</item>
+    </string-array>
+
+
+    <string-array name="pref_sort_options">
+        <item>Watch Status</item>
+        <item>Alphabet</item>
+    </string-array>
+
+    <string-array name="pref_sort_options_values">
+        <item>status</item>
+        <item>alphabet</item>
     </string-array>
 
 

@@ -7,6 +7,7 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.*;
 import android.widget.*;
@@ -20,6 +21,7 @@ import ru.myshows.fragments.EpisodesFragment;
 import ru.myshows.fragments.ShowFragment;
 import ru.myshows.tasks.GetShowTask;
 import ru.myshows.tasks.TaskListener;
+import ru.myshows.tasks.Taskable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -83,13 +85,12 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
         getShowTask.setTaskListener(this);
         getShowTask.execute(showId);
 
-        pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int i, float v, int i1) {}
 
+
+        indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageSelected(int i) {
-                if (i == 1){
+            public void onPageSelected(int position) {
+                if (position == 1){
                     EpisodesFragment episodesFragment = (EpisodesFragment) tabsAdapter.getItem(1);
                     if (episodesFragment.getAdapter() != null)
                         episodesFragment.getAdapter().notifyDataSetChanged();
@@ -97,7 +98,12 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
             }
 
             @Override
-            public void onPageScrollStateChanged(int i) {}
+            public void onPageScrolled(int i, float v, int i1) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+            }
         });
 
     }

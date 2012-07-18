@@ -84,6 +84,7 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
         progress.setIndeterminate(false);
         list.setVisibility(View.VISIBLE);
         isTaskExecuted = true;
+        MyShows.isUserShowsChanged = false;
     }
 
     @Override
@@ -321,14 +322,6 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
         }
         return list;
 
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d("MyShows", "Shows Fragment on resume!");
-        if (adapter != null)
-            adapter.notifyDataSetChanged();
     }
 
 

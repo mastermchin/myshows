@@ -34,7 +34,6 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
 
     private MyExpandableListAdapter adapter;
     private RelativeLayout rootView;
-    private List<Episode> localEpisodes = null;
     private ExpandableListView list;
     private ProgressBar progress;
     DateFormat df = new SimpleDateFormat("dd.MM.yyyy");

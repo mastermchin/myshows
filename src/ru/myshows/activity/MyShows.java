@@ -29,12 +29,12 @@ public class MyShows extends Application {
     public static Context context;
     public static MyShowsClient client;
     public static boolean isLoggedIn;
+    public static boolean isUserShowsChanged;
     public static Typeface font;
 
 
     public static List<UserShow> userShows;
     public static List<Show> topShows;
-    public static List<Show> allShows;
     public static List<Episode> newEpisodes;
     public static List<Episode> nextEpisodes;
     public static Map<String, List<UserNews>> news;
@@ -82,35 +82,35 @@ public class MyShows extends Application {
         return null;
     }
 
-    public static void addOrUpdateUserShow(UserShow show) {
-        if (userShows == null) userShows = new ArrayList<UserShow>();
-        boolean found = false;
-        for (UserShow u : userShows) {
-            if (u.getShowId().equals(show.getShowId())) {
-                u.setWatchStatus(show.getWatchStatus());
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            userShows.add(show);
-        } else {
-
-        }
-
-    }
-
-
-    public static  void removeUserShow(Integer showId) {
-        if (userShows != null) {
-            for (UserShow u : userShows) {
-                if (u.getShowId().equals(showId)) {
-                    userShows.remove(u);
-                    break;
-                }
-            }
-        }
-    }
+//    public static void addOrUpdateUserShow(UserShow show) {
+//        if (userShows == null) userShows = new ArrayList<UserShow>();
+//        boolean found = false;
+//        for (UserShow u : userShows) {
+//            if (u.getShowId().equals(show.getShowId())) {
+//                u.setWatchStatus(show.getWatchStatus());
+//                found = true;
+//                break;
+//            }
+//        }
+//        if (!found) {
+//            userShows.add(show);
+//        } else {
+//
+//        }
+//
+//    }
+//
+//
+//    public static  void removeUserShow(Integer showId) {
+//        if (userShows != null) {
+//            for (UserShow u : userShows) {
+//                if (u.getShowId().equals(showId)) {
+//                    userShows.remove(u);
+//                    break;
+//                }
+//            }
+//        }
+//    }
 
      public static void invalidateUserData(){
          userShows = null;

@@ -196,7 +196,6 @@ public class MainActivity extends SherlockFragmentActivity {
     }
 
 
-
     private class LoginTask extends AsyncTask<Object, Void, Boolean> {
 
         @Override
@@ -218,10 +217,35 @@ public class MainActivity extends SherlockFragmentActivity {
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) getPrivateTabs();
-            else        getPublicTabs();
+            else getPublicTabs();
         }
 
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("MyShows", "Main activity on resume");
+        if (MyShows.isLoggedIn && MyShows.isUserShowsChanged) {
+
+            Fragment showsFragment = adapter.getItem(0);
+            if (showsFragment instanceof ShowsFragment) {
+                GetShowsTask getShowsTask = new GetShowsTask(this, GetShowsTask.SHOWS_USER);
+                getShowsTask.setTaskListener((ShowsFragment) showsFragment);
+                getShowsTask.execute();
+            }
+
+            Fragment newEpisodesFragment = adapter.getItem(1);
+            if (newEpisodesFragment instanceof NewEpisodesFragment) {
+                GetNewEpisodesTask episodesTask = new GetNewEpisodesTask(this, true);
+                episodesTask.setTaskListener((NewEpisodesFragment) newEpisodesFragment);
+                episodesTask.execute();
+            }
+
+
+
+
+        }
+    }
 }

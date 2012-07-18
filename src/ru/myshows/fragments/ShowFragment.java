@@ -117,7 +117,7 @@ public class ShowFragment extends Fragment  {
             yoursRatingBar = ((RatingBar) yoursRatingLayoyt.findViewById(R.id.show_rating_yours_value));
 
             // disable rating changing if remove status
-            if (watchStatus.equals(MyShowsApi.STATUS.remove))
+            if (show.getWatchStatus().equals(MyShowsApi.STATUS.remove))
                 yoursRatingBar.setIsIndicator(true);
 
             if (yoursRating != null) {
@@ -188,6 +188,7 @@ public class ShowFragment extends Fragment  {
     }
 
     public void changeShowStatus(View v) {
+
         switch (v.getId()) {
             case R.id.button_watching:
                 watchStatus = MyShowsApi.STATUS.watching;
@@ -202,10 +203,10 @@ public class ShowFragment extends Fragment  {
                 watchStatus = MyShowsApi.STATUS.remove;
                 break;
         }
-
-        //  activeWatchButton = (Button) v;
-        ChangeShowStatusTask task = new ChangeShowStatusTask(getActivity());
-        task.execute(show.getShowId(), watchStatus);
+        if (!show.getWatchStatus().equals(watchStatus)){
+            ChangeShowStatusTask task = new ChangeShowStatusTask(getActivity());
+            task.execute(show.getShowId(), watchStatus);
+        }
 
 
     }
@@ -241,11 +242,11 @@ public class ShowFragment extends Fragment  {
                     else
                         us.setWatchStatus(watchStatus);
                 } else {
-                    if (!watchStatus.equals(MyShowsApi.STATUS.remove)){
+                    if (!watchStatus.equals(MyShowsApi.STATUS.remove))
                         MyShows.userShows.add(new UserShow(show, watchStatus));
-                    }
-                }
 
+                }
+                MyShows.isUserShowsChanged = true;
                 updateStatusButtons();
                 yoursRatingBar.setIsIndicator(watchStatus.equals(MyShowsApi.STATUS.remove));
             }

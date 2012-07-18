@@ -41,7 +41,7 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.inflater = inflater;
        // return inflater.inflate(R.layout.login, container, false);
-        LinearLayout layout = (LinearLayout)inflater.inflate(R.layout.login, container, false);
+        ScrollView layout = (ScrollView)inflater.inflate(R.layout.login, container, false);
         loginButton = (Button) layout.findViewById(R.id.login_button);
         registesButton = (Button) layout.findViewById(R.id.register_button);
         loginField = (EditText) layout.findViewById(R.id.login_field);

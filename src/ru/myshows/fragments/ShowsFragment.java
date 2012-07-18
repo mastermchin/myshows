@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -77,7 +78,8 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
 
     @Override
     public void onTaskComplete(List<IShow> result) {
-        list.setAdapter(populateAdapter(action, result));
+        List shows = MyShows.userShows != null ? MyShows.userShows : result;
+        list.setAdapter(populateAdapter(action, shows));
         progress.setVisibility(View.GONE);
         progress.setIndeterminate(false);
         list.setVisibility(View.VISIBLE);
@@ -310,6 +312,7 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
         @Override
     public void onResume() {
         super.onResume();
+            Log.d("MyShows",  "Shows Fragment on resume!");
         if (adapter != null)
             adapter.notifyDataSetChanged();
     }

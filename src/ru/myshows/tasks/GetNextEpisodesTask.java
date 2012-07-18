@@ -30,7 +30,7 @@ public class GetNextEpisodesTask extends BaseTask<List<Episode>> {
         if (isForceUpdate)
             MyShows.nextEpisodes = null;
         List<Episode> nextEpisodes = MyShows.nextEpisodes != null ? MyShows.nextEpisodes : MyShows.client.getNextEpisodes();
-        MyShows.newEpisodes = nextEpisodes;
+        MyShows.nextEpisodes = nextEpisodes;
         return nextEpisodes;
     }
 

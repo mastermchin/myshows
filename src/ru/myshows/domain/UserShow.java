@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import ru.myshows.api.MyShowsApi;
 
 import java.util.Collection;
+import java.util.Locale;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,7 +15,7 @@ import java.util.Collection;
  * To change this template use File | Settings | File Templates.
  */
 
-public class UserShow extends JsonEvaluator implements IShow, JsonSerializable {
+public class UserShow extends JsonEvaluator implements IShow, JsonSerializable{
 
     private Integer showId;
     private String title;
@@ -26,6 +27,7 @@ public class UserShow extends JsonEvaluator implements IShow, JsonSerializable {
     private Integer totalEpisodes;
     private Double rating;
     private String imageUrl;
+    private boolean isChecked;
 
     public UserShow() {
     }
@@ -58,6 +60,18 @@ public class UserShow extends JsonEvaluator implements IShow, JsonSerializable {
         }
     }
 
+    @Override
+    public String getFilterString() {
+        return title;
+    }
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
 
     public String getImageUrl() {
         return imageUrl;
@@ -76,6 +90,11 @@ public class UserShow extends JsonEvaluator implements IShow, JsonSerializable {
     }
 
     public String getTitle() {
+        if (Locale.getDefault().getLanguage().equals("ru") &&
+                getRuTitle() != null &&
+                !getRuTitle().equals("null") &&
+                getRuTitle().length() > 0)
+            return getRuTitle();
         return title;
     }
 

@@ -9,8 +9,10 @@
     <string name="tab_profile_title">Профиль</string>
     <string name="tab_shows_title">Сериалы</string>
     <string name="tab_new">Новые</string>
+    <string name="tab_next">Скоро</string>
     <string name="tab_news_title">Новости</string>
-
+    <string name="tab_show">Сериал</string>
+    <string name="tab_episodes">Эпизоды</string>
 
     <string name="search">Искать сериал</string>
     <string name="search_button">Поиск</string>
@@ -57,9 +59,11 @@
 
     <string name="menu_check_all">Отметить все</string>
     <string name="menu_view_on_site">Просмотреть на сайте</string>
-    <string name="menu_about">О программе</string>
-    <string name="menu_switch_theme">Сменить тему</string>
     <string name="menu_update">Обновить</string>
+    <string name="menu_settings">Настройки</string>
+    <string name="menu_save">Сохранить</string>
+    <string name="menu_search">Поиск</string>
+    <string name="menu_exit">Выход</string>
 
     <string name="episode_rating">Рейтинг эпизода</string>
     <string name="season">Сезон</string>
@@ -78,4 +82,45 @@
     <string name="action_watched">посмотрел</string>
     <string name="episode">серию</string>
     <string name="episodes">серии</string>
+
+
+    <string name="on">Вкл.</string>
+    <string name="off">Выкл.</string>
+
+    <string name="pref_title">Настройки</string>
+    <string name="pref_show_news">Показывать новости</string>
+    <string name="pref_show_sort">Сортировка сериалов</string>
+    <string name="pref_sort_status">По статусу</string>
+    <string name="pref_sort_alph">По алфавиту</string>
+
+
+    <string name="request_exit">Хотите выйти?</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+
+    <string name="something_wrong">Что-то не так 0_o</string>
+    <string name="try_again">Возможно нет соединения с интернетом. Попробовать снова? </string>
+
+
+    <string-array name="months">
+        <item>Январь</item>
+        <item>Февраль</item>
+        <item>Март</item>
+        <item>Апрель</item>
+        <item>Май</item>
+        <item>Июнь</item>
+        <item>Июль</item>
+        <item>Август</item>
+        <item>Сентябрь</item>
+        <item>Октябрь</item>
+        <item>Ноябрь</item>
+        <item>Декабрь</item>
+    </string-array>
+
+    <string-array name="pref_sort_options">
+        <item>Статус просмотра</item>
+        <item>Алфавит</item>
+    </string-array>
+
+
 </resources>

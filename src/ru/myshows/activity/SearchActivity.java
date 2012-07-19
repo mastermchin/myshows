@@ -1,91 +1,138 @@
 package ru.myshows.activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
+import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Toast;
-import ru.myshows.util.MyShowsUtil;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
+import ru.myshows.fragments.ShowsFragment;
+import ru.myshows.tasks.GetShowsTask;
 
 /**
- * Created by IntelliJ IDEA.
- * User: gb
- * Date: 07.06.2011
- * Time: 2:05:10
+ * Created with IntelliJ IDEA.
+ * User: GGobozov
+ * Date: 10.07.12
+ * Time: 13:36
  * To change this template use File | Settings | File Templates.
  */
-public class SearchActivity extends Activity {
+public class SearchActivity extends SherlockFragmentActivity {
 
-    private LinearLayout favouritesLayout;
-    private LinearLayout catalog_layout;
+    private String search;
     private EditText searchField;
-    private Button searchButton;
 
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.search);
+        setContentView(R.layout.search_result);
 
-        searchField = (EditText) findViewById(R.id.search_box);
-        searchButton = (Button) findViewById(R.id.search_button);
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                searchButton.setEnabled(false);
-                String query = searchField.getText().toString();
-                if (query.equals("") || query.trim().length() < 1)
-                    Toast.makeText(getParent(), R.string.search_query, Toast.LENGTH_SHORT).show();
-                else
-                    startShowsActivity(query);
-                searchButton.setEnabled(true);
-            }
-        });
+        search = (String) getBundleValue(getIntent(), "search", null);
 
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        getSupportActionBar().setTitle(getResources().getString(R.string.search) + ": " + search);
 
-        favouritesLayout = (LinearLayout) findViewById(R.id.favourites_layout);
-        favouritesLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                favouritesLayout.setEnabled(false);
-                startShowsActivity("top");
-                favouritesLayout.setEnabled(true);
-            }
-        });
+        BitmapDrawable bg = (BitmapDrawable) getResources().getDrawable(R.drawable.stripe_red);
+        bg.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+        getSupportActionBar().setBackgroundDrawable(bg);
 
-
-        catalog_layout = (LinearLayout) findViewById(R.id.catalog_layout);
-        catalog_layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                catalog_layout.setEnabled(false);
-                startShowsActivity("all");
-                catalog_layout.setEnabled(true);
-
-            }
-        });
-
+        if (search != null)
+            executeSearch(search);
 
     }
 
+    private void executeSearch(String search) {
 
+        ShowsFragment showsFragment = (ShowsFragment) getSupportFragmentManager().findFragmentById(R.id.shows_fragment);
+        GetShowsTask task = null;
 
-    private void startShowsActivity(String searchString) {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
-        Intent intent = new Intent();
-        intent.putExtra("search", searchString);
-        intent.setClass(getParent(), ShowsActivity.class);
-        ActivityStack activityStack = (ActivityStack) getParent();
-        activityStack.push("Shows2Activity", intent);
+        if (search.equals("top")) {
+            task = new GetShowsTask(this, GetShowsTask.SHOWS_TOP);
+            showsFragment.setAction(GetShowsTask.SHOWS_TOP);
+            task.setTaskListener(showsFragment);
+            task.execute();
+        }
+
+        if (search.equals("all")) {
+            task = new GetShowsTask(this, GetShowsTask.SHOWS_ALL);
+            showsFragment.setAction(GetShowsTask.SHOWS_ALL);
+            task.setTaskListener(showsFragment);
+            task.execute();
+        }
+
+        if (task == null) {
+            task = new GetShowsTask(this, GetShowsTask.SHOWS_SEARCH);
+            showsFragment.setAction(GetShowsTask.SHOWS_SEARCH);
+            task.setTaskListener(showsFragment);
+            task.execute(search);
+        }
     }
 
+    public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+
+        menu.add(0, 1, 1, "Refresh").setIcon(R.drawable.ic_navigation_refresh).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        if (MyShows.isLoggedIn)
+            menu.add(0, 2, 2, "Settings").setIcon(R.drawable.ic_action_settings).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        menu.add(0, 3, 3, "Search").setIcon(R.drawable.ic_action_search).setActionView(R.layout.action_search).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+            case 1:
+                if (search != null) {
+                    finish();
+                    Intent intent = new Intent();
+                    intent.putExtra("search", search);
+                    intent.setClass(this, SearchActivity.class);
+                    startActivity(intent);
+                }
+                break;
+            case 2:
+                startActivity(new Intent(this, SettingsAcrivity.class));
+                break;
+            case 3:
+                searchField = (EditText) item.getActionView();
+                searchField.addTextChangedListener(filterTextWatcher);
+                break;
+        }
+        return true;
+    }
+
+
+    private TextWatcher filterTextWatcher = new TextWatcher() {
+        public void afterTextChanged(Editable s) {
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            ShowsFragment showsFragment = (ShowsFragment) getSupportFragmentManager().findFragmentById(R.id.shows_fragment);
+            showsFragment.getAdapter().getFilter().filter(s);
+        }
+
+    };
+
+    private Object getBundleValue(Intent intent, String key, Object defaultValue) {
+        if (intent == null) return defaultValue;
+        if (intent.getExtras() == null) return defaultValue;
+        if (intent.getExtras().get(key) == null) return defaultValue;
+        return intent.getExtras().get(key);
+    }
 }

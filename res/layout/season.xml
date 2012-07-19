@@ -4,18 +4,17 @@
                 android:id="@+id/episode_layout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-
-                
+                android:padding="10dp"
 
                 >
 
-    <TextView
+    <ru.myshows.components.RobotoTextView
              android:id="@+id/season_title"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:paddingLeft="50dp"
-            android:textAppearance="@style/DarkLabelsTextAppearance"
             android:layout_centerVertical="true"
+            android:textSize="15sp"
             />
 
 
@@ -25,6 +24,5 @@
             android:layout_height="wrap_content"
             android:focusable="false"
             android:layout_alignParentRight="true"
-            style="@style/DarkCheck"
             />
 </RelativeLayout>

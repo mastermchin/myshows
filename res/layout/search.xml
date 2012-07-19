@@ -1,134 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:orientation="vertical"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:paddingTop="20dip"
-                android:paddingLeft="40dp"
-                android:paddingRight="40dp"
-        >
-
-
-    <ImageView
-            android:id="@+id/my_shows_logo"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/my_shows_logo_dark"
-            android:layout_centerHorizontal="true"
-            android:paddingTop="20dip"
-
-            />
-
-    <TextView
-            android:id="@+id/slogan"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="сериалы, которые я смотрю"
-            android:layout_below="@id/my_shows_logo"
-            android:textSize="18sp"
-            android:gravity="top|center_horizontal"
-            />
-
-    <LinearLayout android:id="@+id/search"
-                  android:layout_width="fill_parent"
-                  android:layout_height="wrap_content"
-                  android:orientation="vertical"
-                  android:paddingTop="30dp"
-                  android:layout_below="@id/slogan"
-            >
-
-
-        <EditText
-                android:id="@+id/search_box"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:hint="@string/search"
-                android:background="@drawable/textfield_t"
-                android:singleLine="true"
-                />
-
-        <Button android:id="@+id/search_button"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:text="@string/search_button"
-                android:background="@drawable/red_button"
-                android:textColor="@color/white"
-                />
-
-
-    </LinearLayout>
-
-
-    <LinearLayout
-            android:id="@+id/search_labels"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_below="@id/search"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal"
-            android:paddingTop="20dp"
+            android:paddingTop="20dip"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:background="@drawable/gradient_background"
+        >
+
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             >
+
+
+        <ImageView
+                android:id="@+id/my_shows_logo"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/my_shows_logo_dark"
+                android:layout_centerHorizontal="true"
+                android:paddingTop="20dip"
+
+                />
+
+
+        <LinearLayout android:id="@+id/search"
+                      android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      android:paddingTop="30dp"
+                      android:layout_below="@id/my_shows_logo"
+                >
+
+
+            <EditText
+                    android:id="@+id/search_box"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:hint="@string/search"
+                    android:singleLine="true"
+                    />
+
+            <Button android:id="@+id/search_button"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:text="@string/search_button"
+                    android:textSize="12sp"
+                    android:background="@drawable/red_button"
+                    android:textColor="@color/white"
+                    />
+
+
+        </LinearLayout>
 
 
         <LinearLayout
-                android:id="@+id/favourites_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="10dp"
+                android:id="@+id/search_labels"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_below="@id/search"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                android:paddingTop="20dp"
                 >
 
-            <ImageView
+
+            <Button
                     android:id="@+id/favourites_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_rating"
-                    android:layout_margin="10dip"
-                    />
-
-            <TextView
-                    android:id="@+id/favourites_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_rating"
                     android:text="@string/favourites_text"
-                    android:layout_marginTop="10dip"
-                    android:layout_gravity="bottom"
+                    android:textColor="@color/white"
+                    android:background="@null"
+                    android:padding="20dp"
                     />
 
-        </LinearLayout>
 
-
-        <LinearLayout
-                android:id="@+id/catalog_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="10dp"
-                >
-
-
-            <ImageView
+            <Button
                     android:id="@+id/catalog_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_catalog"
-                    android:layout_margin="10dip"
-                    />
-
-            <TextView
-                    android:id="@+id/catalog_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_catalog"
                     android:text="@string/catalog_text"
-                    android:layout_marginTop="10dip"
-                    android:layout_gravity="bottom"
+                    android:textColor="@color/white"
+                    android:padding="20dp"
+                    android:background="@null"
                     />
 
         </LinearLayout>
 
 
-    </LinearLayout>
+    </RelativeLayout>
 
-
-</RelativeLayout>
+</ScrollView>

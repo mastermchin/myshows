@@ -8,7 +8,6 @@ import android.os.Message;
 import android.view.View;
 import android.widget.*;
 import ru.myshows.activity.R;
-import ru.myshows.client.MyShowsClient;
 
 /**
  * Created by IntelliJ IDEA.

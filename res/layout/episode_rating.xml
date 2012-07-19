@@ -20,7 +20,7 @@
                     android:layout_height="wrap_content"
                     android:numStars="5"
                     android:stepSize="1"
-                    style="@style/bigDarkRatingBar"
+                    style="@style/DarkRatingBar"
                     android:paddingBottom="10dp"
                     />
 

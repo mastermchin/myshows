@@ -4,6 +4,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import ru.myshows.api.MyShowsApi;
 
+import java.util.Locale;
+
 /**
  * Created by IntelliJ IDEA.
  * User: GGobozov
@@ -11,7 +13,7 @@ import ru.myshows.api.MyShowsApi;
  * Time: 16:21:16
  * To change this template use File | Settings | File Templates.
  */
-public class UserNews extends JsonEvaluator implements JsonSerializable {
+public class UserNews extends JsonEvaluator implements JsonSerializable, Filterable {
 
     private Integer episodeId;
     private int showId;
@@ -22,6 +24,11 @@ public class UserNews extends JsonEvaluator implements JsonSerializable {
     private int episodes;
     private String episode;
     private String action;
+
+    @Override
+    public String getFilterString() {
+        return title+show+login;
+    }
 
     public Integer getEpisodeId() {
         return episodeId;

@@ -1,32 +1,35 @@
 package ru.myshows.activity;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.app.TabActivity;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TabHost;
-import android.widget.TextView;
-import android.widget.Toast;
-import ru.myshows.client.MyShowsClient;
-import ru.myshows.prefs.Prefs;
-import ru.myshows.util.CustomExceptionHandler;
-import ru.myshows.util.MyShowsUtil;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
+import com.viewpagerindicator.TitlePageIndicator;
+import ru.myshows.adapters.SectionedAdapter;
+import ru.myshows.adapters.TabsAdapter;
+import ru.myshows.domain.Searchable;
+import ru.myshows.fragments.*;
+import ru.myshows.tasks.*;
+import ru.myshows.util.Settings;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,176 +38,214 @@ import java.util.Map;
  * Time: 15:47:52
  * To change this template use File | Settings | File Templates.
  */
-public class MainActivity extends TabActivity {
+public class MainActivity extends SherlockFragmentActivity {
 
-    public static final int TAB_SHOWS = 0;
-    public static final int TAB_NEWS = 2;
-    public static final int TAB_PROFILE = 3;
-    public static final int TAB_SEARCH = 4;
-    public static final int TAB_LOGIN = 5;
-    public static final int TAB_NEW = 1;
-    MyShows app;
+    private static final int TAB_SHOWS = 0;
+    private static final int TAB_NEW_EPISODES = 1;
+    private static final int TAB_NEWS = 2;
+    private static final int TAB_PROFILE = 3;
+    private static final int TAB_SEARCH = 4;
+    private static final int TAB_LOGIN = 5;
 
-    /**
-     * Called when the activity is first created.
-     */
 
-    private TabHost tabHost;
-    private MyShowsClient client = MyShowsClient.getInstance();
-    private Map<Integer, TabHost.TabSpec> tabs = new HashMap<Integer, TabHost.TabSpec>();
+    private ViewPager pager;
+    private TitlePageIndicator indicator;
+    private TabsAdapter adapter;
+    private EditText search;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        // MyShowsUtil.applyTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler("/sdcard/MyShows", null));
-        app = (MyShows) getApplication();
-        initTabs();
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
+        adapter = new TabsAdapter(getSupportFragmentManager(), false);
+        pager = (ViewPager) findViewById(R.id.pager);
+        pager.setOffscreenPageLimit(6);
+        indicator = (TitlePageIndicator) findViewById(R.id.indicator);
+        pager.setAdapter(adapter);
+        indicator.setViewPager(pager);
+        indicator.setTypeface(MyShows.font);
+
+        indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                if (!MyShows.isLoggedIn)
+                    return;
+                Fragment currentFragment = adapter.getItem(position);
+                ((Taskable) currentFragment).executeTask();
+            }
+
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+            }
+        });
+
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+
+
+        BitmapDrawable bg = (BitmapDrawable) getResources().getDrawable(R.drawable.stripe_red);
+        bg.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+        getSupportActionBar().setBackgroundDrawable(bg);
+        new LoginTask().execute();
+
     }
 
 
-    private int getThemeAttribute(int attr) {
-        TypedValue typedvalueattr = new TypedValue();
-        getTheme().resolveAttribute(attr, typedvalueattr, true);
-        return typedvalueattr.resourceId;
+    public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+
+        menu.add(0, 1, 1, R.string.menu_update).setIcon(R.drawable.ic_navigation_refresh).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        menu.add(0, 2, 2, R.string.menu_settings).setIcon(R.drawable.ic_action_settings).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        menu.add(0, 3, 3, R.string.menu_search).setIcon(R.drawable.ic_action_search).setActionView(R.layout.action_search).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+        menu.add(0, 4, 4, R.string.menu_exit).setIcon(R.drawable.ic_exit).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+        return super.onCreateOptionsMenu(menu);
     }
 
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
+    public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
+        switch (item.getItemId()) {
+            case 1:
+                int position = pager.getCurrentItem();
+                if (!MyShows.isLoggedIn)
+                    break;
+
+                Fragment currentFragment = adapter.getItem(position);
+                ((Taskable) currentFragment).executeUpdateTask();
+
+                break;
+            case 2:
+                startActivity(new Intent(this, SettingsAcrivity.class));
+                break;
+            case 3:
+                search = (EditText) item.getActionView();
+                search.addTextChangedListener(filterTextWatcher);
+                break;
+            case 4:
+                final AlertDialog alert;
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
+                        .setTitle(R.string.request_exit)
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Settings.setString(Settings.KEY_LOGIN, null);
+                                Settings.setString(Settings.KEY_PASSWORD, null);
+                                Settings.setBoolean(Settings.KEY_LOGGED_IN, false);
+                                MyShows.isLoggedIn = false;
+                                MyShows.invalidateUserData();
+                                finish();
+                                startActivity(new Intent(MainActivity.this, MainActivity.class));
+                            }
+                        })
+                        .setNegativeButton(R.string.no, null);
+                alert = builder.create();
+                alert.show();
+                break;
+        }
+        return true;
     }
 
-    private void initTabs() {
-        tabHost = getTabHost();
-        tabHost.setCurrentTab(0);
-        tabHost.clearAllTabs();
+    private TextWatcher filterTextWatcher = new TextWatcher() {
+        public void afterTextChanged(Editable s) {
+        }
 
-        if (app.isLoggedIn())
-            getPrivateTabs();
-        else
-            new LoginTask(this).execute(Prefs.getStringPrefs(this, Prefs.KEY_LOGIN), Prefs.getStringPrefs(this, Prefs.KEY_PASSWORD));
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
 
-    }
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            Fragment fragment = adapter.getItem(pager.getCurrentItem());
+            if (fragment instanceof Searchable) {
+                ((Searchable) fragment).getAdapter().getFilter().filter(s);
+            }
+        }
 
+    };
 
     private void getPrivateTabs() {
-        tabHost.clearAllTabs();
-        addTab(R.string.tab_shows_title, R.drawable.dark_tab_shows, ActivityStack.class, ShowsActivity.class, TAB_SHOWS);
-        addTab(R.string.tab_new, R.drawable.dark_tab_new_episodes, NewEpisodesActivity.class, null, TAB_NEW);
-        addTab(R.string.tab_news_title, R.drawable.dark_tab_news, NewsActivity.class, null, TAB_NEWS);
-        addTab(R.string.tab_profile_title, R.drawable.dark_tab_profile, ProfileActivity.class, null, TAB_PROFILE);
-        addTab(R.string.tab_search_title, R.drawable.dark_tab_search, ActivityStack.class, SearchActivity.class, TAB_SEARCH);
+
+        adapter.addFragment(new ShowsFragment(ShowsFragment.SHOWS_USER), getResources().getString(R.string.tab_shows_title));
+        adapter.addFragment(new NewEpisodesFragment(), getResources().getString(R.string.tab_new));
+        adapter.addFragment(new NextEpisodesFragment(), getResources().getString(R.string.tab_next));
+        if (Settings.getBoolean(Settings.PREF_SHOW_NEWS))
+            adapter.addFragment(new NewsFragment(), getResources().getString(R.string.tab_news_title));
+        adapter.addFragment(new ProfileFragment(), getResources().getString(R.string.tab_profile_title));
+        adapter.addFragment(new SearchFragment(), getResources().getString(R.string.tab_search_title));
+
+        indicator.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
+
+        // fire first task manually
+        GetShowsTask task = new GetShowsTask(MainActivity.this, GetShowsTask.SHOWS_USER);
+        task.setTaskListener((TaskListener) adapter.getItem(0));
+        task.execute();
     }
 
     private void getPublicTabs() {
-        tabHost.clearAllTabs();
-        addTab(R.string.tab_search_title, R.drawable.dark_tab_search, ActivityStack.class, SearchActivity.class, TAB_SEARCH);
-        addTab(R.string.tab_login_title, R.drawable.dark_tab_login, LoginActivity.class, null, TAB_LOGIN);
+        adapter.addFragment(new SearchFragment(), getResources().getString(R.string.tab_search_title));
+        adapter.addFragment(new LoginFragment(), getResources().getString(R.string.tab_login_title));
+        indicator.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
+    }
+
+
+    private class LoginTask extends AsyncTask<Object, Void, Boolean> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Boolean doInBackground(Object... objects) {
+            if (MyShows.isLoggedIn) return true;
+            if (Settings.getBoolean(Settings.KEY_LOGGED_IN)) {
+                String login = Settings.getString(Settings.KEY_LOGIN);
+                String pass = Settings.getString(Settings.KEY_PASSWORD);
+                return MyShows.client.login(login, pass);
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (result) getPrivateTabs();
+            else getPublicTabs();
+        }
+
     }
 
 
     @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        Log.d("MainActivity", "OnNewIntent!");
-        // if user name clicked in NewsActivity
-        if (getBundleValue(intent, "login", null) != null) {
-            String login = getBundleValue(intent, "login", null).toString();
-            Intent newIntent = new Intent(this, ProfileActivity.class);
-            newIntent.putExtra("login", login);
-            TabHost.TabSpec spec = tabs.get(TAB_PROFILE);
-            spec.setContent(newIntent);
-            switchTab(TAB_PROFILE);
+    protected void onResume() {
+        super.onResume();
+        Log.d("MyShows", "Main activity on resume");
+        if (MyShows.isLoggedIn && MyShows.isUserShowsChanged) {
 
-            // if show clicked in NewsActivity
-        } else if (getBundleValue(intent, "showId", null) != null) {
-            Integer showId = (Integer) getBundleValue(intent, "showId", null);
-            Intent newIntent = new Intent(this, ShowActivity.class);
-            newIntent.putExtra("showId", showId);
-            ActivityStack activityStack = (ActivityStack) getLocalActivityManager().getActivity("tab" + R.string.tab_shows_title);
-            activityStack.push("test", newIntent);
-            switchTab(TAB_SHOWS);
+            Fragment showsFragment = adapter.getItem(0);
+            if (showsFragment instanceof ShowsFragment) {
+                GetShowsTask getShowsTask = new GetShowsTask(this, GetShowsTask.SHOWS_USER);
+                getShowsTask.setTaskListener((ShowsFragment) showsFragment);
+                getShowsTask.execute();
+            }
 
-        } else {
-            initTabs();
+            Fragment newEpisodesFragment = adapter.getItem(1);
+            if (newEpisodesFragment instanceof NewEpisodesFragment) {
+                GetNewEpisodesTask episodesTask = new GetNewEpisodesTask(this, true);
+                episodesTask.setTaskListener((NewEpisodesFragment) newEpisodesFragment);
+                episodesTask.execute();
+            }
+
+
+
+
         }
-
     }
-
-    private void addTab(int labelId, int drawableId, Class activitClass, Class defaultStackClass, Integer tab) {
-        Intent intent = new Intent(this, activitClass);
-        if (defaultStackClass != null) {
-            intent.putExtra("defaultStackClass", defaultStackClass);
-        }
-
-        TabHost.TabSpec spec = tabHost.newTabSpec("tab" + labelId);
-
-        View tabIndicator = LayoutInflater.from(this).inflate(R.layout.tab_indicator, getTabWidget(), false);
-
-        TextView title = (TextView) tabIndicator.findViewById(R.id.title);
-        title.setText(labelId);
-        ImageView icon = (ImageView) tabIndicator.findViewById(R.id.icon);
-        icon.setImageResource(drawableId);
-
-        spec.setIndicator(tabIndicator);
-        spec.setContent(intent);
-        tabs.put(tab, spec);
-        tabHost.addTab(spec);
-
-
-    }
-
-
-    public void switchTab(int tab) {
-        tabHost.setCurrentTab(tab);
-    }
-
-    private Object getBundleValue(Intent intent, String key, Object defaultValue) {
-        if (intent == null) return defaultValue;
-        if (intent.getExtras() == null) return defaultValue;
-        if (intent.getExtras().get(key) == null) return defaultValue;
-        return intent.getExtras().get(key);
-    }
-
-
-
-    private class LoginTask extends AsyncTask {
-        private Context context;
-        private ProgressDialog dialog;
-
-        private LoginTask(Context context) {
-            this.context = context;
-            this.dialog = new ProgressDialog(context);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            this.dialog.setMessage(getResources().getString(R.string.loading));
-            this.dialog.show();
-
-        }
-
-        @Override
-        protected Object doInBackground(Object... objects) {
-            Boolean result = false;
-            String login = (String) objects[0];
-            String pass = (String) objects[1];
-            if (login != null && pass != null)
-                result = client.login(login, pass);
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(Object result) {
-            if (this.dialog.isShowing()) this.dialog.dismiss();
-            app.setLoggedIn((Boolean) result);
-            if (app.isLoggedIn()) getPrivateTabs();
-            else getPublicTabs();
-
-        }
-
-    }
-
 }

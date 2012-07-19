@@ -3,146 +3,180 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-
+                android:background="@drawable/gradient_background"
         >
 
 
-    <ImageView
-            android:id="@+id/avatar"
+    <ProgressBar
+            android:id="@+id/progress_profile"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:adjustViewBounds="true"
-            android:maxHeight="120dp"
-            android:maxWidth="150dp"
-            />
-
-    <TextView android:id="@+id/profile_name"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:textAppearance="@style/DarkTitleTextAppearance"
-              android:layout_toRightOf="@id/avatar"
-
-            />
+            android:indeterminate="true"
+            android:layout_centerInParent="true"/>
 
 
-
-    <TextView android:id="@+id/watched_episodes_time"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:textAppearance="@style/DarkLabelsTextAppearance"
-              android:layout_below="@id/avatar"
-              android:text="@string/watched_episodes"
-              android:paddingLeft="10dp"
-            />
-
-
-    <ru.myshows.components.TextProgressBar
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/episodes_bar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:minHeight="20dip"
-            android:maxHeight="20dip"
-            android:paddingLeft="10dp"
-            android:paddingBottom="10dp"
-            android:progressDrawable="@drawable/progress_bar_red"
-            android:layout_below="@id/watched_episodes_time"/>
-
-    <TextView android:id="@+id/watched_hours_time"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:textAppearance="@style/DarkLabelsTextAppearance"
-              android:layout_below="@id/episodes_bar"
-              android:text="@string/watched_hours"
-              android:paddingLeft="10dp"
-            />
-
-    <ru.myshows.components.TextProgressBar
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/hours_bar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:minHeight="20dip"
-            android:maxHeight="20dip"
-            android:paddingLeft="10dp"
-            android:paddingBottom="10dp"
-            android:progressDrawable="@drawable/progress_bar_blue"
-            android:layout_below="@id/watched_hours_time"/>
-
-    <TextView android:id="@+id/watched_days_time"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:textAppearance="@style/DarkLabelsTextAppearance"
-              android:layout_below="@id/hours_bar"
-              android:text="@string/watched_days"
-              android:paddingLeft="10dp"
-            />
-
-    <ru.myshows.components.TextProgressBar
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/days_bar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:minHeight="20dip"
-            android:maxHeight="20dip"
-            android:paddingLeft="10dp"
-            android:paddingBottom="10dp"
-            android:progressDrawable="@drawable/progress_bar_green"
-            android:layout_below="@id/watched_days_time"/>
-
-
-
-    <RelativeLayout android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/days_bar"
-                    android:id="@+id/profile_shows_info"
-                    android:paddingLeft="10dp"
+    <ScrollView android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/scroll_layout"
             >
+        <RelativeLayout android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                >
 
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:id="@+id/profile_watching_label"
-                  style="@style/DarkTitleTextAppearance"
-                />
-
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:id="@+id/profile_will_watch_label"
-                  android:layout_below="@id/profile_watching_label"
-                  style="@style/DarkTitleTextAppearance"
-                />
-
-
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:id="@+id/profile_cancelled_label"
-                  android:layout_below="@id/profile_will_watch_label"
-                  style="@style/DarkTitleTextAppearance"
-                />
-
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:id="@+id/profile_finished_label"
-                  android:layout_below="@id/profile_cancelled_label"
-                  style="@style/DarkTitleTextAppearance"
-                />
+            <ImageView
+                    android:id="@+id/avatar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:adjustViewBounds="true"
+                    android:maxHeight="120dp"
+                    android:maxWidth="150dp"
+                    />
 
 
+            <ru.myshows.components.RobotoTextView
+                    android:id="@+id/profile_name"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/DarkTitleTextAppearance"
+                    android:layout_toRightOf="@id/avatar"
 
-    </RelativeLayout>
+                    />
 
 
-    <Button
-            android:id="@+id/logout_button"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/logout"
-            android:background="@drawable/red_button"
-            android:textColor="@color/white"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="10dp"
-            />
+            <LinearLayout android:layout_width="fill_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="vertical"
+                          android:layout_below="@id/avatar"
+                          android:id="@+id/progress"
+                    >
+
+
+                <ru.myshows.components.RobotoTextView
+                        android:id="@+id/watched_episodes_time"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/watched_episodes"
+                        android:paddingLeft="10dp"
+                        android:textSize="15sp"
+                        />
+
+                <LinearLayout android:layout_width="fill_parent"
+                              android:layout_height="wrap_content">
+
+                    <ru.myshows.components.TextProgressBar
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/episodes_bar"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:minHeight="20dip"
+                            android:maxHeight="20dip"
+                            android:padding="10dp"
+                            android:progressDrawable="@drawable/progress_bar_red"
+                            android:layout_weight="1"
+                            />
+
+                </LinearLayout>
+
+                <ru.myshows.components.RobotoTextView
+                        android:id="@+id/watched_hours_time"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/watched_hours"
+                        android:paddingLeft="10dp"
+                        android:textSize="15sp"
+                        />
+
+                <LinearLayout android:layout_width="fill_parent"
+                              android:layout_height="wrap_content"
+                              android:weightSum="1"
+                        >
+
+                    <ru.myshows.components.TextProgressBar
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/hours_bar"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:minHeight="20dip"
+                            android:maxHeight="20dip"
+                            android:padding="10dp"
+                            android:progressDrawable="@drawable/progress_bar_blue"
+                            android:layout_weight="0.75"
+                            />
+
+                </LinearLayout>
+
+                <ru.myshows.components.RobotoTextView
+                        android:id="@+id/watched_days_time"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/hours_bar"
+                        android:text="@string/watched_days"
+                        android:paddingLeft="10dp"
+                        android:textSize="15sp"
+                        />
+
+                <LinearLayout android:layout_width="fill_parent"
+                              android:layout_height="wrap_content"
+                              android:weightSum="1"
+                        >
+
+                    <ru.myshows.components.TextProgressBar
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/days_bar"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:minHeight="20dip"
+                            android:maxHeight="20dip"
+                            android:padding="10dp"
+                            android:progressDrawable="@drawable/progress_bar_green"
+                            android:layout_weight="0.5"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <RelativeLayout android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/progress"
+                            android:id="@+id/profile_shows_info"
+                            android:paddingLeft="10dp"
+                    >
+
+                <ru.myshows.components.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/profile_watching_label"
+                        />
+
+                <ru.myshows.components.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/profile_will_watch_label"
+                        android:layout_below="@id/profile_watching_label"
+                        />
+
+
+                <ru.myshows.components.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/profile_cancelled_label"
+                        android:layout_below="@id/profile_will_watch_label"
+                        />
+
+                <ru.myshows.components.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/profile_finished_label"
+                        android:layout_below="@id/profile_cancelled_label"
+                        />
+
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </ScrollView>
 
 
 </RelativeLayout>

@@ -1,0 +1,24 @@
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.preference.PreferenceCategory android:title="@string/pref_title">
+
+        <CheckBoxPreference
+                android:key="show_news_key"
+                android:defaultValue="true"
+                android:title="@string/pref_show_news"
+                />
+
+
+         <android.preference.ListPreference
+               android:key="shows_sort_key"
+               android:defaultValue="status"
+               android:title="@string/pref_show_sort"
+               android:entries="@array/pref_sort_options"
+               android:entryValues="@array/pref_sort_options_values"
+               android:dialogTitle="@string/pref_show_sort"/>
+
+             />
+    </android.preference.PreferenceCategory>
+
+</PreferenceScreen>

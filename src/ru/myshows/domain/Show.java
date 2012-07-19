@@ -4,9 +4,9 @@ package ru.myshows.domain;
 import org.json.JSONObject;
 import ru.myshows.api.MyShowsApi;
 import ru.myshows.util.JsonUtil;
-import ru.myshows.util.MyShowsUtil;
 
 import java.util.Collection;
+import java.util.Locale;
 
 /**
  * Created by IntelliJ IDEA.
@@ -16,7 +16,7 @@ import java.util.Collection;
  * To change this template use File | Settings | File Templates.
  */
 
-public class Show extends  JsonEvaluator implements IShow,JsonSerializable {
+public class Show extends  JsonEvaluator implements IShow,JsonSerializable{
 
 
     private Integer showId;
@@ -45,6 +45,11 @@ public class Show extends  JsonEvaluator implements IShow,JsonSerializable {
     public Show() {
     }
 
+    @Override
+    public String getFilterString() {
+        return title;
+    }
+
     public String getImageUrl() {
         return imageUrl;
     }
@@ -67,6 +72,11 @@ public class Show extends  JsonEvaluator implements IShow,JsonSerializable {
     }
 
     public String getTitle() {
+        if (Locale.getDefault().getLanguage().equals("ru") &&
+                getRuTitle() != null &&
+                !getRuTitle().equals("null") &&
+                getRuTitle().length() > 0)
+            return getRuTitle();
         return title;
     }
 
@@ -173,7 +183,8 @@ public class Show extends  JsonEvaluator implements IShow,JsonSerializable {
 
     @Override
     public MyShowsApi.STATUS getWatchStatus() {
-        return MyShowsApi.STATUS.remove;
+        //return MyShowsApi.STATUS.remove;
+        return watchStatus;
     }
 
     public void setRating(Double rating) {

@@ -6,7 +6,11 @@
 
     <color name="light_red">#ffd00000</color>
     <color name="dark_red">#990000</color>
-    <color name="very_light_red">#ff9999</color>
+    <color name="stripe_dark_red">#990000</color>
+    <color name="stripe_light_red">#B00000</color>
+
+
+    <color name="pink">#ffff3b63</color>
 
     <color name="text_tab_selected">#ff010101</color>
     <color name="text_tab_unselected">#ffffff</color>
@@ -29,5 +33,6 @@
 
 
     <color name="transparent">#00000000</color>
+
 
 </resources>

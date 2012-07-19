@@ -1,32 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="ru.myshows.activity"
+          android:installLocation="auto"
           android:versionCode="8"
           android:versionName="1.4.4"
         >
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <!--For rating bar support-->
 
-    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="10"/>
+    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="8"/>
 
-    <application android:name="MyShows" android:icon="@drawable/ic_logo" android:label="MyShows">
-        <activity android:theme="@android:style/Theme.NoTitleBar" android:name=".MainActivity" android:configChanges="keyboardHidden|orientation"
-                  android:launchMode="singleTask"
+    <application android:name="MyShows" android:icon="@drawable/ic_logo" android:label="MyShows" android:theme="@style/Theme.MyShows">
+        <activity android:name=".MainActivity" android:configChanges="keyboardHidden|orientation"
+
                   android:icon="@drawable/ic_logo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".ShowActivity" android:configChanges="keyboardHidden|orientation"/>
+        <activity android:name=".SettingsAcrivity"/>
         <activity android:name=".SearchActivity"/>
-        <activity android:name=".LoginActivity"/>
-        <activity android:name=".NewsActivity"/>
-        <activity android:name=".ProfileActivity" android:launchMode="singleTask"/>
-        <activity android:name=".ShowsActivity"/>
-        <activity android:name=".ShowActivity"/>
-        <activity android:name=".ActivityStack"/>
-        <activity android:name=".MyShowsPreferenceAcrivity"/>
-        <activity android:name=".NewEpisodesActivity"/>
+        <activity android:name=".ProfileActivity"/>
     </application>
 </manifest>

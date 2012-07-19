@@ -140,6 +140,12 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
         }
 
         @Override
+        public int getCount() {
+            if (shows == null || shows.isEmpty()) return 0;
+            return shows.size();
+        }
+
+        @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             final int pos = position;
             final ViewHolder holder;
@@ -299,7 +305,7 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
                     if (finishedShows.size() > 0)
                         sectionList.add(new SectionedAdapter.Section(remove + " (" + finishedShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, finishedShows)));
                     break;
-                }else {
+                } else {
                     Collections.sort(shows, sc);
                     sectionList.add(new SectionedAdapter.Section(res.getString(R.string.tab_shows_title) + " (" + shows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, shows)));
                 }

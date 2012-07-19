@@ -72,8 +72,8 @@ public class GetShowsTask extends BaseTask<List<IShow>>  {
                 shows = MyShows.userShows != null ? MyShows.userShows:  MyShows.client.getShows();
                 MyShows.userShows = shows;
 
-                // get unwatched episodes
-                //MyShows.newEpisodes =  MyShows.client.getUnwatchedEpisodes();
+                // get unwatched episodes to make unwatched episodes seen in shows tab
+                MyShows.newEpisodes =  MyShows.client.getUnwatchedEpisodes();
                 break;
 
         }

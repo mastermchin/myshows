@@ -176,6 +176,7 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
                         UserShow us = MyShows.getUserShow(showId);
                         if (us != null)
                             watchStatus = us.getWatchStatus();
+                        result.setWatchStatus(watchStatus);
                         progress.setVisibility(View.GONE);
                         indicatorLayout.setVisibility(View.VISIBLE);
                         ShowFragment showFragment = (ShowFragment) tabsAdapter.getItem(0);

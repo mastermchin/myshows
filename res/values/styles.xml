@@ -7,6 +7,8 @@
          <item name="android:actionBarStyle">@style/MyShows.ActionBar</item>
          <item name="vpiTitlePageIndicatorStyle">@style/CustomTitlePageIndicator</item>
          <item name="android:listViewStyle">@style/MyShows.ListView</item>
+         <item name="actionModeCloseDrawable">@drawable/ic_exit</item>
+         <item name="android:actionModeCloseDrawable">@drawable/ic_exit</item>
      </style>
 
 
@@ -18,6 +20,7 @@
     <style name="MyShows.ActionBar" parent="Widget.Sherlock.ActionBar">
         <item name="android:background">@drawable/tiled_background</item>
         <item name="background">@drawable/tiled_background</item>
+
     </style>
 
 

@@ -2,6 +2,7 @@ package ru.myshows.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -100,7 +101,6 @@ public class EpisodesFragment extends SherlockFragment {
                 UserShow us = MyShows.getUserShow(show.getShowId());
                 if (us != null) {
                     us.setWatchedEpisodes(checked.split(",").length);
-                    // app.setUserShowsChanged(true);
                 }
             }
             return result;
@@ -184,7 +184,8 @@ public class EpisodesFragment extends SherlockFragment {
                 s.setChecked(true);
             }
             for (Episode e : (List<Episode>) getAllChildrenAsList()) {
-                e.setChecked(true);
+                if (e.getAirDate().before(new Date()))
+                    e.setChecked(true);
             }
             adapter.notifyDataSetChanged();
         }
@@ -206,6 +207,8 @@ public class EpisodesFragment extends SherlockFragment {
                     return false;
                 for (int j = 0; j < getChildrenCount(i); j++){
                     Episode e = (Episode) getChild(i, j);
+                    if (e.getAirDate().before(new Date()))
+                        continue;
                     if (!e.isChecked())
                         return false;
                 }
@@ -244,7 +247,8 @@ public class EpisodesFragment extends SherlockFragment {
                         CheckBox checkBox = (CheckBox) v;
                         boolean isChecked = checkBox.isChecked();
                         for (Episode e : (List<Episode>) getGroupChildren(gp)) {
-                            e.setChecked(isChecked);
+                            if (e.getAirDate().before(new Date()))
+                                e.setChecked(isChecked);
                         }
                         SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
                         if (mMode == null)
@@ -281,12 +285,15 @@ public class EpisodesFragment extends SherlockFragment {
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
+
+            boolean isEpisodesExists = episode.getAirDate().before(new Date());
+
             holder.title.setText(episode.getTitle());
             holder.shortTitle.setText(episode.getShortName() != null ? episode.getShortName() : "");
             holder.airDate.setText(episode.getAirDate() != null ? df.format(episode.getAirDate()) : "unknown");
 
             // show checkboxes only if user is logged in
-            if (MyShows.isLoggedIn && MyShows.getUserShow(show.getShowId()) != null) {
+            if (MyShows.isLoggedIn && MyShows.getUserShow(show.getShowId()) != null && isEpisodesExists) {
                 holder.checkBox.setVisibility(View.VISIBLE);
                 holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override

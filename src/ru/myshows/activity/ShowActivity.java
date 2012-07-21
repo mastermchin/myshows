@@ -1,6 +1,7 @@
 package ru.myshows.activity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Shader;
@@ -9,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import com.actionbarsherlock.app.ActionBar;
@@ -22,6 +24,9 @@ import ru.myshows.fragments.ShowFragment;
 import ru.myshows.tasks.GetShowTask;
 import ru.myshows.tasks.TaskListener;
 import ru.myshows.tasks.Taskable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -77,7 +82,7 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
 
 
         showId = (Integer) getBundleValue(getIntent(), "showId", null);
-        watchStatus = (MyShowsApi.STATUS) getBundleValue(getIntent(), "watchStatus",  MyShowsApi.STATUS.remove);
+        watchStatus = (MyShowsApi.STATUS) getBundleValue(getIntent(), "watchStatus", MyShowsApi.STATUS.remove);
         yoursRating = (Double) getBundleValue(getIntent(), "yoursRating", null);
 
 
@@ -86,11 +91,10 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
         getShowTask.execute(showId);
 
 
-
         indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                if (position == 1){
+                if (position == 1) {
                     EpisodesFragment episodesFragment = (EpisodesFragment) tabsAdapter.getItem(1);
                     if (episodesFragment.getAdapter() != null)
                         episodesFragment.getAdapter().notifyDataSetChanged();
@@ -122,13 +126,14 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
         indicatorLayout.setVisibility(View.VISIBLE);
         tabsAdapter.addFragment(new ShowFragment(result, yoursRating), getResources().getString(R.string.tab_show));
         tabsAdapter.addFragment(new EpisodesFragment(result), getResources().getString(R.string.tab_episodes));
+        populateExternalLinkActions(result);
         indicator.notifyDataSetChanged();
         tabsAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onTaskFailed(Exception e) {
-        if (e != null){
+        if (e != null) {
             progress.setVisibility(View.GONE);
         }
         final AlertDialog alert;
@@ -151,7 +156,6 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
 
     public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
         menu.add(0, 1, 1, R.string.menu_update).setIcon(R.drawable.ic_navigation_refresh).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        menu.add(0, 2, 2, R.string.menu_view_on_site).setIcon(R.drawable.ic_web_site).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
         if (MyShows.isLoggedIn)
             menu.add(0, 3, 3, R.string.menu_settings).setIcon(R.drawable.ic_action_settings).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
         return super.onCreateOptionsMenu(menu);
@@ -196,10 +200,10 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
                 //tabsAdapter = new TabsAdapter(getSupportFragmentManager(), true);
                 getShowTask.execute(showId);
                 break;
-            case 2:
-                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://myshows.ru/view/" + showId + "/"));
-                startActivity(i);
-                break;
+//            case 2:
+//                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://myshows.ru/view/" + showId + "/"));
+//                startActivity(i);
+//                break;
             case 3:
                 startActivity(new Intent(this, SettingsAcrivity.class));
                 break;
@@ -247,6 +251,105 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
     public void changeShowStatus(View v) {
         ShowFragment showFragment = (ShowFragment) tabsAdapter.getItem(0);
         showFragment.changeShowStatus(v);
+    }
+
+    private void populateExternalLinkActions(Show show) {
+
+        List<SiteLink> links = new ArrayList<SiteLink>();
+        links.add(new SiteLink("MyShows", "http://myshows.ru/view/" + show.getShowId() + "/"));
+        if (show.getKinopoiskId() != null && !show.getKinopoiskId().equals("null"))
+            links.add(new SiteLink("Kinopoisk", "http://www.kinopoisk.ru/film/" + show.getKinopoiskId() + "/"));
+        if (show.getImdbId() != null && !show.getImdbId().equals("null"))
+            links.add(new SiteLink("IMDB", "http://www.imdb.com/title/" + show.getImdbId() + "/"));
+        if (show.getTvrageId() != null && !show.getTvrageId().equals("null"))
+            links.add(new SiteLink("TV Rage", "http://www.tvrage.com/shows/id-" + show.getTvrageId()));
+        LinksAdapter linkAdapter = new LinksAdapter(this, R.layout.external_link, links);
+
+        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        getSupportActionBar().setListNavigationCallbacks(linkAdapter, new ActionBar.OnNavigationListener() {
+            @Override
+            public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+                getSupportActionBar().setSelectedNavigationItem(0);
+                return false;
+            }
+        });
+
+    }
+
+
+    public static class SiteLink {
+        private String name;
+        private String url;
+
+        public SiteLink(String name, String url) {
+            this.name = name;
+            this.url = url;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+
+    }
+
+    private static class LinksAdapter extends ArrayAdapter<SiteLink> {
+
+        private List<SiteLink> strings;
+        private Context context;
+
+        private LinksAdapter(Context context, int textViewResourceId, List<SiteLink> objects) {
+            super(context, textViewResourceId, objects);
+            this.strings = objects;
+            this.context = context;
+        }
+
+        @Override
+        public int getCount() {
+            if (strings == null) return 0;
+            return strings.size();
+        }
+
+        @Override
+        public SiteLink getItem(int position) {
+            return super.getItem(position);
+        }
+
+
+        // return views of drop down items
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+
+            final SiteLink siteLink = strings.get(position);
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            // at 0 position show only icon
+
+            TextView site = (TextView) inflater.inflate(R.layout.external_link, null);
+            site.setText(siteLink.getName());
+
+            site.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(siteLink.getUrl()));
+                    context.startActivity(i);
+                }
+            });
+            return site;
+
+
+        }
+
+
+        // return header view of drop down
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            return inflater.inflate(R.layout.icon, null);
+        }
     }
 
 

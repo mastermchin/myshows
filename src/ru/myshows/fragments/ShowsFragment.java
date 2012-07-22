@@ -187,8 +187,8 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
                 });
 
                 holder.title.setText(show.getTitle());
-                UserShow userShow = MyShows.getUserShow(show.getShowId());
-                holder.rating.setRating(userShow != null ? userShow.getRating().floatValue() : show.getRating().floatValue());
+               // UserShow userShow = MyShows.getUserShow(show.getShowId());
+                holder.rating.setRating(/*userShow != null ? userShow.getRating().floatValue() : */show.getRating().floatValue());
 
                 if (show instanceof UserShow) {
 

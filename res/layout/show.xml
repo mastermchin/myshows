@@ -4,6 +4,7 @@
                 android:layout_height="fill_parent"
                 android:background="@drawable/gradient_background"
                 xmlns:android="http://schemas.android.com/apk/res/android"
+                android:padding="5dp"
             >
 
         <LinearLayout android:layout_width="fill_parent"
@@ -27,6 +28,7 @@
                               android:layout_width="fill_parent"
                               android:layout_height="wrap_content"
                               android:visibility="gone"
+                              android:padding="5dp"
                         >
 
                     <ru.myshows.components.RobotoTextView
@@ -34,7 +36,6 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:text="@string/date"
-                            android:paddingRight="3dp"
                             android:layout_weight="0.4"
                             />
 
@@ -50,61 +51,9 @@
                 </LinearLayout>
 
 
-                <LinearLayout android:id="@+id/show_genres_layout"
-                              android:layout_width="fill_parent"
-                              android:layout_height="wrap_content"
-                              android:visibility="gone"
-                        >
-
-                    <ru.myshows.components.RobotoTextView
-                            android:id="@+id/show_genres_label"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:text="@string/genres"
-                            android:paddingRight="3dp"
-                            android:layout_weight="0.4"
-                            />
-
-                    <ru.myshows.components.RobotoTextView
-                            android:id="@+id/show_genres_valye"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.6"
-                            />
-
-                </LinearLayout>
-
-
-                <LinearLayout android:id="@+id/show_watching_layout"
-                              android:layout_width="fill_parent"
-                              android:layout_height="wrap_content"
-                              android:visibility="gone"
-
-                        >
-
-                    <ru.myshows.components.RobotoTextView
-                            android:id="@+id/show_watching_label"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:text="@string/watching"
-                            android:paddingRight="3dp"
-                            android:layout_weight="0.4"
-                            />
-
-                    <ru.myshows.components.RobotoTextView
-                            android:id="@+id/show_watching_value"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.6"
-                            />
-
-                </LinearLayout>
-
-
                 <LinearLayout android:id="@+id/show_rating_myshows_layout"
                               android:layout_width="fill_parent"
                               android:layout_height="wrap_content"
-                              android:visibility="gone"
                         >
 
                     <ru.myshows.components.RobotoTextView
@@ -112,8 +61,10 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:text="@string/my_shows_rating"
-                            android:paddingRight="3dp"
                             android:layout_weight="0.4"
+                            android:padding="5dp"
+                            android:layout_gravity="center_vertical"
+
                             />
                     <LinearLayout
                             android:layout_width="0dp"
@@ -138,7 +89,6 @@
                 <LinearLayout android:id="@+id/show_rating_yours_layout"
                               android:layout_width="fill_parent"
                               android:layout_height="wrap_content"
-                              android:visibility="gone"
                         >
 
                     <ru.myshows.components.RobotoTextView
@@ -146,8 +96,9 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:text="@string/yours_rating"
-                            android:paddingRight="3dp"
+                            android:padding="5dp"
                             android:layout_weight="0.4"
+                            android:layout_gravity="center_vertical"
                             />
 
                     <LinearLayout

@@ -75,6 +75,7 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        getSupportActionBar().setIcon(R.drawable.ic_list_logo);
         if (title != null)
             getSupportActionBar().setTitle(title);
 

@@ -102,6 +102,9 @@
     <string name="try_again">Возможно нет соединения с интернетом. Попробовать снова? </string>
 
 
+    <string name="unwatched">не просмотрено</string>
+
+
     <string-array name="months">
         <item>Январь</item>
         <item>Февраль</item>

@@ -193,13 +193,16 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
                 convertView = inflater.inflate(R.layout.season, parent, false);
                 holder = new ViewHolder();
                 holder.title = (TextView) convertView.findViewById(R.id.season_title);
+                holder.unwatched = (TextView) convertView.findViewById(R.id.unwatched);
                 holder.checkBox = (CheckBox) convertView.findViewById(R.id.season_check_box);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.title.setText(userShow.getTitle() + "  (" + (getChildrenCount(groupPosition)) + ")");
+            holder.title.setText(userShow.getTitle());
+            holder.unwatched.setVisibility(View.VISIBLE);
+            holder.unwatched.setText(getActivity().getResources().getString(R.string.unwatched) + ": " + getChildrenCount(groupPosition));
             holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -226,6 +229,7 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
 
         protected class ViewHolder {
             protected TextView title;
+            protected TextView unwatched;
             protected CheckBox checkBox;
             protected TextView shortTitle;
             private TextView airDate;

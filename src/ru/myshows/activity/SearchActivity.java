@@ -39,6 +39,7 @@ public class SearchActivity extends SherlockFragmentActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        getSupportActionBar().setIcon(R.drawable.ic_list_logo);
         getSupportActionBar().setTitle(getResources().getString(R.string.search) + ": " + search);
 
         BitmapDrawable bg = (BitmapDrawable) getResources().getDrawable(R.drawable.stripe_red);

@@ -132,7 +132,7 @@ public class EpisodesFragment extends SherlockFragment {
             if (eps == null || eps.isEmpty())
                 return;
 
-            for (int i = 1; i <= totalSeasons; i++) {
+            for (int i = totalSeasons; i >= 1; i--) {
                 boolean isAllEpisodesWatched = true;
                 ArrayList<Episode> seasonEpisodes = new ArrayList<Episode>();
                 for (Iterator<Episode> iter = eps.iterator(); iter.hasNext(); ) {
@@ -224,6 +224,7 @@ public class EpisodesFragment extends SherlockFragment {
                 convertView = inflater.inflate(R.layout.season, parent, false);
                 holder = new ViewHolder();
                 holder.title = (TextView) convertView.findViewById(R.id.season_title);
+                holder.unwatched = (TextView) convertView.findViewById(R.id.unwatched);
                 holder.checkBox = (CheckBox) convertView.findViewById(R.id.season_check_box);
                 convertView.setTag(holder);
             } else {
@@ -231,7 +232,7 @@ public class EpisodesFragment extends SherlockFragment {
             }
 
             holder.title.setText(season.getTitle());
-
+            holder.unwatched.setVisibility(View.GONE);
             // show checkboxes only if user is logged in
             if (MyShows.isLoggedIn  &&  MyShows.getUserShow(show.getShowId()) != null) {
                 holder.checkBox.setVisibility(View.VISIBLE);
@@ -265,6 +266,7 @@ public class EpisodesFragment extends SherlockFragment {
 
         protected class ViewHolder {
             protected TextView title;
+            protected TextView unwatched;
             protected CheckBox checkBox;
             protected TextView shortTitle;
             private TextView airDate;

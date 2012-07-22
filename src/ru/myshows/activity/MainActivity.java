@@ -89,7 +89,7 @@ public class MainActivity extends SherlockFragmentActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-
+        getSupportActionBar().setIcon(R.drawable.ic_list_logo);
 
         BitmapDrawable bg = (BitmapDrawable) getResources().getDrawable(R.drawable.stripe_red);
         bg.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
@@ -189,7 +189,7 @@ public class MainActivity extends SherlockFragmentActivity {
     }
 
     private void getPublicTabs() {
-        adapter.addFragment(new SearchFragment(), getResources().getString(R.string.tab_search_title));
+        //adapter.addFragment(new SearchFragment(), getResources().getString(R.string.tab_search_title));
         adapter.addFragment(new LoginFragment(), getResources().getString(R.string.tab_login_title));
         indicator.notifyDataSetChanged();
         adapter.notifyDataSetChanged();

@@ -27,8 +27,6 @@ public class ShowFragment extends Fragment  {
 
     private ImageView showLogo;
     private LinearLayout dateLayout;
-    private LinearLayout genresLayoyt;
-    private LinearLayout watchingLayoyt;
     private LinearLayout myShowsRatingLayoyt;
     private LinearLayout yoursRatingLayoyt;
     private RatingBar myShowsRatingBar;
@@ -67,8 +65,6 @@ public class ShowFragment extends Fragment  {
     private void populateUI(Show show) {
         showLogo = (ImageView) view.findViewById(R.id.show_logo);
         dateLayout = (LinearLayout) view.findViewById(R.id.show_date_layout);
-        genresLayoyt = (LinearLayout) view.findViewById(R.id.show_genres_layout);
-        watchingLayoyt = (LinearLayout) view.findViewById(R.id.show_watching_layout);
         myShowsRatingLayoyt = (LinearLayout) view.findViewById(R.id.show_rating_myshows_layout);
         yoursRatingLayoyt = (LinearLayout) view.findViewById(R.id.show_rating_yours_layout);
         statusButtonsLayoyt = (LinearLayout) view.findViewById(R.id.show_status_buttons_layout);
@@ -87,17 +83,6 @@ public class ShowFragment extends Fragment  {
             if (show.getEndedAt() != null)
                 date += " - " + show.getEndedAt();
             ((TextView) dateLayout.findViewById(R.id.show_date_value)).setText(date);
-        }
-
-        // genres
-        if (show.getGenres() != null) {
-            genresLayoyt.setVisibility(View.VISIBLE);
-            ((TextView) genresLayoyt.findViewById(R.id.show_genres_valye)).setText(show.getGenres());
-        }
-        //watching
-        if (show.getWatching() != null) {
-            watchingLayoyt.setVisibility(View.VISIBLE);
-            ((TextView) watchingLayoyt.findViewById(R.id.show_watching_value)).setText(String.valueOf(show.getWatching()));
         }
 
 

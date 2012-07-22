@@ -110,6 +110,9 @@
     <string name="something_wrong">Something wrong 0_o</string>
     <string name="try_again">Maybe there is no internet connection. Try again?</string>
 
+
+    <string name="unwatched">unwatched</string>
+
     <string-array name="months">
         <item>January</item>
         <item>February</item>

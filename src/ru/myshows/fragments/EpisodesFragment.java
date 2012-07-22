@@ -184,7 +184,7 @@ public class EpisodesFragment extends SherlockFragment {
                 s.setChecked(true);
             }
             for (Episode e : (List<Episode>) getAllChildrenAsList()) {
-                if (e.getAirDate().before(new Date()))
+                if (e.getAirDate() != null && e.getAirDate().before(new Date()))
                     e.setChecked(true);
             }
             adapter.notifyDataSetChanged();
@@ -207,10 +207,10 @@ public class EpisodesFragment extends SherlockFragment {
                     return false;
                 for (int j = 0; j < getChildrenCount(i); j++){
                     Episode e = (Episode) getChild(i, j);
-                    if (e.getAirDate().before(new Date()))
-                        continue;
-                    if (!e.isChecked())
+                    if (e.getAirDate() != null && e.getAirDate().before(new Date()) && !e.isChecked())
                         return false;
+//                    if (!e.isChecked())
+//                        return false;
                 }
             }
             return true;
@@ -247,7 +247,7 @@ public class EpisodesFragment extends SherlockFragment {
                         CheckBox checkBox = (CheckBox) v;
                         boolean isChecked = checkBox.isChecked();
                         for (Episode e : (List<Episode>) getGroupChildren(gp)) {
-                            if (e.getAirDate().before(new Date()))
+                            if (e.getAirDate() != null && e.getAirDate().before(new Date()))
                                 e.setChecked(isChecked);
                         }
                         SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
@@ -286,7 +286,7 @@ public class EpisodesFragment extends SherlockFragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            boolean isEpisodesExists = episode.getAirDate().before(new Date());
+            boolean isEpisodesExists = episode.getAirDate() != null && episode.getAirDate().before(new Date());
 
             holder.title.setText(episode.getTitle());
             holder.shortTitle.setText(episode.getShortName() != null ? episode.getShortName() : "");

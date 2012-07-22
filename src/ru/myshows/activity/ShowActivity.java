@@ -15,6 +15,8 @@ import android.view.*;
 import android.widget.*;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.internal.widget.IcsLinearLayout;
+import com.actionbarsherlock.internal.widget.IcsSpinner;
 import com.viewpagerindicator.TitlePageIndicator;
 import ru.myshows.adapters.TabsAdapter;
 import ru.myshows.api.MyShowsApi;
@@ -154,12 +156,12 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
     }
 
 
-    public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
-        menu.add(0, 1, 1, R.string.menu_update).setIcon(R.drawable.ic_navigation_refresh).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        if (MyShows.isLoggedIn)
-            menu.add(0, 3, 3, R.string.menu_settings).setIcon(R.drawable.ic_action_settings).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        return super.onCreateOptionsMenu(menu);
-    }
+//    public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+//        menu.add(0, 1, 1, R.string.menu_update).setIcon(R.drawable.ic_navigation_refresh).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
+//        if (MyShows.isLoggedIn)
+//            menu.add(0, 3, 3, R.string.menu_settings).setIcon(R.drawable.ic_action_settings).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
+//        return super.onCreateOptionsMenu(menu);
+//    }
 
     @Override
     public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
@@ -167,49 +169,52 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
             case android.R.id.home:
                 finish();
                 break;
-            case 1:
-
-                //http://code.google.com/p/android/issues/detail?id=19211#makechanges
-                //http://stackoverflow.com/questions/9727173/support-fragmentpageradapter-holds-reference-to-old-fragments/9744146#9744146
-                //http://stackoverflow.com/questions/10022179/fragmentpageradapter-with-two-fragments-go-to-the-first-from-the-second-and-upd
-
-                GetShowTask getShowTask = new GetShowTask(ShowActivity.this, true);
-                getShowTask.setTaskListener(new TaskListener<Show>() {
-                    @Override
-                    public void onTaskComplete(Show result) {
-                        UserShow us = MyShows.getUserShow(showId);
-                        if (us != null)
-                            watchStatus = us.getWatchStatus();
-                        result.setWatchStatus(watchStatus);
-                        progress.setVisibility(View.GONE);
-                        indicatorLayout.setVisibility(View.VISIBLE);
-                        ShowFragment showFragment = (ShowFragment) tabsAdapter.getItem(0);
-                        showFragment.refresh(result);
-                        EpisodesFragment episodesFragment = (EpisodesFragment) tabsAdapter.getItem(1);
-                        episodesFragment.refresh(result);
-                        tabsAdapter.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onTaskFailed(Exception e) {
-
-                    }
-                });
-                progress.setVisibility(View.VISIBLE);
-                indicatorLayout.setVisibility(View.GONE);
-                //tabsAdapter = new TabsAdapter(getSupportFragmentManager(), true);
-                getShowTask.execute(showId);
-                break;
-//            case 2:
-//                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://myshows.ru/view/" + showId + "/"));
-//                startActivity(i);
-//                break;
-            case 3:
-                startActivity(new Intent(this, SettingsAcrivity.class));
-                break;
         }
         return true;
     }
+//            case 1:
+//
+//                //http://code.google.com/p/android/issues/detail?id=19211#makechanges
+//                //http://stackoverflow.com/questions/9727173/support-fragmentpageradapter-holds-reference-to-old-fragments/9744146#9744146
+//                //http://stackoverflow.com/questions/10022179/fragmentpageradapter-with-two-fragments-go-to-the-first-from-the-second-and-upd
+//
+//                GetShowTask getShowTask = new GetShowTask(ShowActivity.this, true);
+//                getShowTask.setTaskListener(new TaskListener<Show>() {
+//                    @Override
+//                    public void onTaskComplete(Show result) {
+//                        UserShow us = MyShows.getUserShow(showId);
+//                        if (us != null)
+//                            watchStatus = us.getWatchStatus();
+//                        result.setWatchStatus(watchStatus);
+//                        progress.setVisibility(View.GONE);
+//                        indicatorLayout.setVisibility(View.VISIBLE);
+//                        ShowFragment showFragment = (ShowFragment) tabsAdapter.getItem(0);
+//                        showFragment.refresh(result);
+//                        EpisodesFragment episodesFragment = (EpisodesFragment) tabsAdapter.getItem(1);
+//                        episodesFragment.refresh(result);
+//                        tabsAdapter.notifyDataSetChanged();
+//                    }
+//
+//                    @Override
+//                    public void onTaskFailed(Exception e) {
+//
+//                    }
+//                });
+//                progress.setVisibility(View.VISIBLE);
+//                indicatorLayout.setVisibility(View.GONE);
+//                //tabsAdapter = new TabsAdapter(getSupportFragmentManager(), true);
+//                getShowTask.execute(showId);
+//                break;
+////            case 2:
+////                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://myshows.ru/view/" + showId + "/"));
+////                startActivity(i);
+////                break;
+//            case 3:
+//                startActivity(new Intent(this, SettingsAcrivity.class));
+//                break;
+//        }
+//        return true;
+//    }
 
 
     private Object getBundleValue(Intent intent, String key, Object defaultValue) {
@@ -265,14 +270,65 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
             links.add(new SiteLink("TV Rage", "http://www.tvrage.com/shows/id-" + show.getTvrageId()));
         LinksAdapter linkAdapter = new LinksAdapter(this, R.layout.external_link, links);
 
-        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        getSupportActionBar().setListNavigationCallbacks(linkAdapter, new ActionBar.OnNavigationListener() {
+//        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+//        getSupportActionBar().setListNavigationCallbacks(linkAdapter, new ActionBar.OnNavigationListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+//                getSupportActionBar().setSelectedNavigationItem(0);
+//                return false;
+//            }
+//        });
+
+
+
+        View customNav = LayoutInflater.from(this).inflate(R.layout.custom_show_action_bar, null);
+        IcsSpinner spinner = (IcsSpinner)customNav.findViewById(R.id.spinner);
+        spinner.setAdapter(linkAdapter);
+
+
+        ImageView refresh = (ImageView) customNav.findViewById(R.id.refresh);
+        refresh.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-                getSupportActionBar().setSelectedNavigationItem(0);
-                return false;
+            public void onClick(View view) {
+                GetShowTask getShowTask = new GetShowTask(ShowActivity.this, true);
+                getShowTask.setTaskListener(new TaskListener<Show>() {
+                    @Override
+                    public void onTaskComplete(Show result) {
+                        UserShow us = MyShows.getUserShow(showId);
+                        if (us != null)
+                            watchStatus = us.getWatchStatus();
+                        result.setWatchStatus(watchStatus);
+                        progress.setVisibility(View.GONE);
+                        indicatorLayout.setVisibility(View.VISIBLE);
+                        ShowFragment showFragment = (ShowFragment) tabsAdapter.getItem(0);
+                        showFragment.refresh(result);
+                        EpisodesFragment episodesFragment = (EpisodesFragment) tabsAdapter.getItem(1);
+                        episodesFragment.refresh(result);
+                        tabsAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onTaskFailed(Exception e) {
+
+                    }
+                });
+                progress.setVisibility(View.VISIBLE);
+                indicatorLayout.setVisibility(View.GONE);
+                //tabsAdapter = new TabsAdapter(getSupportFragmentManager(), true);
+                getShowTask.execute(showId);
             }
         });
+
+        ImageView settings = (ImageView) customNav.findViewById(R.id.settings);
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(ShowActivity.this, SettingsAcrivity.class));
+            }
+        });
+
+        getSupportActionBar().setCustomView(customNav, new ActionBar.LayoutParams(Gravity.RIGHT));
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
 
     }
 

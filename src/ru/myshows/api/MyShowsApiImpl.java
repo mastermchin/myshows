@@ -39,8 +39,8 @@ public class MyShowsApiImpl implements MyShowsApi {
         this.httpClient = new DefaultHttpClient();
         ClientConnectionManager mgr = httpClient.getConnectionManager();
         HttpParams params = httpClient.getParams();
-        HttpConnectionParams.setConnectionTimeout(params, 30000);
-        HttpConnectionParams.setSoTimeout(params, 50000);
+        HttpConnectionParams.setConnectionTimeout(params, 15000);
+        HttpConnectionParams.setSoTimeout(params, 20000);
         this.httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);
     }
 
@@ -203,56 +203,56 @@ public class MyShowsApiImpl implements MyShowsApi {
     @Override
     public boolean checkEpisode(Integer episodeId) {
         String url = String.format(MyShowsApi.URL.URL_CHECK_EPISODE, episodeId);
-        return execute(url, false) != null ? true : false;
+        return executeWithStringResult(url, false) != null ? true : false;
     }
 
     @Override
     public boolean checkEpisode(Integer episodeId, RATIO ratio) {
         String url = String.format(MyShowsApi.URL.URL_CHECK_EPISODE_RATIO, episodeId, RATIO.getRatio(ratio));
-        return execute(url, false) != null ? true : false;
+        return executeWithStringResult(url, false) != null ? true : false;
     }
 
     @Override
     public boolean uncheckEpisode(Integer episodeId) {
         String url = String.format(MyShowsApi.URL.URL_UNCHECK_EPISODE, episodeId);
-        return execute(url, false) != null ? true : false;
+        return executeWithStringResult(url, false) != null ? true : false;
     }
 
     @Override
     public boolean syncWatchedEpisodes(Integer showsId, String ids) {
         String url = String.format(MyShowsApi.URL.URL_SYNC_WATCHED, showsId, ids);
-        return execute(url, false) != null ? true : false;
+        return executeWithStringResult(url, false) != null ? true : false;
     }
 
     @Override
     public boolean syncAllShowEpisodes(Integer showId, String watchedIds, String unwatchedIds) {
         String url = String.format(MyShowsApi.URL.URL_SYNC_ALL, showId, watchedIds, unwatchedIds);
-        return execute(url, false) != null ? true : false;
+        return executeWithStringResult(url, false) != null ? true : false;
     }
 
     @Override
     public boolean changeShowStatus(Integer showId, MyShowsApi.STATUS status) {
         System.out.println("Change show " + showId + " status to : " + status.toString());
         String url = String.format(MyShowsApi.URL.URL_CHANGE_SHOW_STATUS, showId, status.toString());
-        return execute(url, false) != null ? true : false;
+        return executeWithStringResult(url, false) != null ? true : false;
     }
 
     @Override
     public boolean changeShowRatio(Integer showId, int ratio) {
         String url = String.format(MyShowsApi.URL.URL_CHANGE_SHOW_RATIO, showId, ratio);
-        return execute(url, false) != null ? true : false;
+        return executeWithStringResult(url, false) != null ? true : false;
     }
 
     @Override
     public boolean changeEpisodeRatio(int ratio, Integer episodeId) {
         String url = String.format(MyShowsApi.URL.URL_CHANGE_EPISODE_RATIO, ratio, episodeId);
-        return execute(url,false) != null ? true : false;
+        return executeWithStringResult(url,false) != null ? true : false;
     }
 
     @Override
     public boolean changeEpisodesRatio(int ratio, String episodeIds) {
         String url = String.format(MyShowsApi.URL.URL_CHANGE_EPISODES_RATIO, ratio, episodeIds);
-        return execute(url,false) != null ? true : false;
+        return executeWithStringResult(url,false) != null ? true : false;
     }
 
     @Override
@@ -264,13 +264,13 @@ public class MyShowsApiImpl implements MyShowsApi {
     @Override
     public boolean addFavoriteEpisode(Integer episodeId) {
         String url = String.format(MyShowsApi.URL.URL_ADD_FAVORITE_EPISODE, episodeId);
-        return execute(url, false) != null ? true : false;
+        return executeWithStringResult(url, false) != null ? true : false;
     }
 
     @Override
     public boolean removeFavoriteEpisode(Integer episodeId) {
         String url = String.format(MyShowsApi.URL.URL_REMOVE_FAVORITE_EPISODE, episodeId);
-        return execute(url, false) != null ? true : false;
+        return executeWithStringResult(url, false) != null ? true : false;
     }
 
     @Override
@@ -282,13 +282,13 @@ public class MyShowsApiImpl implements MyShowsApi {
     @Override
     public boolean addIgnoredEpisode(Integer episodeId) {
         String url = String.format(MyShowsApi.URL.URL_ADD_IGNORED_EPISODE, episodeId);
-        return execute(url, false) != null ? true : false;
+        return executeWithStringResult(url, false) != null ? true : false;
     }
 
     @Override
     public boolean removeIgnoredEpisode(Integer episodeId) {
         String url = String.format(MyShowsApi.URL.URL_REMOVE_IGNORED_EPISODE, episodeId);
-        return execute(url, false) != null ? true : false;
+        return executeWithStringResult(url, false) != null ? true : false;
     }
 
     @Override

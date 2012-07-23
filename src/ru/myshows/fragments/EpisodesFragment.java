@@ -26,6 +26,7 @@ import ru.myshows.domain.UserShow;
 import ru.myshows.tasks.BaseTask;
 import ru.myshows.tasks.GetNewEpisodesTask;
 import ru.myshows.util.EpisodeComparator;
+import ru.myshows.util.Settings;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -132,24 +133,35 @@ public class EpisodesFragment extends SherlockFragment {
             if (eps == null || eps.isEmpty())
                 return;
 
-            for (int i = totalSeasons; i >= 1; i--) {
-                boolean isAllEpisodesWatched = true;
-                ArrayList<Episode> seasonEpisodes = new ArrayList<Episode>();
-                for (Iterator<Episode> iter = eps.iterator(); iter.hasNext(); ) {
-                    Episode e = iter.next();
-                    if (e.getSeasonNumber() == i) {
-                        seasonEpisodes.add(e);
-                        if (!e.isChecked())
-                            isAllEpisodesWatched = false;
-                    }
-                }
-                groups.add(new Season(getResources().getString(R.string.season) + " " + i, isAllEpisodesWatched));
-                Collections.sort(seasonEpisodes, new EpisodeComparator("episode"));
-                children.add(seasonEpisodes);
+            String sort = Settings.getString(Settings.PREF_SEASONS_SORT);
+            if (sort == null) sort = "asc";
 
+            if (sort.equals("asc")){
+                for (int i = 1; i <= totalSeasons; i++){
+                     populateAdapter(eps, i, sort);
+                }
+            } else {
+                for (int i = totalSeasons; i >= 1; i--) {
+                    populateAdapter(eps, i, sort);
+                }
             }
 
+        }
 
+        public void populateAdapter(Collection<Episode> eps, int i, String sort){
+            boolean isAllEpisodesWatched = true;
+            ArrayList<Episode> seasonEpisodes = new ArrayList<Episode>();
+            for (Iterator<Episode> iter = eps.iterator(); iter.hasNext(); ) {
+                Episode e = iter.next();
+                if (e.getSeasonNumber() == i) {
+                    seasonEpisodes.add(e);
+                    if (!e.isChecked())
+                        isAllEpisodesWatched = false;
+                }
+            }
+            groups.add(new Season(getResources().getString(R.string.season) + " " + i, isAllEpisodesWatched));
+            Collections.sort(seasonEpisodes, new EpisodeComparator(sort));
+            children.add(seasonEpisodes);
         }
 
         public Object getAllChildrenAsList() {

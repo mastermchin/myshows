@@ -10,6 +10,8 @@ package ru.myshows.activity;
 public final class R {
     public static final class array {
         public static final int months=0x7f0c0000;
+        public static final int pref_seasons_options=0x7f0c0003;
+        public static final int pref_seasons_options_values=0x7f0c0004;
         public static final int pref_sort_options=0x7f0c0001;
         public static final int pref_sort_options_values=0x7f0c0002;
     }
@@ -1397,11 +1399,13 @@ containing a value of this type.
         public static final int action_watched=0x7f0b0046;
         public static final int all=0x7f0b002b;
         public static final int app_name=0x7f0b000b;
+        public static final int asc=0x7f0b0056;
         public static final int cancel_action=0x7f0b001e;
         public static final int catalog_text=0x7f0b0018;
         public static final int changes_not_saved=0x7f0b0032;
         public static final int changes_saved=0x7f0b0031;
         public static final int date=0x7f0b003e;
+        public static final int desc=0x7f0b0057;
         public static final int episode=0x7f0b0047;
         public static final int episode_rating=0x7f0b003c;
         public static final int episodes=0x7f0b0048;
@@ -1424,16 +1428,17 @@ Register
         public static final int menu_update=0x7f0b0037;
         public static final int menu_view_on_site=0x7f0b0036;
         public static final int my_shows_rating=0x7f0b0041;
-        public static final int no=0x7f0b0054;
+        public static final int no=0x7f0b0055;
         public static final int off=0x7f0b004a;
         public static final int on=0x7f0b0049;
         public static final int password=0x7f0b001b;
         public static final int pref_next_news=0x7f0b004d;
         public static final int pref_profile_news=0x7f0b004e;
+        public static final int pref_seasons_sort=0x7f0b0050;
         public static final int pref_show_news=0x7f0b004c;
         public static final int pref_show_sort=0x7f0b004f;
-        public static final int pref_sort_alph=0x7f0b0051;
-        public static final int pref_sort_status=0x7f0b0050;
+        public static final int pref_sort_alph=0x7f0b0052;
+        public static final int pref_sort_status=0x7f0b0051;
         public static final int pref_title=0x7f0b004b;
         public static final int register_action=0x7f0b001d;
         public static final int register_failed=0x7f0b0027;
@@ -1441,14 +1446,14 @@ Register
         public static final int register_password=0x7f0b0026;
         public static final int register_title=0x7f0b0033;
         public static final int register_username=0x7f0b0025;
-        public static final int request_exit=0x7f0b0052;
+        public static final int request_exit=0x7f0b0053;
         public static final int save=0x7f0b0021;
         public static final int search=0x7f0b0015;
         public static final int search_button=0x7f0b0016;
         public static final int search_query=0x7f0b0022;
         public static final int search_results=0x7f0b0029;
         public static final int season=0x7f0b003d;
-        public static final int something_wrong=0x7f0b0055;
+        public static final int something_wrong=0x7f0b0058;
         public static final int status_cancelled=0x7f0b002f;
         public static final int status_finished=0x7f0b002e;
         public static final int status_remove=0x7f0b0030;
@@ -1467,8 +1472,8 @@ Tabs titles
         public static final int tab_show=0x7f0b0013;
         public static final int tab_shows_title=0x7f0b000f;
         public static final int top=0x7f0b002a;
-        public static final int try_again=0x7f0b0056;
-        public static final int unwatched=0x7f0b0057;
+        public static final int try_again=0x7f0b0059;
+        public static final int unwatched=0x7f0b005a;
         public static final int username=0x7f0b001a;
         public static final int users_text=0x7f0b0019;
         public static final int watched_days=0x7f0b0045;
@@ -1476,7 +1481,7 @@ Tabs titles
         public static final int watched_hours=0x7f0b0044;
         public static final int watching=0x7f0b0040;
         public static final int wrong_login_or_password=0x7f0b001f;
-        public static final int yes=0x7f0b0053;
+        public static final int yes=0x7f0b0054;
         public static final int yours_rating=0x7f0b0042;
     }
     public static final class style {

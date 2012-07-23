@@ -34,12 +34,19 @@ public class EpisodeComparator implements Comparator {
                 return -1;
             else return 0;
 
-        } else if (sortBy.equals("episode")) {
+        } else if (sortBy.equals("asc")) {
             if (e1.getEpisodeNumber() > e2.getEpisodeNumber())
                 return 1;
             else if (e1.getEpisodeNumber() < e2.getEpisodeNumber())
                 return -1;
             else return 0;
+        } else if (sortBy.equals("desc")) {
+            if (e1.getEpisodeNumber() > e2.getEpisodeNumber())
+                return -1;
+            else if (e1.getEpisodeNumber() < e2.getEpisodeNumber())
+                return 1;
+            else return 0;
+
         } else if (sortBy.equals("shortName")) {
             e1.setShortName("s" + String.format("%1$02d", e1.getSeasonNumber()) + "e" + String.format("%1$02d", e1.getEpisodeNumber()));
             e2.setShortName("s" + String.format("%1$02d", e2.getSeasonNumber()) + "e" + String.format("%1$02d", e2.getEpisodeNumber()));

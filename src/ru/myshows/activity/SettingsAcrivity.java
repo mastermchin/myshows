@@ -22,6 +22,7 @@ public class SettingsAcrivity extends PreferenceActivity implements SharedPrefer
     private CheckBoxPreference showNextEpisodes;
     private CheckBoxPreference showProfile;
     private ListPreference sortShowsPref;
+    private ListPreference sortSeasonsPref;
 
 
     @Override
@@ -32,6 +33,7 @@ public class SettingsAcrivity extends PreferenceActivity implements SharedPrefer
         showNextEpisodes = (CheckBoxPreference) getPreferenceScreen().findPreference(Settings.PREF_SHOW_NEXT);
         showProfile = (CheckBoxPreference) getPreferenceScreen().findPreference(Settings.PREF_SHOW_PROFILE);
         sortShowsPref = (ListPreference) getPreferenceScreen().findPreference(Settings.PREF_SHOW_SORT);
+        sortSeasonsPref = (ListPreference) getPreferenceScreen().findPreference(Settings.PREF_SEASONS_SORT);
     }
 
 
@@ -46,6 +48,8 @@ public class SettingsAcrivity extends PreferenceActivity implements SharedPrefer
         showProfile.setSummary(Settings.getBoolean(Settings.PREF_SHOW_PROFILE) ? on : off);
         String s = Settings.getString(Settings.PREF_SHOW_SORT);
         sortShowsPref.setSummary(s.equals("status") ? getRString(R.string.pref_sort_status) : getRString(R.string.pref_sort_alph));
+        String s2 = Settings.getString(Settings.PREF_SEASONS_SORT);
+        sortSeasonsPref.setSummary(s2.equals("asc") ? getRString(R.string.asc) : getRString(R.string.desc));
 
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
@@ -60,6 +64,9 @@ public class SettingsAcrivity extends PreferenceActivity implements SharedPrefer
         } else if (key.equals(Settings.PREF_SHOW_SORT)) {
             String s = Settings.getString(key);
             sortShowsPref.setSummary(s.equals("status") ? getRString(R.string.pref_sort_status) : getRString(R.string.pref_sort_alph));
+        } else if (key.equals(Settings.PREF_SEASONS_SORT)) {
+            String s = Settings.getString(key);
+            sortSeasonsPref.setSummary(s.equals("asc") ? getRString(R.string.asc) : getRString(R.string.desc));
         } else if (key.equals(Settings.PREF_SHOW_NEXT)) {
             showNextEpisodes.setSummary(Settings.getBoolean(Settings.PREF_SHOW_NEXT) ? on : off);
         } else if (key.equals(Settings.PREF_SHOW_PROFILE)) {

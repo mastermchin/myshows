@@ -22,6 +22,7 @@ public class Settings {
     public static final String PREF_SHOW_NEXT = "show_next_key";
     public static final String PREF_SHOW_PROFILE = "show_profile_key";
     public static final String PREF_SHOW_SORT = "shows_sort_key";
+    public static final String PREF_SEASONS_SORT = "seasons_sort_key";
 
 
     public static SharedPreferences getPreferences() {

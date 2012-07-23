@@ -92,6 +92,7 @@
     <string name="pref_next_news">Показывать следующие</string>
     <string name="pref_profile_news">Показывать профиль</string>
     <string name="pref_show_sort">Сортировка сериалов</string>
+    <string name="pref_seasons_sort">Сотртировка сезонов/эпизодов</string>
     <string name="pref_sort_status">По статусу</string>
     <string name="pref_sort_alph">По алфавиту</string>
 
@@ -99,6 +100,9 @@
     <string name="request_exit">Хотите выйти?</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
+    <string name="asc">По возрастанию</string>
+    <string name="desc">По убыванию</string>
+
 
     <string name="something_wrong">Что-то не так 0_o</string>
     <string name="try_again">Возможно нет соединения с интернетом. Попробовать снова? </string>
@@ -127,5 +131,9 @@
         <item>Алфавит</item>
     </string-array>
 
+    <string-array name="pref_seasons_options">
+        <item>По возрастанию</item>
+        <item>По убыванию</item>
+    </string-array>
 
 </resources>

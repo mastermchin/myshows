@@ -31,6 +31,17 @@
                android:dialogTitle="@string/pref_show_sort"/>
 
              />
+
+        <android.preference.ListPreference
+                android:key="seasons_sort_key"
+                android:defaultValue="asc"
+                android:title="@string/pref_seasons_sort"
+                android:entries="@array/pref_seasons_options"
+                android:entryValues="@array/pref_seasons_options_values"
+                android:dialogTitle="@string/pref_seasons_sort"/>
+
+        />
+
     </android.preference.PreferenceCategory>
 
 </PreferenceScreen>

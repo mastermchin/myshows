@@ -43,6 +43,8 @@ public interface MyShowsApi {
 
     public boolean changeEpisodeRatio(int ratio, Integer episodeId);
 
+    public boolean changeEpisodesRatio(int ratio, String episodeIds);
+
     public JSONArray getFavoritesEpisodes();
 
     public boolean addFavoriteEpisode(Integer episodeId);
@@ -140,6 +142,7 @@ public interface MyShowsApi {
         public static final String URL_CHANGE_SHOW_STATUS = "http://api.myshows.ru/profile/shows/%1$d/%2$s";
         public static final String URL_CHANGE_SHOW_RATIO = "http://api.myshows.ru/profile/shows/%1$d/rate/%2$d";
         public static final String URL_CHANGE_EPISODE_RATIO = "http://api.myshows.ru/profile/episodes/rate/%1$d/%2$d";
+        public static final String URL_CHANGE_EPISODES_RATIO = "http://api.myshows.ru/profile/episodes/rate/?r[%1$d]=%2$s";
         public static final String URL_FAVORITES_EPISODES = "http://api.myshows.ru/profile/episodes/favorites/list/";
         public static final String URL_ADD_FAVORITE_EPISODE = "http://api.myshows.ru/profile/episodes/favorites/add/%1$d";
         public static final String URL_REMOVE_FAVORITE_EPISODE = "http://api.myshows.ru/profile/episodes/favorites/remove/%1$d";

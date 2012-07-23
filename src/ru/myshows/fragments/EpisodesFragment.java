@@ -379,7 +379,6 @@ public class EpisodesFragment extends SherlockFragment {
             //Used to put dark icons on light action bar
             menu.add(0, 1, 1, R.string.save).setIcon(R.drawable.ic_save).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
             menu.add(0, 2, 2, R.string.menu_check_all).setIcon(R.drawable.ic_check_all).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
-            menu.add(0, 3, 3, R.string.episode_rating).setIcon(R.drawable.ic_rating_important).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
             return true;
         }
 

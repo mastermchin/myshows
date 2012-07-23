@@ -3,6 +3,8 @@ package ru.myshows.fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.*;
 import android.widget.*;
 import com.actionbarsherlock.app.SherlockFragment;
@@ -10,6 +12,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
 import ru.myshows.adapters.SectionedAdapter;
+import ru.myshows.components.RatingDialog;
 import ru.myshows.domain.Episode;
 import ru.myshows.domain.Season;
 import ru.myshows.domain.UserShow;
@@ -385,6 +388,7 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
         public boolean onCreateActionMode(com.actionbarsherlock.view.ActionMode mode, com.actionbarsherlock.view.Menu menu) {
             //Used to put dark icons on light action bar
             menu.add(0, 1, 1, "Save").setIcon(R.drawable.ic_save).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            menu.add(0, 2, 2, R.string.episode_rating).setIcon(R.drawable.ic_rating_important).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
             return true;
         }
 
@@ -399,6 +403,19 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
                 case 1:
                     new CheckNewEpisodesTask().execute();
                     break;
+                case 2:
+
+                    Handler handler = new Handler() {
+                        @Override
+                        public void handleMessage(Message msg) {
+                            int rating = msg.arg1;
+                            new ChangeEpisodesRateTask().execute(rating);
+                        }
+                    };
+                    RatingDialog rate = new RatingDialog(getActivity(), handler);
+                    rate.setTitle(R.string.episode_rating);
+                    rate.show();
+
             }
             mode.finish();
             return true;
@@ -409,6 +426,39 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
             mMode = null;
         }
     }
+
+
+
+    public class ChangeEpisodesRateTask extends BaseTask<Boolean> {
+        ArrayList<Episode> episodes = (ArrayList<Episode>) adapter.getAllChildrenAsList();
+
+        @Override
+        public Boolean doWork(Object... objects) throws Exception {
+
+            Integer ratio = (Integer) objects[0];
+
+            StringBuilder checkedIds = new StringBuilder();
+            for (Episode e : episodes)
+                if (e.isChecked())
+                    checkedIds.append(e.getEpisodeId() + ",");
+
+            String checked = checkedIds.toString();
+            if (checked.endsWith(",")) checked = checked.substring(0, checked.length() - 1);
+            return MyShows.client.changeEpisodesRatio(ratio, checked);
+        }
+
+        @Override
+        public void onResult(Boolean result) {
+            Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onError(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
 
 }

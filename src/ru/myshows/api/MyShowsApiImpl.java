@@ -19,6 +19,7 @@ import ru.myshows.util.Settings;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.security.MessageDigest;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -240,6 +241,12 @@ public class MyShowsApiImpl implements MyShowsApi {
     @Override
     public boolean changeEpisodeRatio(int ratio, Integer episodeId) {
         String url = String.format(MyShowsApi.URL.URL_CHANGE_EPISODE_RATIO, ratio, episodeId);
+        return execute(url,false) != null ? true : false;
+    }
+
+    @Override
+    public boolean changeEpisodesRatio(int ratio, String episodeIds) {
+        String url = String.format(MyShowsApi.URL.URL_CHANGE_EPISODES_RATIO, ratio, episodeIds);
         return execute(url,false) != null ? true : false;
     }
 

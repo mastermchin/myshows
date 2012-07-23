@@ -93,6 +93,10 @@ public class MyShowsClient {
         return api.changeEpisodeRatio(ratio, episodeId);
     }
 
+    public boolean changeEpisodesRatio(int ratio, String episodeIds) {
+        return api.changeEpisodesRatio(ratio, episodeIds);
+    }
+
     public JSONArray getFavoritesEpisodes() {
         JSONArray episodes = api.getFavoritesEpisodes();
         return episodes;

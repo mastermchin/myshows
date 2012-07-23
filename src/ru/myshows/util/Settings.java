@@ -19,10 +19,12 @@ public class Settings {
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_LOGGED_IN = "loggedIn";
     public static final String PREF_SHOW_NEWS = "show_news_key";
+    public static final String PREF_SHOW_NEXT = "show_next_key";
+    public static final String PREF_SHOW_PROFILE = "show_profile_key";
     public static final String PREF_SHOW_SORT = "shows_sort_key";
 
 
-    public  static SharedPreferences getPreferences() {
+    public static SharedPreferences getPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(MyShows.context);
     }
 
@@ -30,7 +32,7 @@ public class Settings {
         return getPreferences().getString(name, "");
     }
 
-    public static void setString(String key, String value){
+    public static void setString(String key, String value) {
         getPreferences().edit().putString(key, value).commit();
     }
 
@@ -38,17 +40,13 @@ public class Settings {
         return getPreferences().getBoolean(name, false);
     }
 
-    public static void setBoolean(String key, boolean value){
+    public static void setBoolean(String key, boolean value) {
         getPreferences().edit().putBoolean(key, value).commit();
     }
 
     public static int getInt(String name) {
         return Integer.parseInt(getPreferences().getString(name, "-1"));
     }
-
-
-
-
 
 
 }

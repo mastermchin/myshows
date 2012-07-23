@@ -97,6 +97,8 @@
 
      <string name="pref_title">Settings</string>
      <string name="pref_show_news">Show friends news</string>
+     <string name="pref_next_news">Show next episodes</string>
+     <string name="pref_profile_news">Show profile</string>
      <string name="pref_show_sort">Shows sort options</string>
     <string name="pref_sort_status">By watch status</string>
     <string name="pref_sort_alph">By alphabet</string>

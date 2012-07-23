@@ -4,9 +4,21 @@
     <android.preference.PreferenceCategory android:title="@string/pref_title">
 
         <CheckBoxPreference
+                android:key="show_next_key"
+                android:defaultValue="true"
+                android:title="@string/pref_next_news"
+                />
+
+        <CheckBoxPreference
                 android:key="show_news_key"
                 android:defaultValue="true"
                 android:title="@string/pref_show_news"
+                />
+
+        <CheckBoxPreference
+                android:key="show_profile_key"
+                android:defaultValue="true"
+                android:title="@string/pref_profile_news"
                 />
 
 

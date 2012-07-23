@@ -19,6 +19,8 @@ import ru.myshows.util.Settings;
 public class SettingsAcrivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private CheckBoxPreference showFriendsNews;
+    private CheckBoxPreference showNextEpisodes;
+    private CheckBoxPreference showProfile;
     private ListPreference sortShowsPref;
 
 
@@ -27,6 +29,8 @@ public class SettingsAcrivity extends PreferenceActivity implements SharedPrefer
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
         showFriendsNews = (CheckBoxPreference) getPreferenceScreen().findPreference(Settings.PREF_SHOW_NEWS);
+        showNextEpisodes = (CheckBoxPreference) getPreferenceScreen().findPreference(Settings.PREF_SHOW_NEXT);
+        showProfile = (CheckBoxPreference) getPreferenceScreen().findPreference(Settings.PREF_SHOW_PROFILE);
         sortShowsPref = (ListPreference) getPreferenceScreen().findPreference(Settings.PREF_SHOW_SORT);
     }
 
@@ -38,6 +42,8 @@ public class SettingsAcrivity extends PreferenceActivity implements SharedPrefer
         String off = getRString(R.string.off);
 
         showFriendsNews.setSummary(Settings.getBoolean(Settings.PREF_SHOW_NEWS) ? on : off);
+        showNextEpisodes.setSummary(Settings.getBoolean(Settings.PREF_SHOW_NEXT) ? on : off);
+        showProfile.setSummary(Settings.getBoolean(Settings.PREF_SHOW_PROFILE) ? on : off);
         String s = Settings.getString(Settings.PREF_SHOW_SORT);
         sortShowsPref.setSummary(s.equals("status") ? getRString(R.string.pref_sort_status) : getRString(R.string.pref_sort_alph));
 
@@ -54,10 +60,14 @@ public class SettingsAcrivity extends PreferenceActivity implements SharedPrefer
         } else if (key.equals(Settings.PREF_SHOW_SORT)) {
             String s = Settings.getString(key);
             sortShowsPref.setSummary(s.equals("status") ? getRString(R.string.pref_sort_status) : getRString(R.string.pref_sort_alph));
+        } else if (key.equals(Settings.PREF_SHOW_NEXT)) {
+            showNextEpisodes.setSummary(Settings.getBoolean(Settings.PREF_SHOW_NEXT) ? on : off);
+        } else if (key.equals(Settings.PREF_SHOW_PROFILE)) {
+            showProfile.setSummary(Settings.getBoolean(Settings.PREF_SHOW_PROFILE) ? on : off);
         }
     }
 
-    private String getRString(int id){
+    private String getRString(int id) {
         return getResources().getString(id);
     }
 }

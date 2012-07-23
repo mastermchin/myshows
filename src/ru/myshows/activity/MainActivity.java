@@ -173,10 +173,12 @@ public class MainActivity extends SherlockFragmentActivity {
 
         adapter.addFragment(new ShowsFragment(ShowsFragment.SHOWS_USER), getResources().getString(R.string.tab_shows_title));
         adapter.addFragment(new NewEpisodesFragment(), getResources().getString(R.string.tab_new));
-        adapter.addFragment(new NextEpisodesFragment(), getResources().getString(R.string.tab_next));
+        if (Settings.getBoolean(Settings.PREF_SHOW_NEXT))
+            adapter.addFragment(new NextEpisodesFragment(), getResources().getString(R.string.tab_next));
         if (Settings.getBoolean(Settings.PREF_SHOW_NEWS))
             adapter.addFragment(new NewsFragment(), getResources().getString(R.string.tab_news_title));
-        adapter.addFragment(new ProfileFragment(), getResources().getString(R.string.tab_profile_title));
+        if (Settings.getBoolean(Settings.PREF_SHOW_PROFILE))
+            adapter.addFragment(new ProfileFragment(), getResources().getString(R.string.tab_profile_title));
         adapter.addFragment(new SearchFragment(), getResources().getString(R.string.tab_search_title));
 
         indicator.notifyDataSetChanged();

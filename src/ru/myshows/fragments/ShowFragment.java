@@ -218,8 +218,9 @@ public class ShowFragment extends Fragment  {
 
         @Override
         public void onResult(Boolean result) {
-            Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
             if (result) {
+                show.setWatchStatus(watchStatus);
                 UserShow us = MyShows.getUserShow(show.getShowId());
                 if (us != null){
                     if (watchStatus.equals(MyShowsApi.STATUS.remove))

@@ -72,7 +72,12 @@ public class MyShowsApiImpl implements MyShowsApi {
             HttpResponse response = httpClient.execute(get);
             int code = response.getStatusLine().getStatusCode();
             if (code == HttpURLConnection.HTTP_OK) {
-                return response.getEntity().getContent();
+                InputStream stream = response.getEntity().getContent();
+                if (stream == null)
+                    Log.d("MyShows", "Response = null");
+                else
+                    Log.d("MyShows", "Response = " +  stream.available());
+                return stream;
             } else {
                 Log.e("MyShows", "Wrong response code " + code + " for request " + get.getRequestLine().toString());
                 return null;

@@ -128,6 +128,7 @@ public class MainActivity extends SherlockFragmentActivity {
             case 3:
                 search = (EditText) item.getActionView();
                 search.addTextChangedListener(filterTextWatcher);
+                search.requestFocus();
                 break;
             case 4:
                 final AlertDialog alert;

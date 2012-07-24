@@ -110,6 +110,7 @@ public class SearchActivity extends SherlockFragmentActivity {
             case 3:
                 searchField = (EditText) item.getActionView();
                 searchField.addTextChangedListener(filterTextWatcher);
+                searchField.requestFocus();
                 break;
         }
         return true;

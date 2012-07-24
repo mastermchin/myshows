@@ -4,4 +4,5 @@
           android:layout_height="wrap_content"
           android:singleLine="true"
           android:background="@drawable/edit_text"
+          android:focusable="true"
           android:hint="@string/search"/>

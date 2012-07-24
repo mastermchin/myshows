@@ -15,6 +15,8 @@ import ru.myshows.domain.Show;
 import ru.myshows.domain.UserShow;
 import ru.myshows.tasks.BaseTask;
 
+import java.util.ArrayList;
+
 /**
  * Created with IntelliJ IDEA.
  * User: gb
@@ -228,9 +230,11 @@ public class ShowFragment extends Fragment  {
                     else
                         us.setWatchStatus(watchStatus);
                 } else {
-                    if (!watchStatus.equals(MyShowsApi.STATUS.remove))
+                    if (!watchStatus.equals(MyShowsApi.STATUS.remove)){
+                        if (MyShows.userShows == null)
+                            MyShows.userShows = new ArrayList<UserShow>();
                         MyShows.userShows.add(new UserShow(show, watchStatus));
-
+                    }
                 }
                 MyShows.isUserShowsChanged = true;
                 updateStatusButtons();

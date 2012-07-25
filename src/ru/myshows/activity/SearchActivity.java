@@ -1,6 +1,7 @@
 package ru.myshows.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
@@ -9,6 +10,7 @@ import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import com.actionbarsherlock.app.ActionBar;
@@ -111,6 +113,8 @@ public class SearchActivity extends SherlockFragmentActivity {
                 searchField = (EditText) item.getActionView();
                 searchField.addTextChangedListener(filterTextWatcher);
                 searchField.requestFocus();
+                InputMethodManager imm =(InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
                 break;
         }
         return true;

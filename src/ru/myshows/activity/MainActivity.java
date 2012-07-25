@@ -1,6 +1,7 @@
 package ru.myshows.activity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -17,6 +18,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -129,6 +131,8 @@ public class MainActivity extends SherlockFragmentActivity {
                 search = (EditText) item.getActionView();
                 search.addTextChangedListener(filterTextWatcher);
                 search.requestFocus();
+                InputMethodManager imm =(InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
                 break;
             case 4:
                 final AlertDialog alert;

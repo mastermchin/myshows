@@ -372,8 +372,14 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
         @Override
         public void onResult(Boolean result) {
             Toast.makeText(getActivity(), exception == null ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
-            if (result)
-                executeUpdateTask();
+            if (result){
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        executeUpdateTask();
+                    }
+                }, 1000);
+            }
         }
 
         @Override

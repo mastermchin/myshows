@@ -19,6 +19,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="50dp"
                 android:textSize="15sp"
+                android:textColor="@color/white"
                 />
 
         <ru.myshows.components.RobotoTextView

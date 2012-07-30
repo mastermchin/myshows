@@ -189,29 +189,33 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
             return adapter;
         }
 
-        Map<Integer, List<Episode>> episodesByMonth = new TreeMap<Integer, List<Episode>>();
+        Map<String, List<Episode>> episodesByMonth = new TreeMap<String, List<Episode>>();
 
         for (Episode e : result) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(e.getAirDate());
             int month = calendar.get(Calendar.MONTH);
-            List<Episode> temp = episodesByMonth.get(month);
+            int year = calendar.get(Calendar.YEAR);
+            List<Episode> temp = episodesByMonth.get(month+":"+year);
             if (temp == null) {
                 temp = new ArrayList<Episode>();
-                episodesByMonth.put(month, temp);
+                episodesByMonth.put(month+":"+year, temp);
 
             }
             temp.add(e);
         }
+
+
         List<SectionedAdapter.Section> sectionList = new ArrayList<SectionedAdapter.Section>();
 
-        for (Map.Entry<Integer, List<Episode>> entry : episodesByMonth.entrySet()) {
-            Integer month = entry.getKey();
+        for (Map.Entry<String, List<Episode>> entry : episodesByMonth.entrySet()) {
+            String dateString = entry.getKey();
+            Log.d("MyShows", "Date string = " + dateString);
             List<Episode> episodes = entry.getValue();
             Collections.sort(episodes, new EpisodeComparator("date"));
-            //String m = new DateFormatSymbols().getMonths()[month];
-            String m = getResources().getStringArray(R.array.months)[month];
-            sectionList.add(new SectionedAdapter.Section(m, new EpisodesAdapter(getActivity(), R.layout.episode, episodes)));
+            String[] array = dateString.split(":");
+            String m = getResources().getStringArray(R.array.months)[Integer.valueOf(array[0])];
+            sectionList.add(new SectionedAdapter.Section(m + " " + array[1], new EpisodesAdapter(getActivity(), R.layout.episode, episodes)));
         }
         adapter = new SectionedAdapter(getActivity(), R.layout.header, sectionList);
         return adapter;

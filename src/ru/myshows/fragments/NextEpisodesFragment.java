@@ -189,7 +189,32 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
             return adapter;
         }
 
-        Map<String, List<Episode>> episodesByMonth = new TreeMap<String, List<Episode>>();
+        Map<String, List<Episode>> episodesByMonth = new TreeMap<String, List<Episode>>(new Comparator<String>() {
+            @Override
+            public int compare(String s, String s1) {
+                try{
+                    int year = Integer.parseInt(s.split(":")[0]);
+                    int year1 = Integer.parseInt(s1.split(":")[0]);
+                    if (year != year1){
+                        if (year > year1)
+                            return 1;
+                        else
+                            return -1;
+
+                    }
+                    int month = Integer.parseInt(s.split(":")[1]);
+                    int month1 = Integer.parseInt(s1.split(":")[1]);
+                    if (month > month1)
+                        return 1;
+                    else if (month < month1)
+                        return -1;
+                    else
+                        return 0;
+                }catch (Exception e){
+                    return s.compareTo(s1);
+                }
+            }
+        });
 
         for (Episode e : result) {
             Calendar calendar = Calendar.getInstance();

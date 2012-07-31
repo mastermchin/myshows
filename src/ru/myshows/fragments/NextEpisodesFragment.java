@@ -193,8 +193,8 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
             @Override
             public int compare(String s, String s1) {
                 try{
-                    int year = Integer.parseInt(s.split(":")[0]);
-                    int year1 = Integer.parseInt(s1.split(":")[0]);
+                    int year = Integer.parseInt(s.split(":")[1]);
+                    int year1 = Integer.parseInt(s1.split(":")[1]);
                     if (year != year1){
                         if (year > year1)
                             return 1;
@@ -202,8 +202,8 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
                             return -1;
 
                     }
-                    int month = Integer.parseInt(s.split(":")[1]);
-                    int month1 = Integer.parseInt(s1.split(":")[1]);
+                    int month = Integer.parseInt(s.split(":")[0]);
+                    int month1 = Integer.parseInt(s1.split(":")[0]);
                     if (month > month1)
                         return 1;
                     else if (month < month1)
@@ -211,6 +211,7 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
                     else
                         return 0;
                 }catch (Exception e){
+                    e.printStackTrace();
                     return s.compareTo(s1);
                 }
             }

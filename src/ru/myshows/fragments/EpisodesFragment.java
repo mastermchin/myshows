@@ -52,9 +52,10 @@ public class EpisodesFragment extends SherlockFragment {
         this.show = show;
     }
 
+    public EpisodesFragment() {
+    }
 
-
-    public void refresh(Show show){
+    public void refresh(Show show) {
         Collection<Episode> episodes = show.getEpisodes();
         //exclude specials
         Iterator<Episode> iterator = episodes.iterator();
@@ -78,7 +79,6 @@ public class EpisodesFragment extends SherlockFragment {
     }
 
 
-
     public class CheckEpisodesTask extends BaseTask<Boolean> {
         ArrayList<Episode> episodes = (ArrayList<Episode>) adapter.getAllChildrenAsList();
 
@@ -88,8 +88,11 @@ public class EpisodesFragment extends SherlockFragment {
             StringBuilder checkedIds = new StringBuilder();
             StringBuilder uncheckedIds = new StringBuilder();
             for (Episode e : episodes) {
-                if (e.isChecked()) checkedIds.append(e.getEpisodeId() + ",");
-                if (!e.isChecked()) uncheckedIds.append(e.getEpisodeId() + ",");
+                // check only exists episodes
+                if (e.getAirDate() != null && e.getAirDate().before(new Date())) {
+                    if (e.isChecked()) checkedIds.append(e.getEpisodeId() + ",");
+                    if (!e.isChecked()) uncheckedIds.append(e.getEpisodeId() + ",");
+                }
             }
 
             String checked = checkedIds.toString();
@@ -110,7 +113,7 @@ public class EpisodesFragment extends SherlockFragment {
         @Override
         public void onResult(Boolean result) {
             Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
-            if (result){
+            if (result) {
                 new GetNewEpisodesTask(getActivity(), true).execute();
             }
 
@@ -136,9 +139,9 @@ public class EpisodesFragment extends SherlockFragment {
             String sort = Settings.getString(Settings.PREF_SEASONS_SORT);
             if (sort == null) sort = "asc";
 
-            if (sort.equals("asc")){
-                for (int i = 1; i <= totalSeasons; i++){
-                     populateAdapter(eps, i, sort);
+            if (sort.equals("asc")) {
+                for (int i = 1; i <= totalSeasons; i++) {
+                    populateAdapter(eps, i, sort);
                 }
             } else {
                 for (int i = totalSeasons; i >= 1; i--) {
@@ -148,7 +151,7 @@ public class EpisodesFragment extends SherlockFragment {
 
         }
 
-        public void populateAdapter(Collection<Episode> eps, int i, String sort){
+        public void populateAdapter(Collection<Episode> eps, int i, String sort) {
             boolean isAllEpisodesWatched = true;
             ArrayList<Episode> seasonEpisodes = new ArrayList<Episode>();
             for (Iterator<Episode> iter = eps.iterator(); iter.hasNext(); ) {
@@ -212,12 +215,12 @@ public class EpisodesFragment extends SherlockFragment {
             adapter.notifyDataSetChanged();
         }
 
-        public boolean isAllChecked(){
-            for (int i=0; i < getGroupCount(); i++){
-                Season s = (Season)getGroup(i);
+        public boolean isAllChecked() {
+            for (int i = 0; i < getGroupCount(); i++) {
+                Season s = (Season) getGroup(i);
                 if (!s.isChecked())
                     return false;
-                for (int j = 0; j < getChildrenCount(i); j++){
+                for (int j = 0; j < getChildrenCount(i); j++) {
                     Episode e = (Episode) getChild(i, j);
                     if (e.getAirDate() != null && e.getAirDate().before(new Date()) && !e.isChecked())
                         return false;
@@ -246,7 +249,7 @@ public class EpisodesFragment extends SherlockFragment {
             holder.title.setText(season.getTitle());
             holder.unwatched.setVisibility(View.GONE);
             // show checkboxes only if user is logged in
-            if (MyShows.isLoggedIn  &&  MyShows.getUserShow(show.getShowId()) != null) {
+            if (MyShows.isLoggedIn && MyShows.getUserShow(show.getShowId()) != null) {
                 holder.checkBox.setVisibility(View.VISIBLE);
                 holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -270,7 +273,7 @@ public class EpisodesFragment extends SherlockFragment {
                     }
                 });
                 holder.checkBox.setChecked(season.isChecked());
-            }else {
+            } else {
                 holder.checkBox.setVisibility(View.INVISIBLE);
             }
             return convertView;
@@ -353,7 +356,7 @@ public class EpisodesFragment extends SherlockFragment {
                         holder.checkBox.setChecked(!holder.checkBox.isChecked());
                     }
                 });
-            }else {
+            } else {
                 holder.checkBox.setVisibility(View.INVISIBLE);
             }
 

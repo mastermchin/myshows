@@ -85,6 +85,11 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
 
 
         showId = (Integer) getBundleValue(getIntent(), "showId", null);
+        if (savedInstanceState != null){
+            showId = savedInstanceState.getInt("showId");
+            Log.d("MyShows", "Get show id from bundle = " + showId);
+        }
+
         watchStatus = (MyShowsApi.STATUS) getBundleValue(getIntent(), "watchStatus", MyShowsApi.STATUS.remove);
         yoursRating = (Double) getBundleValue(getIntent(), "yoursRating", null);
 
@@ -409,5 +414,10 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
         }
     }
 
-
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("showId", showId);
+        Log.d("MyShows", "PUT show id TO bundle = " + showId);
+    }
 }

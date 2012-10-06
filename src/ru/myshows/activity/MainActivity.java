@@ -190,9 +190,16 @@ public class MainActivity extends SherlockFragmentActivity {
         adapter.notifyDataSetChanged();
 
         // fire first task manually
-        GetShowsTask task = new GetShowsTask(MainActivity.this, GetShowsTask.SHOWS_USER);
-        task.setTaskListener((TaskListener) adapter.getItem(0));
-        task.execute();
+        Fragment f = adapter.getItem(0);
+
+        if (f.getTag() == null) {
+            finish();
+            startActivity(new Intent(this, MainActivity.class));
+        } else {
+            GetShowsTask task = new GetShowsTask(MainActivity.this, GetShowsTask.SHOWS_USER);
+            task.setTaskListener((TaskListener) f);
+            task.execute();
+        }
     }
 
     private void getPublicTabs() {
@@ -233,7 +240,6 @@ public class MainActivity extends SherlockFragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("MyShows", "Main activity on resume");
         if (MyShows.isLoggedIn && MyShows.isUserShowsChanged) {
 
             Fragment showsFragment = adapter.getItem(0);
@@ -249,8 +255,6 @@ public class MainActivity extends SherlockFragmentActivity {
                 episodesTask.setTaskListener((NewEpisodesFragment) newEpisodesFragment);
                 episodesTask.execute();
             }
-
-
 
 
         }

@@ -45,6 +45,9 @@ public class ShowFragment extends Fragment  {
     private View view;
 
 
+    public ShowFragment() {
+    }
+
     public ShowFragment(Show show, Double yoursRating) {
         this.show = show;
         this.watchStatus = show.getWatchStatus();
@@ -59,7 +62,8 @@ public class ShowFragment extends Fragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.show, container, false);
-        populateUI(show);
+        if (show != null)
+            populateUI(show);
         return view;
     }
 

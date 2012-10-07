@@ -63,9 +63,14 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
     public void executeTask() {
         if (isTaskExecuted)
             return;
-        GetNewEpisodesTask episodesTask = new GetNewEpisodesTask(getActivity());
-        episodesTask.setTaskListener(this);
-        episodesTask.execute();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                GetNewEpisodesTask episodesTask = new GetNewEpisodesTask(getActivity());
+                episodesTask.setTaskListener(NewEpisodesFragment.this);
+                episodesTask.execute();
+            }
+        }, 1000);
     }
 
     @Override
@@ -90,7 +95,7 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
 
     @Override
     public void onTaskFailed(Exception e) {
-        if (e != null){
+        if (e != null) {
             progress.setVisibility(View.GONE);
         }
         final AlertDialog alert;
@@ -331,7 +336,6 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
     }
 
 
-
     private class CheckNewEpisodesTask extends BaseTask<Boolean> {
 
         @Override
@@ -372,7 +376,7 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
         @Override
         public void onResult(Boolean result) {
             Toast.makeText(getActivity(), exception == null ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
-            if (result){
+            if (result) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -434,7 +438,6 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
     }
 
 
-
     public class ChangeEpisodesRateTask extends BaseTask<Boolean> {
         ArrayList<Episode> episodes = (ArrayList<Episode>) adapter.getAllChildrenAsList();
 
@@ -463,8 +466,6 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
             e.printStackTrace();
         }
     }
-
-
 
 
 }

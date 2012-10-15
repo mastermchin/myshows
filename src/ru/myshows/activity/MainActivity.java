@@ -54,11 +54,16 @@ public class MainActivity extends SherlockFragmentActivity {
     private TitlePageIndicator indicator;
     private TabsAdapter adapter;
     private EditText search;
+    private Bundle savedInstanceState;
+
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        this.savedInstanceState = savedInstanceState;
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
         adapter = new TabsAdapter(getSupportFragmentManager(), false);
@@ -69,12 +74,14 @@ public class MainActivity extends SherlockFragmentActivity {
         indicator.setViewPager(pager);
         indicator.setTypeface(MyShows.font);
 
+
+
         indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 if (!MyShows.isLoggedIn)
                     return;
-                Fragment currentFragment = adapter.getItem(position);
+                Fragment currentFragment = getFragment(position) ;
                 ((Taskable) currentFragment).executeTask();
             }
 
@@ -131,8 +138,8 @@ public class MainActivity extends SherlockFragmentActivity {
                 search = (EditText) item.getActionView();
                 search.addTextChangedListener(filterTextWatcher);
                 search.requestFocus();
-                InputMethodManager imm =(InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                 break;
             case 4:
                 final AlertDialog alert;
@@ -166,7 +173,7 @@ public class MainActivity extends SherlockFragmentActivity {
         }
 
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            Fragment fragment = adapter.getItem(pager.getCurrentItem());
+            Fragment fragment = getFragment(pager.getCurrentItem());
             if (fragment instanceof Searchable) {
                 ((Searchable) fragment).getAdapter().getFilter().filter(s);
             }
@@ -176,30 +183,80 @@ public class MainActivity extends SherlockFragmentActivity {
 
     private void getPrivateTabs() {
 
-        adapter.addFragment(new ShowsFragment(ShowsFragment.SHOWS_USER), getResources().getString(R.string.tab_shows_title));
-        adapter.addFragment(new NewEpisodesFragment(), getResources().getString(R.string.tab_new));
-        if (Settings.getBoolean(Settings.PREF_SHOW_NEXT))
-            adapter.addFragment(new NextEpisodesFragment(), getResources().getString(R.string.tab_next));
-        if (Settings.getBoolean(Settings.PREF_SHOW_NEWS))
-            adapter.addFragment(new NewsFragment(), getResources().getString(R.string.tab_news_title));
-        if (Settings.getBoolean(Settings.PREF_SHOW_PROFILE))
-            adapter.addFragment(new ProfileFragment(), getResources().getString(R.string.tab_profile_title));
-        adapter.addFragment(new SearchFragment(), getResources().getString(R.string.tab_search_title));
+        if (savedInstanceState == null) {
+
+            adapter.addFragment(new ShowsFragment(ShowsFragment.SHOWS_USER), getResources().getString(R.string.tab_shows_title));
+            adapter.addFragment(new NewEpisodesFragment(), getResources().getString(R.string.tab_new));
+            if (Settings.getBoolean(Settings.PREF_SHOW_NEXT))
+                adapter.addFragment(new NextEpisodesFragment(), getResources().getString(R.string.tab_next));
+            if (Settings.getBoolean(Settings.PREF_SHOW_NEWS))
+                adapter.addFragment(new NewsFragment(), getResources().getString(R.string.tab_news_title));
+            if (Settings.getBoolean(Settings.PREF_SHOW_PROFILE))
+                adapter.addFragment(new ProfileFragment(), getResources().getString(R.string.tab_profile_title));
+            adapter.addFragment(new SearchFragment(), getResources().getString(R.string.tab_search_title));
+
+        } else {
+            Integer  count  = savedInstanceState.getInt("tabsCount");
+            String[] titles = savedInstanceState.getStringArray("titles");
+            for (int i = 0; i < count; i++){
+                 adapter.addFragment(getFragment(i), titles[i]);
+            }
+        }
 
         indicator.notifyDataSetChanged();
         adapter.notifyDataSetChanged();
+        if (savedInstanceState != null)
+            pager.setCurrentItem(savedInstanceState.getInt("currentTab"));
 
         // fire first task manually
-        Fragment f = adapter.getItem(0);
+//        Fragment f = adapter.getItem(0);
+//
+//        if (f.getTag() == null) {
+//            finish();
+//            startActivity(new Intent(this, MainActivity.class));
+//        } else {
+//            GetShowsTask task = new GetShowsTask(MainActivity.this, GetShowsTask.SHOWS_USER);
+//            task.setTaskListener((TaskListener) f);
+//            task.execute();
+//        }
 
-        if (f.getTag() == null) {
-            finish();
-            startActivity(new Intent(this, MainActivity.class));
-        } else {
-            GetShowsTask task = new GetShowsTask(MainActivity.this, GetShowsTask.SHOWS_USER);
-            task.setTaskListener((TaskListener) f);
-            task.execute();
-        }
+       Fragment f = getFragment(pager.getCurrentItem());
+        if (f instanceof Taskable)
+        ((Taskable)  f ).executeTask();
+        //Fragment f = adapter.getItem(0);
+        //GetShowsTask task = new GetShowsTask(MainActivity.this, GetShowsTask.SHOWS_USER);
+        //task.setTaskListener((TaskListener) f);
+        //task.execute();
+//        if (savedInstanceState == null) {
+//            Log.d("MyShows", "Saved Instance == null");
+//            f = adapter.getItem(0);
+//            GetShowsTask task = new GetShowsTask(MainActivity.this, GetShowsTask.SHOWS_USER);
+//            task.setTaskListener((TaskListener) f);
+//            task.execute();
+//        } else {
+//            Log.d("MyShows", "Saved Instance != null");
+//            f = getSupportFragmentManager().findFragmentByTag(getFragmentTag(0));
+//            GetShowsTask task = new GetShowsTask(MainActivity.this, GetShowsTask.SHOWS_USER);
+//            task.setTaskListener((TaskListener) f);
+//            task.execute();
+//        }
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("tabsCount", adapter.getCount());
+        outState.putStringArray("titles", adapter.getTitles().toArray(new String[0]));
+        outState.putInt("currentTab", pager.getCurrentItem());
+    }
+
+    private Fragment getFragment(int position){
+         return savedInstanceState == null ? adapter.getItem(position) : getSupportFragmentManager().findFragmentByTag(getFragmentTag(position));
+    }
+
+    private String getFragmentTag(int position) {
+        return "android:switcher:" + R.id.pager + ":" + position;
     }
 
     private void getPublicTabs() {
@@ -236,27 +293,27 @@ public class MainActivity extends SherlockFragmentActivity {
 
     }
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (MyShows.isLoggedIn && MyShows.isUserShowsChanged) {
-
-            Fragment showsFragment = adapter.getItem(0);
-            if (showsFragment instanceof ShowsFragment) {
-                GetShowsTask getShowsTask = new GetShowsTask(this, GetShowsTask.SHOWS_USER);
-                getShowsTask.setTaskListener((ShowsFragment) showsFragment);
-                getShowsTask.execute();
-            }
-
-            Fragment newEpisodesFragment = adapter.getItem(1);
-            if (newEpisodesFragment instanceof NewEpisodesFragment) {
-                GetNewEpisodesTask episodesTask = new GetNewEpisodesTask(this, true);
-                episodesTask.setTaskListener((NewEpisodesFragment) newEpisodesFragment);
-                episodesTask.execute();
-            }
-
-
-        }
-    }
+//
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        if (MyShows.isLoggedIn && MyShows.isUserShowsChanged) {
+//
+//            Fragment showsFragment = adapter.getItem(0);
+//            if (showsFragment instanceof ShowsFragment) {
+//                GetShowsTask getShowsTask = new GetShowsTask(this, GetShowsTask.SHOWS_USER);
+//                getShowsTask.setTaskListener((ShowsFragment) showsFragment);
+//                getShowsTask.execute();
+//            }
+//
+//            Fragment newEpisodesFragment = adapter.getItem(1);
+//            if (newEpisodesFragment instanceof NewEpisodesFragment) {
+//                GetNewEpisodesTask episodesTask = new GetNewEpisodesTask(this, true);
+//                episodesTask.setTaskListener((NewEpisodesFragment) newEpisodesFragment);
+//                episodesTask.execute();
+//            }
+//
+//
+//        }
+//    }
 }

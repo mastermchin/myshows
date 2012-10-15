@@ -74,6 +74,8 @@ public class EpisodesFragment extends SherlockFragment {
         this.inflater = inflater;
         View view = inflater.inflate(R.layout.episodes, container, false);
         episodesList = (ExpandableListView) view.findViewById(R.id.episodes_list);
+        if (savedInstanceState != null && show == null)
+            show = MyShows.client.getShowInfo(savedInstanceState.getInt("showId"));
         refresh(show);
         return view;
     }
@@ -125,6 +127,12 @@ public class EpisodesFragment extends SherlockFragment {
         }
     }
 
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("showId", show.getShowId());
+    }
 
     public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 

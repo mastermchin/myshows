@@ -46,6 +46,10 @@ public class TabsAdapter extends FragmentPagerAdapter {
         titles.add(title);
     }
 
+    public List<String> getTitles() {
+        return titles;
+    }
+
     @Override
     public CharSequence getPageTitle(int position) {
         return titles.get(position);

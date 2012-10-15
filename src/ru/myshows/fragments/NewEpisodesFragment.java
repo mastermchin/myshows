@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import com.actionbarsherlock.app.SherlockFragment;
@@ -52,6 +53,7 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.inflater = inflater;
+        Log.d("MyShows", "NewEpisodesFragment on create View");
         rootView = (RelativeLayout) inflater.inflate(R.layout.new_episodes, container, false);
         progress = (ProgressBar) rootView.findViewById(R.id.progress_new_episodes);
         list = (ExpandableListView) rootView.findViewById(R.id.new_episodes_list);

@@ -73,7 +73,11 @@ public class MyShows extends Application {
 
 
     public static  UserShow getUserShow(Integer showId) {
-        if (userShows == null) return null;
+
+        if (userShows == null && isLoggedIn) {
+            userShows = client.getShows();
+            //return null;
+        }
         if (showId == null) return null;
         for (UserShow us : userShows) {
             if (us.getShowId() != null && us.getShowId().equals(showId))

@@ -26,6 +26,7 @@ import ru.myshows.fragments.ShowFragment;
 import ru.myshows.tasks.GetShowTask;
 import ru.myshows.tasks.TaskListener;
 import ru.myshows.tasks.Taskable;
+import ru.myshows.util.Settings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +51,7 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
     private TabsAdapter tabsAdapter;
     private LinearLayout indicatorLayout;
     private ProgressBar progress;
-
+    private Bundle savedInstanceState;
 
     public ShowActivity() {
     }
@@ -59,6 +60,7 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_info);
+        this.savedInstanceState = savedInstanceState;
 
         tabsAdapter = new TabsAdapter(getSupportFragmentManager(), true);
         pager = (ViewPager) findViewById(R.id.pager);
@@ -85,9 +87,8 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
 
 
         showId = (Integer) getBundleValue(getIntent(), "showId", null);
-        if (savedInstanceState != null){
+        if (savedInstanceState != null) {
             showId = savedInstanceState.getInt("showId");
-            Log.d("MyShows", "Get show id from bundle = " + showId);
         }
 
         watchStatus = (MyShowsApi.STATUS) getBundleValue(getIntent(), "watchStatus", MyShowsApi.STATUS.remove);
@@ -103,7 +104,7 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
             @Override
             public void onPageSelected(int position) {
                 if (position == 1) {
-                    EpisodesFragment episodesFragment = (EpisodesFragment) tabsAdapter.getItem(1);
+                    EpisodesFragment episodesFragment = (EpisodesFragment) getFragment(1);
                     if (episodesFragment.getAdapter() != null)
                         episodesFragment.getAdapter().notifyDataSetChanged();
                 }
@@ -128,15 +129,28 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
         if (us != null)
             watchStatus = us.getWatchStatus();
 
-
         result.setWatchStatus(watchStatus);
         progress.setVisibility(View.GONE);
         indicatorLayout.setVisibility(View.VISIBLE);
-        tabsAdapter.addFragment(new ShowFragment(result, yoursRating), getResources().getString(R.string.tab_show));
-        tabsAdapter.addFragment(new EpisodesFragment(result), getResources().getString(R.string.tab_episodes));
+
+        if (savedInstanceState == null) {
+            tabsAdapter.addFragment(new ShowFragment(result, yoursRating), getResources().getString(R.string.tab_show));
+            tabsAdapter.addFragment(new EpisodesFragment(result), getResources().getString(R.string.tab_episodes));
+        } else {
+            Integer count = savedInstanceState.getInt("tabsCount");
+            String[] titles = savedInstanceState.getStringArray("titles");
+            for (int i = 0; i < count; i++) {
+                tabsAdapter.addFragment(getFragment(i), titles[i]);
+            }
+            pager.setCurrentItem(savedInstanceState.getInt("currentTab"));
+        }
+
         populateExternalLinkActions(result);
         indicator.notifyDataSetChanged();
         tabsAdapter.notifyDataSetChanged();
+
+        //if (savedInstanceState != null)
+//            pager.setCurrentItem(savedInstanceState.getInt("currentTab"));
     }
 
     @Override
@@ -180,7 +194,6 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
     }
 
 
-
     public void changeShowStatus(View v) {
         ShowFragment showFragment = (ShowFragment) tabsAdapter.getItem(0);
         showFragment.changeShowStatus(v);
@@ -208,9 +221,8 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
 //        });
 
 
-
         View customNav = LayoutInflater.from(this).inflate(R.layout.custom_show_action_bar, null);
-        IcsSpinner spinner = (IcsSpinner)customNav.findViewById(R.id.spinner);
+        IcsSpinner spinner = (IcsSpinner) customNav.findViewById(R.id.spinner);
         spinner.setAdapter(linkAdapter);
 
 
@@ -340,6 +352,17 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("showId", showId);
-        Log.d("MyShows", "PUT show id TO bundle = " + showId);
+        outState.putStringArray("titles", tabsAdapter.getTitles().toArray(new String[0]));
+        outState.putInt("tabsCount", tabsAdapter.getCount());
+        outState.putInt("currentTab", pager.getCurrentItem());
     }
+
+    private Fragment getFragment(int position) {
+        return savedInstanceState == null ? tabsAdapter.getItem(position) : getSupportFragmentManager().findFragmentByTag(getFragmentTag(position));
+    }
+
+    private String getFragmentTag(int position) {
+        return "android:switcher:" + R.id.pager + ":" + position;
+    }
+
 }

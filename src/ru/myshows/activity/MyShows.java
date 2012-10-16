@@ -48,9 +48,6 @@ public class MyShows extends Application {
         client = MyShowsClient.getInstance();
         font = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Light.ttf");
 
-//
-//        ImageLoader imageLoader = ImageLoader.getInstance();
-//        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
 
         // init image loader
         DisplayImageOptions options = new DisplayImageOptions.Builder()
@@ -73,12 +70,12 @@ public class MyShows extends Application {
 
 
     public static  UserShow getUserShow(Integer showId) {
-
-        if (userShows == null && isLoggedIn) {
+        if (showId == null)
+            return null;
+        if (userShows == null && isLoggedIn)
             userShows = client.getShows();
-            //return null;
-        }
-        if (showId == null) return null;
+        if (userShows == null)
+            return null;
         for (UserShow us : userShows) {
             if (us.getShowId() != null && us.getShowId().equals(showId))
                 return us;
@@ -86,35 +83,7 @@ public class MyShows extends Application {
         return null;
     }
 
-//    public static void addOrUpdateUserShow(UserShow show) {
-//        if (userShows == null) userShows = new ArrayList<UserShow>();
-//        boolean found = false;
-//        for (UserShow u : userShows) {
-//            if (u.getShowId().equals(show.getShowId())) {
-//                u.setWatchStatus(show.getWatchStatus());
-//                found = true;
-//                break;
-//            }
-//        }
-//        if (!found) {
-//            userShows.add(show);
-//        } else {
-//
-//        }
-//
-//    }
-//
-//
-//    public static  void removeUserShow(Integer showId) {
-//        if (userShows != null) {
-//            for (UserShow u : userShows) {
-//                if (u.getShowId().equals(showId)) {
-//                    userShows.remove(u);
-//                    break;
-//                }
-//            }
-//        }
-//    }
+
 
      public static void invalidateUserData(){
          userShows = null;

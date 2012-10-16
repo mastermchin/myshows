@@ -3,6 +3,7 @@ package ru.myshows.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
  * Time: 1:04
  * To change this template use File | Settings | File Templates.
  */
-public class ShowFragment extends Fragment  {
+public class ShowFragment extends Fragment {
 
 
     private ImageView showLogo;
@@ -55,15 +56,25 @@ public class ShowFragment extends Fragment  {
 
     }
 
-    public void refresh(Show show){
+    public void refresh(Show show) {
         populateUI(show);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.show, container, false);
-        if (show != null)
-            populateUI(show);
+
+        if (savedInstanceState != null && show == null) {
+            int showId = savedInstanceState.getInt("showId");
+            Log.d("MyShows", "get show info with Show id = " + showId);
+            if (MyShows.userShows == null)
+                MyShows.userShows = MyShows.client.getShows();
+            show = MyShows.client.getShowInfo(showId);
+            show.setWatchStatus(MyShows.getUserShow(showId).getWatchStatus());
+            watchStatus = show.getWatchStatus();
+            yoursRating = savedInstanceState.getDouble("yoursRating");
+        }
+        populateUI(show);
         return view;
     }
 
@@ -100,7 +111,6 @@ public class ShowFragment extends Fragment  {
         }
 
 
-
         if (MyShows.isLoggedIn) {
 
             // yours rating
@@ -131,6 +141,13 @@ public class ShowFragment extends Fragment  {
     }
 
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("showId", show.getShowId());
+        outState.putDouble("yoursRating", yoursRating);
+    }
+
     public class ChangeShowRatioTask extends BaseTask<Boolean> {
         Float rating;
 
@@ -151,7 +168,7 @@ public class ShowFragment extends Fragment  {
             if (result) {
                 UserShow us = MyShows.getUserShow(show.getShowId());
                 if (us != null)
-                    us.setRating((double)rating);
+                    us.setRating((double) rating);
             }
 
         }
@@ -194,7 +211,7 @@ public class ShowFragment extends Fragment  {
                 watchStatus = MyShowsApi.STATUS.remove;
                 break;
         }
-        if (!show.getWatchStatus().equals(watchStatus)){
+        if (!show.getWatchStatus().equals(watchStatus)) {
             ChangeShowStatusTask task = new ChangeShowStatusTask(getActivity());
             task.execute(show.getShowId(), watchStatus);
         }
@@ -228,13 +245,13 @@ public class ShowFragment extends Fragment  {
             if (result) {
                 show.setWatchStatus(watchStatus);
                 UserShow us = MyShows.getUserShow(show.getShowId());
-                if (us != null){
+                if (us != null) {
                     if (watchStatus.equals(MyShowsApi.STATUS.remove))
                         MyShows.userShows.remove(us);
                     else
                         us.setWatchStatus(watchStatus);
                 } else {
-                    if (!watchStatus.equals(MyShowsApi.STATUS.remove)){
+                    if (!watchStatus.equals(MyShowsApi.STATUS.remove)) {
                         if (MyShows.userShows == null)
                             MyShows.userShows = new ArrayList<UserShow>();
                         MyShows.userShows.add(new UserShow(show, watchStatus));
@@ -252,7 +269,6 @@ public class ShowFragment extends Fragment  {
         }
 
     }
-
 
 
 }

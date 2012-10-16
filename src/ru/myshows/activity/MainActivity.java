@@ -42,21 +42,11 @@ import java.util.*;
  */
 public class MainActivity extends SherlockFragmentActivity {
 
-    private static final int TAB_SHOWS = 0;
-    private static final int TAB_NEW_EPISODES = 1;
-    private static final int TAB_NEWS = 2;
-    private static final int TAB_PROFILE = 3;
-    private static final int TAB_SEARCH = 4;
-    private static final int TAB_LOGIN = 5;
-
-
     private ViewPager pager;
     private TitlePageIndicator indicator;
     private TabsAdapter adapter;
     private EditText search;
     private Bundle savedInstanceState;
-
-
 
 
     @Override
@@ -208,38 +198,11 @@ public class MainActivity extends SherlockFragmentActivity {
         if (savedInstanceState != null)
             pager.setCurrentItem(savedInstanceState.getInt("currentTab"));
 
-        // fire first task manually
-//        Fragment f = adapter.getItem(0);
-//
-//        if (f.getTag() == null) {
-//            finish();
-//            startActivity(new Intent(this, MainActivity.class));
-//        } else {
-//            GetShowsTask task = new GetShowsTask(MainActivity.this, GetShowsTask.SHOWS_USER);
-//            task.setTaskListener((TaskListener) f);
-//            task.execute();
-//        }
+
 
        Fragment f = getFragment(pager.getCurrentItem());
         if (f instanceof Taskable)
         ((Taskable)  f ).executeTask();
-        //Fragment f = adapter.getItem(0);
-        //GetShowsTask task = new GetShowsTask(MainActivity.this, GetShowsTask.SHOWS_USER);
-        //task.setTaskListener((TaskListener) f);
-        //task.execute();
-//        if (savedInstanceState == null) {
-//            Log.d("MyShows", "Saved Instance == null");
-//            f = adapter.getItem(0);
-//            GetShowsTask task = new GetShowsTask(MainActivity.this, GetShowsTask.SHOWS_USER);
-//            task.setTaskListener((TaskListener) f);
-//            task.execute();
-//        } else {
-//            Log.d("MyShows", "Saved Instance != null");
-//            f = getSupportFragmentManager().findFragmentByTag(getFragmentTag(0));
-//            GetShowsTask task = new GetShowsTask(MainActivity.this, GetShowsTask.SHOWS_USER);
-//            task.setTaskListener((TaskListener) f);
-//            task.execute();
-//        }
 
     }
 
@@ -293,27 +256,18 @@ public class MainActivity extends SherlockFragmentActivity {
 
     }
 
-//
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        if (MyShows.isLoggedIn && MyShows.isUserShowsChanged) {
-//
-//            Fragment showsFragment = adapter.getItem(0);
-//            if (showsFragment instanceof ShowsFragment) {
-//                GetShowsTask getShowsTask = new GetShowsTask(this, GetShowsTask.SHOWS_USER);
-//                getShowsTask.setTaskListener((ShowsFragment) showsFragment);
-//                getShowsTask.execute();
-//            }
-//
-//            Fragment newEpisodesFragment = adapter.getItem(1);
-//            if (newEpisodesFragment instanceof NewEpisodesFragment) {
-//                GetNewEpisodesTask episodesTask = new GetNewEpisodesTask(this, true);
-//                episodesTask.setTaskListener((NewEpisodesFragment) newEpisodesFragment);
-//                episodesTask.execute();
-//            }
-//
-//
-//        }
-//    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (MyShows.isLoggedIn && MyShows.isUserShowsChanged) {
+
+            Taskable showsFragment = (Taskable)getFragment(0);
+            Taskable newEpisodesFragment = (Taskable)getFragment(1);
+            showsFragment.executeTask();
+            newEpisodesFragment.executeUpdateTask();
+
+
+        }
+    }
 }

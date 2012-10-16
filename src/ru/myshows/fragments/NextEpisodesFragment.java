@@ -90,7 +90,7 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
 
     @Override
     public void onTaskFailed(Exception e) {
-        if (e != null){
+        if (e != null) {
             progress.setVisibility(View.GONE);
         }
         final AlertDialog alert;
@@ -107,7 +107,6 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
         alert = builder.create();
         alert.show();
     }
-
 
 
     public static class EpisodesAdapter extends ArrayAdapter<Episode> {
@@ -147,14 +146,15 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
                     holder = (ViewHolder) convertView.getTag();
                 }
 
-                holder.checkBox.setVisibility(View.GONE);
-                UserShow us = MyShows.getUserShow(episode.getShowId());
-                // it happens when show is not started yet but already added as watching
-                if (us == null)
-                    us = new UserShow(MyShows.client.getShowInfo(episode.getShowId()), MyShowsApi.STATUS.watching);
-                holder.title.setText(us.getTitle());
-                holder.shortTitle.setText(episode.getShortName() != null ? episode.getShortName() : composeShortTitle(episode) + " " + episode.getTitle());
-                holder.airDate.setText(episode.getAirDate() != null ? df.format(episode.getAirDate()) : "unknown");
+                try {
+                    UserShow us = MyShows.getUserShow(episode.getShowId());
+                    // it happens when show is not started yet but already added as watching
+                    if (us == null)
+                        us = new UserShow(MyShows.client.getShowInfo(episode.getShowId()), MyShowsApi.STATUS.watching);
+                    holder.title.setText(us.getTitle());
+                    holder.shortTitle.setText(episode.getShortName() != null ? episode.getShortName() : composeShortTitle(episode) + " " + episode.getTitle());
+                    holder.airDate.setText(episode.getAirDate() != null ? df.format(episode.getAirDate()) : "unknown");
+                } catch (NullPointerException e) {}
                 holder.checkBox.setVisibility(View.GONE);
             }
             return convertView;
@@ -168,7 +168,6 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
         }
 
     }
-
 
 
     View.OnClickListener clickListener = new View.OnClickListener() {
@@ -197,10 +196,10 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
         Map<String, List<Episode>> episodesByMonth = new TreeMap<String, List<Episode>>(new Comparator<String>() {
             @Override
             public int compare(String s, String s1) {
-                try{
+                try {
                     int year = Integer.parseInt(s.split(":")[1]);
                     int year1 = Integer.parseInt(s1.split(":")[1]);
-                    if (year != year1){
+                    if (year != year1) {
                         if (year > year1)
                             return 1;
                         else
@@ -215,7 +214,7 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
                         return -1;
                     else
                         return 0;
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                     return s.compareTo(s1);
                 }
@@ -227,10 +226,10 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
             calendar.setTime(e.getAirDate());
             int month = calendar.get(Calendar.MONTH);
             int year = calendar.get(Calendar.YEAR);
-            List<Episode> temp = episodesByMonth.get(month+":"+year);
+            List<Episode> temp = episodesByMonth.get(month + ":" + year);
             if (temp == null) {
                 temp = new ArrayList<Episode>();
-                episodesByMonth.put(month+":"+year, temp);
+                episodesByMonth.put(month + ":" + year, temp);
 
             }
             temp.add(e);
@@ -241,7 +240,6 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
 
         for (Map.Entry<String, List<Episode>> entry : episodesByMonth.entrySet()) {
             String dateString = entry.getKey();
-            Log.d("MyShows", "Date string = " + dateString);
             List<Episode> episodes = entry.getValue();
             Collections.sort(episodes, new EpisodeComparator("date"));
             String[] array = dateString.split(":");

@@ -71,7 +71,6 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d("MyShows", "Shows Fragment on create View");
         View view = inflater.inflate(R.layout.shows, container, false);
         list = (ListView) view.findViewById(R.id.shows_list);
         progress = (ProgressBar) view.findViewById(R.id.progress_shows);
@@ -82,11 +81,9 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
 
     @Override
     public void onTaskComplete(List<IShow> result) {
-        Log.d("MyShows", "Task complete");
         list.setAdapter(populateAdapter(action, result));
         progress.setVisibility(View.GONE);
         progress.setIndeterminate(false);
-        Log.d("MyShows", "Set list visible!");
         list.setVisibility(View.VISIBLE);
         isTaskExecuted = true;
         MyShows.isUserShowsChanged = false;
@@ -258,11 +255,6 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
     public SectionedAdapter populateAdapter(int action, List<IShow> shows) {
         //adapter = new SectionedAdapter(getActivity(), R.layout.header, null);
 
-        // hack to avoid FC, sometimes getActivity is null
-        // if (getActivity() == null) return adapter;
-
-        Log.d("MyShows", "Populate adapter with " + shows.size() + " shows!");
-
         List<SectionedAdapter.Section> sectionList = new ArrayList<SectionedAdapter.Section>();
 
         Resources res = getActivity().getResources();
@@ -320,7 +312,6 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
 
         }
         adapter = new SectionedAdapter(getActivity(), R.layout.header, sectionList);
-        Log.d("MyShows", "Create new sectioned adapter!");
         adapter.notifyDataSetChanged();
         return adapter;
     }

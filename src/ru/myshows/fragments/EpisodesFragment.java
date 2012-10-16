@@ -19,10 +19,7 @@ import com.actionbarsherlock.view.Menu;
 import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
 import ru.myshows.api.MyShowsApi;
-import ru.myshows.domain.Episode;
-import ru.myshows.domain.Season;
-import ru.myshows.domain.Show;
-import ru.myshows.domain.UserShow;
+import ru.myshows.domain.*;
 import ru.myshows.tasks.BaseTask;
 import ru.myshows.tasks.GetNewEpisodesTask;
 import ru.myshows.util.EpisodeComparator;
@@ -74,12 +71,32 @@ public class EpisodesFragment extends SherlockFragment {
         this.inflater = inflater;
         View view = inflater.inflate(R.layout.episodes, container, false);
         episodesList = (ExpandableListView) view.findViewById(R.id.episodes_list);
-        if (savedInstanceState != null && show == null)
-            show = MyShows.client.getShowInfo(savedInstanceState.getInt("showId"));
+        if (savedInstanceState != null && show == null) {
+            int showId = savedInstanceState.getInt("showId");
+            show = MyShows.client.getShowInfo(showId);
+            populateWatchedEpisodes(show, MyShows.client.getSeenEpisodes(showId));
+        }
         refresh(show);
         return view;
     }
 
+
+    private void populateWatchedEpisodes(Show show, List<WatchedEpisode> episodes) {
+        if (episodes == null || episodes.size() == 0) return;
+        Iterator<Episode> i = show.getEpisodes().iterator();
+        while (i.hasNext()) {
+            Episode e = i.next();
+            Iterator<WatchedEpisode> iter = episodes.iterator();
+            while (iter.hasNext()) {
+                WatchedEpisode we = iter.next();
+                if (e.getEpisodeId().equals(we.getWatchedId())) {
+                    e.setChecked(true);
+                    break;
+                }
+            }
+
+        }
+    }
 
     public class CheckEpisodesTask extends BaseTask<Boolean> {
         ArrayList<Episode> episodes = (ArrayList<Episode>) adapter.getAllChildrenAsList();

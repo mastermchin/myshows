@@ -195,6 +195,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
         indicator.notifyDataSetChanged();
         adapter.notifyDataSetChanged();
+
         if (savedInstanceState != null)
             pager.setCurrentItem(savedInstanceState.getInt("currentTab"));
 

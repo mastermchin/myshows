@@ -149,8 +149,6 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
         indicator.notifyDataSetChanged();
         tabsAdapter.notifyDataSetChanged();
 
-        //if (savedInstanceState != null)
-//            pager.setCurrentItem(savedInstanceState.getInt("currentTab"));
     }
 
     @Override

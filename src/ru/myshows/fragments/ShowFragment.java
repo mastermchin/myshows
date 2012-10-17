@@ -66,7 +66,6 @@ public class ShowFragment extends Fragment {
 
         if (savedInstanceState != null && show == null) {
             int showId = savedInstanceState.getInt("showId");
-            Log.d("MyShows", "get show info with Show id = " + showId);
             if (MyShows.userShows == null)
                 MyShows.userShows = MyShows.client.getShows();
             show = MyShows.client.getShowInfo(showId);

@@ -4,10 +4,15 @@ import android.util.Log;
 import org.apache.http.*;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
@@ -42,6 +47,22 @@ public class MyShowsApiImpl implements MyShowsApi {
         HttpConnectionParams.setConnectionTimeout(params, 15000);
         HttpConnectionParams.setSoTimeout(params, 20000);
         this.httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);
+
+        /*
+
+         HttpParams params = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(params, 15000);
+        HttpConnectionParams.setSoTimeout(params, 20000);
+
+
+        SchemeRegistry schemeRegistry = new SchemeRegistry();
+        schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+
+        ClientConnectionManager cm = new ThreadSafeClientConnManager(params, schemeRegistry);
+        httpClient = new DefaultHttpClient(cm, params);
+
+        * */
+
     }
 
     private void setCredentials(String login, String password) {

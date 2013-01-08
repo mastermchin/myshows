@@ -47,6 +47,8 @@ public class TabsAdapter extends FragmentPagerAdapter {
     }
 
     public List<String> getTitles() {
+        if (titles == null)
+            titles = new ArrayList<String>();
         return titles;
     }
 

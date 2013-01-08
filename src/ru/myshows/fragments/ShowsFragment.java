@@ -11,6 +11,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.*;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.*;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -170,8 +172,8 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
                 ImageLoader.getInstance().displayImage(show.getImageUrl(), holder.logo, new ImageLoadingListener() {
                     @Override
                     public void onLoadingStarted() {
-                        holder.logo.setImageResource(R.drawable.ic_list_logo);
-                        holder.logo.setScaleType(ImageView.ScaleType.CENTER);
+                        //holder.logo.setImageResource(R.drawable.ic_list_logo);
+                       // holder.logo.setScaleType(ImageView.ScaleType.CENTER);
                     }
 
                     @Override
@@ -181,6 +183,11 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
                     @Override
                     public void onLoadingComplete() {
                         holder.logo.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        if (!holder.isAnimated){
+                            Animation myFadeInAnimation = AnimationUtils.loadAnimation(context, R.anim.list_images);
+                            holder.logo.startAnimation(myFadeInAnimation);
+                        }
+                        holder.isAnimated = true;
                     }
 
                     @Override
@@ -230,6 +237,7 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
             protected TextView title;
             protected RatingBar rating;
             protected TextView unwatched;
+            boolean isAnimated;
         }
 
         public List<IShow> getShows() {

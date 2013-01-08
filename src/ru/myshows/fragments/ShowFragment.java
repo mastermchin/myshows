@@ -69,7 +69,8 @@ public class ShowFragment extends Fragment {
             if (MyShows.userShows == null)
                 MyShows.userShows = MyShows.client.getShows();
             show = MyShows.client.getShowInfo(showId);
-            show.setWatchStatus(MyShows.getUserShow(showId).getWatchStatus());
+            UserShow userShow = MyShows.getUserShow(showId);
+            show.setWatchStatus(userShow == null ? MyShowsApi.STATUS.remove :userShow.getWatchStatus());
             watchStatus = show.getWatchStatus();
             yoursRating = savedInstanceState.getDouble("yoursRating");
         }

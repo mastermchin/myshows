@@ -164,7 +164,7 @@ public class ShowFragment extends Fragment {
 
         @Override
         public void onResult(Boolean result) {
-            if (getActivity() != null)
+            if (isAdded())
                 Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
             if (result) {
                 UserShow us = MyShows.getUserShow(show.getShowId());
@@ -181,7 +181,7 @@ public class ShowFragment extends Fragment {
     }
 
     private void updateStatusButtons() {
-        if (getResources() == null) {
+        if (isAdded()) {
             boolean isWatching = watchStatus.equals(MyShowsApi.STATUS.watching) || watchStatus.equals(MyShowsApi.STATUS.finished);
             watchingButton.setBackgroundDrawable(isWatching ? getResources().getDrawable(R.drawable.red_label) : null);
 
@@ -242,7 +242,7 @@ public class ShowFragment extends Fragment {
 
         @Override
         public void onResult(Boolean result) {
-            if (context != null)
+            if (isAdded())
                 Toast.makeText(context, result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
             if (result) {
                 show.setWatchStatus(watchStatus);

@@ -115,7 +115,6 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
     }
 
 
-
     public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 
         private ArrayList<UserShow> shows = new ArrayList<UserShow>();
@@ -378,14 +377,16 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
 
         @Override
         public void onResult(Boolean result) {
-            Toast.makeText(getActivity(), exception == null ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
-            if (result) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        executeUpdateTask();
-                    }
-                }, 1000);
+            if (isAdded()) {
+                Toast.makeText(getActivity(), exception == null ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
+                if (result) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            executeUpdateTask();
+                        }
+                    }, 1000);
+                }
             }
         }
 
@@ -461,7 +462,8 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
 
         @Override
         public void onResult(Boolean result) {
-            Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
+            if (isAdded())
+                Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
         }
 
         @Override

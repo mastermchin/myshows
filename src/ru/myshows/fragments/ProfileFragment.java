@@ -66,7 +66,8 @@ public class ProfileFragment extends Fragment implements TaskListener<Profile>, 
 
     @Override
     public void onTaskComplete(Profile result) {
-        populateUI(result);
+        if (isAdded())
+            populateUI(result);
         progress.setIndeterminate(false);
         progress.setVisibility(View.GONE);
         scrollView.setVisibility(View.VISIBLE);

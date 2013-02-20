@@ -93,7 +93,7 @@ public class LoginFragment extends Fragment {
     }
 
     private void showError() {
-        if (getActivity() != null)
+        if (isAdded())
             Toast.makeText(getActivity(), R.string.wrong_login_or_password, Toast.LENGTH_SHORT).show();
     }
 

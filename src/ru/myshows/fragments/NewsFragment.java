@@ -55,7 +55,8 @@ public class NewsFragment extends Fragment implements TaskListener<Map<String, L
 
     @Override
     public void onTaskComplete(Map<String, List<UserNews>> result) {
-        list.setAdapter( populateAdapter(result));
+        if (isAdded())
+            list.setAdapter( populateAdapter(result));
         progress.setVisibility(View.GONE);
         progress.setIndeterminate(false);
         list.setVisibility(View.VISIBLE);

@@ -81,7 +81,8 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
 
     @Override
     public void onTaskComplete(List<Episode> result) {
-        list.setAdapter(populateAdapter(result));
+        if (isAdded())
+            list.setAdapter(populateAdapter(result));
         progress.setVisibility(View.GONE);
         progress.setIndeterminate(false);
         list.setVisibility(View.VISIBLE);

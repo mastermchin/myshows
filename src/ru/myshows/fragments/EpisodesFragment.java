@@ -131,9 +131,11 @@ public class EpisodesFragment extends SherlockFragment {
 
         @Override
         public void onResult(Boolean result) {
-            Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
-            if (result) {
-                new GetNewEpisodesTask(getActivity(), true).execute();
+            if (getActivity() != null) {
+                Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
+                if (result) {
+                    new GetNewEpisodesTask(getActivity(), true).execute();
+                }
             }
 
         }

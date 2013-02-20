@@ -164,7 +164,8 @@ public class ShowFragment extends Fragment {
 
         @Override
         public void onResult(Boolean result) {
-            Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
             if (result) {
                 UserShow us = MyShows.getUserShow(show.getShowId());
                 if (us != null)
@@ -180,19 +181,19 @@ public class ShowFragment extends Fragment {
     }
 
     private void updateStatusButtons() {
-        boolean isWatching = watchStatus.equals(MyShowsApi.STATUS.watching) || watchStatus.equals(MyShowsApi.STATUS.finished);
-        watchingButton.setBackgroundDrawable(isWatching ? getResources().getDrawable(R.drawable.red_label) : null);
+        if (getResources() == null) {
+            boolean isWatching = watchStatus.equals(MyShowsApi.STATUS.watching) || watchStatus.equals(MyShowsApi.STATUS.finished);
+            watchingButton.setBackgroundDrawable(isWatching ? getResources().getDrawable(R.drawable.red_label) : null);
 
-        boolean isLater = watchStatus.equals(MyShowsApi.STATUS.later);
-        willWatchButton.setBackgroundDrawable(isLater ? getResources().getDrawable(R.drawable.red_label) : null);
+            boolean isLater = watchStatus.equals(MyShowsApi.STATUS.later);
+            willWatchButton.setBackgroundDrawable(isLater ? getResources().getDrawable(R.drawable.red_label) : null);
 
-        boolean isCancelled = watchStatus.equals(MyShowsApi.STATUS.cancelled);
-        cancelledButton.setBackgroundDrawable(isCancelled ? getResources().getDrawable(R.drawable.red_label) : null);
+            boolean isCancelled = watchStatus.equals(MyShowsApi.STATUS.cancelled);
+            cancelledButton.setBackgroundDrawable(isCancelled ? getResources().getDrawable(R.drawable.red_label) : null);
 
-        boolean isRemove = watchStatus.equals(MyShowsApi.STATUS.remove);
-        removeButton.setBackgroundDrawable(isRemove ? getResources().getDrawable(R.drawable.red_label) : null);
-
-
+            boolean isRemove = watchStatus.equals(MyShowsApi.STATUS.remove);
+            removeButton.setBackgroundDrawable(isRemove ? getResources().getDrawable(R.drawable.red_label) : null);
+        }
     }
 
     public void changeShowStatus(View v) {
@@ -241,7 +242,8 @@ public class ShowFragment extends Fragment {
 
         @Override
         public void onResult(Boolean result) {
-            Toast.makeText(context, result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
+            if (context != null)
+                Toast.makeText(context, result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
             if (result) {
                 show.setWatchStatus(watchStatus);
                 UserShow us = MyShows.getUserShow(show.getShowId());
@@ -258,8 +260,9 @@ public class ShowFragment extends Fragment {
                     }
                 }
                 MyShows.isUserShowsChanged = true;
-                updateStatusButtons();
                 yoursRatingBar.setIsIndicator(watchStatus.equals(MyShowsApi.STATUS.remove));
+                updateStatusButtons();
+
             }
         }
 

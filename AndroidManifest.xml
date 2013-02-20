@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <!--For rating bar support-->
 
-    <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="9"/>
+    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="15"/>
     <supports-screens android:anyDensity="true" />
 
     <application android:name="MyShows" android:icon="@drawable/ic_logo" android:label="MyShows" android:theme="@style/Theme.MyShows">

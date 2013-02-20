@@ -71,7 +71,7 @@ public class MainActivity extends SherlockFragmentActivity {
             public void onPageSelected(int position) {
                 if (!MyShows.isLoggedIn)
                     return;
-                Fragment currentFragment = getFragment(position) ;
+                Fragment currentFragment = getFragment(position);
                 ((Taskable) currentFragment).executeTask();
             }
 
@@ -118,7 +118,8 @@ public class MainActivity extends SherlockFragmentActivity {
                     break;
 
                 Fragment currentFragment = adapter.getItem(position);
-                ((Taskable) currentFragment).executeUpdateTask();
+                if (currentFragment != null)
+                    ((Taskable) currentFragment).executeUpdateTask();
 
                 break;
             case 2:
@@ -201,22 +202,26 @@ public class MainActivity extends SherlockFragmentActivity {
 
 
 
-       Fragment f = getFragment(pager.getCurrentItem());
+        Fragment f = getFragment(pager.getCurrentItem());
         if (f instanceof Taskable)
-        ((Taskable)  f ).executeTask();
+            ((Taskable) f).executeTask();
 
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("tabsCount", adapter.getCount());
-        outState.putStringArray("titles", adapter.getTitles().toArray(new String[0]));
-        outState.putInt("currentTab", pager.getCurrentItem());
+        if (adapter != null) {
+            outState.putInt("tabsCount", adapter.getCount());
+            List<String> titles = adapter.getTitles();
+            outState.putStringArray("titles", titles.toArray(new String[titles.size()]));
+        }
+        if (pager != null)
+            outState.putInt("currentTab", pager.getCurrentItem());
     }
 
-    private Fragment getFragment(int position){
-         return savedInstanceState == null ? adapter.getItem(position) : getSupportFragmentManager().findFragmentByTag(getFragmentTag(position));
+    private Fragment getFragment(int position) {
+        return savedInstanceState == null ? adapter.getItem(position) : getSupportFragmentManager().findFragmentByTag(getFragmentTag(position));
     }
 
     private String getFragmentTag(int position) {
@@ -263,11 +268,14 @@ public class MainActivity extends SherlockFragmentActivity {
         super.onResume();
         if (MyShows.isLoggedIn && MyShows.isUserShowsChanged) {
 
-            Taskable showsFragment = (Taskable)getFragment(0);
-            Taskable newEpisodesFragment = (Taskable)getFragment(1);
-            showsFragment.executeTask();
-            newEpisodesFragment.executeUpdateTask();
+            Fragment showsFragment = getFragment(0);
+            if (showsFragment != null)
+                ((Taskable) showsFragment).executeTask();
 
+
+            Fragment newEpisodesFragment = getFragment(1);
+            if (newEpisodesFragment != null)
+                ((Taskable) newEpisodesFragment).executeUpdateTask();
 
         }
     }

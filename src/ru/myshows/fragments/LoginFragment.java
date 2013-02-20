@@ -93,7 +93,8 @@ public class LoginFragment extends Fragment {
     }
 
     private void showError() {
-        Toast.makeText(getActivity(), R.string.wrong_login_or_password, Toast.LENGTH_SHORT).show();
+        if (getActivity() != null)
+            Toast.makeText(getActivity(), R.string.wrong_login_or_password, Toast.LENGTH_SHORT).show();
     }
 
     private class LoginTask extends AsyncTask {

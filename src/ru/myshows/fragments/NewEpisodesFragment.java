@@ -209,30 +209,32 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.title.setText(userShow.getTitle());
-            holder.unwatched.setVisibility(View.VISIBLE);
-            holder.unwatched.setText(getActivity().getResources().getString(R.string.unwatched) + ": " + getChildrenCount(groupPosition));
-            holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    userShow.setChecked(isChecked);
-                }
-            });
-            holder.checkBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    CheckBox checkBox = (CheckBox) v;
-                    boolean isChecked = checkBox.isChecked();
-                    for (Episode e : (List<Episode>) getGroupChildren(gp)) {
-                        e.setChecked(isChecked);
+            if (userShow != null) {
+                holder.title.setText(userShow.getTitle());
+                holder.unwatched.setVisibility(View.VISIBLE);
+                holder.unwatched.setText(getActivity().getResources().getString(R.string.unwatched) + ": " + getChildrenCount(groupPosition));
+                holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        userShow.setChecked(isChecked);
                     }
-                    SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
-                    if (mMode == null)
-                        mMode = activity.startActionMode(new CheckNewEpisodesActionMode());
-                    adapter.notifyDataSetChanged();
-                }
-            });
-            holder.checkBox.setChecked(userShow.isChecked());
+                });
+                holder.checkBox.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        CheckBox checkBox = (CheckBox) v;
+                        boolean isChecked = checkBox.isChecked();
+                        for (Episode e : (List<Episode>) getGroupChildren(gp)) {
+                            e.setChecked(isChecked);
+                        }
+                        SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
+                        if (mMode == null)
+                            mMode = activity.startActionMode(new CheckNewEpisodesActionMode());
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+                holder.checkBox.setChecked(userShow.isChecked());
+            }
             return convertView;
         }
 

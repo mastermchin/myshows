@@ -215,6 +215,7 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
         spinner.setAdapter(linkAdapter);
 
 
+
         ImageView refresh = (ImageView) customNav.findViewById(R.id.refresh);
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override

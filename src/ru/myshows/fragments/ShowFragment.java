@@ -133,7 +133,6 @@ public class ShowFragment extends Fragment {
                 }
             });
 
-            // show status buttons
             statusButtonsLayoyt.setVisibility(View.VISIBLE);
             updateStatusButtons();
         }

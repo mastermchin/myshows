@@ -350,9 +350,14 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("showId", showId);
-        outState.putStringArray("titles", tabsAdapter.getTitles().toArray(new String[0]));
-        outState.putInt("tabsCount", tabsAdapter.getCount());
-        outState.putInt("currentTab", pager.getCurrentItem());
+        if (tabsAdapter != null) {
+            outState.putInt("tabsCount", tabsAdapter.getCount());
+            List<String> titles = tabsAdapter.getTitles();
+            outState.putStringArray("titles", titles.toArray(new String[titles.size()]));
+        }
+        if (pager != null)
+            outState.putInt("currentTab", pager.getCurrentItem());
+
     }
 
     private Fragment getFragment(int position) {

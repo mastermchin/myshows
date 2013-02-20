@@ -111,6 +111,7 @@ public class ShowFragment extends Fragment {
         }
 
 
+
         if (MyShows.isLoggedIn) {
 
             // yours rating

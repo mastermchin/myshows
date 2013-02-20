@@ -209,15 +209,6 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
             links.add(new SiteLink("TV Rage", "http://www.tvrage.com/shows/id-" + show.getTvrageId()));
         LinksAdapter linkAdapter = new LinksAdapter(this, R.layout.external_link, links);
 
-//        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-//        getSupportActionBar().setListNavigationCallbacks(linkAdapter, new ActionBar.OnNavigationListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-//                getSupportActionBar().setSelectedNavigationItem(0);
-//                return false;
-//            }
-//        });
-
 
         View customNav = LayoutInflater.from(this).inflate(R.layout.custom_show_action_bar, null);
         IcsSpinner spinner = (IcsSpinner) customNav.findViewById(R.id.spinner);

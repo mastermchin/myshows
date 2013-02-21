@@ -63,21 +63,24 @@ public class ShowFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.show, container, false);
-
-        if (savedInstanceState != null && show == null) {
-            int showId = savedInstanceState.getInt("showId");
-            if (MyShows.userShows == null)
-                MyShows.userShows = MyShows.client.getShows();
-            show = MyShows.client.getShowInfo(showId);
-            UserShow userShow = MyShows.getUserShow(showId);
-            show.setWatchStatus(userShow == null ? MyShowsApi.STATUS.remove :userShow.getWatchStatus());
-            watchStatus = show.getWatchStatus();
-            yoursRating = savedInstanceState.getDouble("yoursRating");
-        }
-        populateUI(show);
         return view;
     }
 
+    @Override
+    public void onActivityCreated(final Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null && show == null) {
+            show = (Show) savedInstanceState.getSerializable("show");
+            UserShow userShow = MyShows.getUserShow(show.getShowId());
+            show.setWatchStatus(userShow == null ? MyShowsApi.STATUS.remove : userShow.getWatchStatus());
+            watchStatus = show.getWatchStatus();
+            yoursRating = savedInstanceState.getDouble("yoursRating");
+            populateUI(show);
+        } else {
+            populateUI(show);
+        }
+
+    }
 
     private void populateUI(Show show) {
         showLogo = (ImageView) view.findViewById(R.id.show_logo);
@@ -109,7 +112,6 @@ public class ShowFragment extends Fragment {
             myShowsRatingBar = ((RatingBar) myShowsRatingLayoyt.findViewById(R.id.show_rating_myshows_value));
             myShowsRatingBar.setRating((float) show.getRating().doubleValue());
         }
-
 
 
         if (MyShows.isLoggedIn) {
@@ -144,8 +146,12 @@ public class ShowFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("showId", show.getShowId());
-        outState.putDouble("yoursRating", yoursRating);
+        if (show != null){
+            outState.putSerializable("show", show);
+        }
+        if (yoursRating != null)
+            outState.putDouble("yoursRating", yoursRating);
+
     }
 
     public class ChangeShowRatioTask extends BaseTask<Boolean> {

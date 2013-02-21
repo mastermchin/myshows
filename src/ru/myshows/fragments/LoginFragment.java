@@ -30,7 +30,6 @@ public class LoginFragment extends Fragment {
     private EditText loginField;
     private EditText passwordField;
     private MyShowsClient client = MyShowsClient.getInstance();
-    MyShows app;
     private LayoutInflater inflater;
 
     public LoginFragment() {

@@ -9,24 +9,24 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
-import android.view.*;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.internal.widget.IcsLinearLayout;
 import com.actionbarsherlock.internal.widget.IcsSpinner;
-import com.viewpagerindicator.TitlePageIndicator;
 import ru.myshows.adapters.TabsAdapter;
 import ru.myshows.api.MyShowsApi;
-import ru.myshows.domain.*;
+import ru.myshows.domain.Show;
+import ru.myshows.domain.UserShow;
 import ru.myshows.fragments.EpisodesFragment;
 import ru.myshows.fragments.ShowFragment;
 import ru.myshows.tasks.GetShowTask;
 import ru.myshows.tasks.TaskListener;
-import ru.myshows.tasks.Taskable;
-import ru.myshows.util.Settings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +47,7 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
     private String title;
 
     private ViewPager pager;
-    private TitlePageIndicator indicator;
+    private PagerTabStrip pagerTabStrip;
     private TabsAdapter tabsAdapter;
     private LinearLayout indicatorLayout;
     private ProgressBar progress;
@@ -64,10 +64,11 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
 
         tabsAdapter = new TabsAdapter(getSupportFragmentManager(), true);
         pager = (ViewPager) findViewById(R.id.pager);
-        indicator = (TitlePageIndicator) findViewById(R.id.indicator);
         pager.setAdapter(tabsAdapter);
-        indicator.setViewPager(pager);
-        indicator.setTypeface(MyShows.font);
+
+        pagerTabStrip = (PagerTabStrip) findViewById(R.id.pagerTabStrip);
+        pagerTabStrip.setTabIndicatorColorResource(R.color.light_red);
+
         progress = (ProgressBar) findViewById(R.id.progress_show);
         indicatorLayout = (LinearLayout) findViewById(R.id.indicator_layout);
 
@@ -100,24 +101,6 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
         getShowTask.execute(showId);
 
 
-        indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                if (position == 1) {
-                    EpisodesFragment episodesFragment = (EpisodesFragment) getFragment(1);
-                    if (episodesFragment != null && episodesFragment.getAdapter() != null)
-                        episodesFragment.getAdapter().notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onPageScrolled(int i, float v, int i1) {
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-            }
-        });
 
     }
 
@@ -146,7 +129,7 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
         }
 
         populateExternalLinkActions(result);
-        indicator.notifyDataSetChanged();
+        //indicator.notifyDataSetChanged();
         tabsAdapter.notifyDataSetChanged();
 
     }

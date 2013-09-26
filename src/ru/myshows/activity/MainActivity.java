@@ -4,34 +4,28 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
-import com.viewpagerindicator.TitlePageIndicator;
-import ru.myshows.adapters.SectionedAdapter;
 import ru.myshows.adapters.TabsAdapter;
 import ru.myshows.domain.Searchable;
 import ru.myshows.fragments.*;
-import ru.myshows.tasks.*;
+import ru.myshows.tasks.Taskable;
 import ru.myshows.util.Settings;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -43,7 +37,7 @@ import java.util.*;
 public class MainActivity extends SherlockFragmentActivity {
 
     private ViewPager pager;
-    private TitlePageIndicator indicator;
+    private PagerTabStrip pagerTabStrip;
     private TabsAdapter adapter;
     private EditText search;
     private Bundle savedInstanceState;
@@ -59,30 +53,29 @@ public class MainActivity extends SherlockFragmentActivity {
         adapter = new TabsAdapter(getSupportFragmentManager(), false);
         pager = (ViewPager) findViewById(R.id.pager);
         pager.setOffscreenPageLimit(6);
-        indicator = (TitlePageIndicator) findViewById(R.id.indicator);
         pager.setAdapter(adapter);
-        indicator.setViewPager(pager);
-        indicator.setTypeface(MyShows.font);
+        pagerTabStrip = (PagerTabStrip) findViewById(R.id.pagerTabStrip);
+        pagerTabStrip.setTabIndicatorColorResource(R.color.light_red);
 
 
 
-        indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                if (!MyShows.isLoggedIn)
-                    return;
-                Fragment currentFragment = getFragment(position);
-                ((Taskable) currentFragment).executeTask();
-            }
-
-            @Override
-            public void onPageScrolled(int i, float v, int i1) {
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-            }
-        });
+//        indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageSelected(int position) {
+//                if (!MyShows.isLoggedIn)
+//                    return;
+//                Fragment currentFragment = getFragment(position);
+//                ((Taskable) currentFragment).executeTask();
+//            }
+//
+//            @Override
+//            public void onPageScrolled(int i, float v, int i1) {
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int i) {
+//            }
+//        });
 
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -194,7 +187,7 @@ public class MainActivity extends SherlockFragmentActivity {
             }
         }
 
-        indicator.notifyDataSetChanged();
+        //indicator.notifyDataSetChanged();
         adapter.notifyDataSetChanged();
 
         if (savedInstanceState != null)
@@ -202,9 +195,9 @@ public class MainActivity extends SherlockFragmentActivity {
 
 
 
-        Fragment f = getFragment(pager.getCurrentItem());
-        if (f instanceof Taskable)
-            ((Taskable) f).executeTask();
+//        Fragment f = getFragment(pager.getCurrentItem());
+//        if (f instanceof Taskable)
+//            ((Taskable) f).executeTask();
 
     }
 
@@ -231,7 +224,7 @@ public class MainActivity extends SherlockFragmentActivity {
     private void getPublicTabs() {
         //adapter.addFragment(new SearchFragment(), getResources().getString(R.string.tab_search_title));
         adapter.addFragment(new LoginFragment(), getResources().getString(R.string.tab_login_title));
-        indicator.notifyDataSetChanged();
+       // indicator.notifyDataSetChanged();
         adapter.notifyDataSetChanged();
     }
 

@@ -1,32 +1,35 @@
 package ru.myshows.fragments;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
-import android.view.*;
-import android.widget.*;
-import ru.myshows.activity.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import ru.myshows.activity.MyShows;
+import ru.myshows.activity.ProfileActivity;
+import ru.myshows.activity.R;
+import ru.myshows.activity.ShowActivity;
 import ru.myshows.adapters.SectionedAdapter;
-import ru.myshows.api.MyShowsClient;
 import ru.myshows.domain.Searchable;
 import ru.myshows.domain.UserNews;
 import ru.myshows.domain.UserShow;
-import ru.myshows.tasks.BaseTask;
 import ru.myshows.tasks.GetNewsTask;
 import ru.myshows.tasks.TaskListener;
 import ru.myshows.tasks.Taskable;
 import ru.myshows.util.NewsComparator;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by IntelliJ IDEA.
@@ -51,6 +54,12 @@ public class NewsFragment extends Fragment implements TaskListener<Map<String, L
         list = (ListView) view.findViewById(R.id.news_list);
         progress = (ProgressBar) view.findViewById(R.id.progress_news);
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        executeTask();
     }
 
     @Override

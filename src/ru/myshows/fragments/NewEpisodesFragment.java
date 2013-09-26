@@ -5,17 +5,16 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
-import ru.myshows.adapters.SectionedAdapter;
 import ru.myshows.components.RatingDialog;
 import ru.myshows.domain.Episode;
-import ru.myshows.domain.Season;
 import ru.myshows.domain.UserShow;
 import ru.myshows.tasks.BaseTask;
 import ru.myshows.tasks.GetNewEpisodesTask;
@@ -57,6 +56,12 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
         progress = (ProgressBar) rootView.findViewById(R.id.progress_new_episodes);
         list = (ExpandableListView) rootView.findViewById(R.id.new_episodes_list);
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        executeTask();
     }
 
 

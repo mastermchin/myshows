@@ -1,15 +1,10 @@
 package ru.myshows.fragments;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +16,6 @@ import ru.myshows.api.MyShowsApi;
 import ru.myshows.domain.Episode;
 import ru.myshows.domain.Searchable;
 import ru.myshows.domain.UserShow;
-import ru.myshows.tasks.GetNewEpisodesTask;
 import ru.myshows.tasks.GetNextEpisodesTask;
 import ru.myshows.tasks.TaskListener;
 import ru.myshows.tasks.Taskable;
@@ -60,6 +54,12 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
         return rootView;
     }
 
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        executeTask();
+    }
 
     @Override
     public void executeTask() {

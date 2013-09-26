@@ -105,7 +105,7 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
             public void onPageSelected(int position) {
                 if (position == 1) {
                     EpisodesFragment episodesFragment = (EpisodesFragment) getFragment(1);
-                    if (episodesFragment.getAdapter() != null)
+                    if (episodesFragment != null && episodesFragment.getAdapter() != null)
                         episodesFragment.getAdapter().notifyDataSetChanged();
                 }
             }
@@ -230,9 +230,9 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
                         result.setWatchStatus(watchStatus);
                         progress.setVisibility(View.GONE);
                         indicatorLayout.setVisibility(View.VISIBLE);
-                        ShowFragment showFragment = (ShowFragment) tabsAdapter.getItem(0);
+                        ShowFragment showFragment = (ShowFragment) getFragment(0);
                         showFragment.refresh(result);
-                        EpisodesFragment episodesFragment = (EpisodesFragment) tabsAdapter.getItem(1);
+                        EpisodesFragment episodesFragment = (EpisodesFragment) getFragment(1);
                         episodesFragment.refresh(result);
                         tabsAdapter.notifyDataSetChanged();
                     }

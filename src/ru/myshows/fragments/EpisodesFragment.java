@@ -386,6 +386,9 @@ public class EpisodesFragment extends SherlockFragment {
                     @Override
                     public void onClick(View v) {
                         holder.checkBox.setChecked(!holder.checkBox.isChecked());
+                        SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
+                        if (mMode == null)
+                            mMode = activity.startActionMode(new SaveEpisodesActionMode());
                     }
                 });
             } else {

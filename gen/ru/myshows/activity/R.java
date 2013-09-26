@@ -19,7 +19,7 @@ public final class R {
         public static final int pref_sort_options_values=0x7f0d0002;
     }
     public static final class attr {
-        /**  Specified if we are forcing an action item overflow menu. 
+        /**  Specified if we are forcing an action item overflow menu.
          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -28,18 +28,18 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int absForceOverflow=0x7f010056;
-        /**  Custom divider drawable to use for elements in the action bar. 
+        /**  Custom divider drawable to use for elements in the action bar.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int actionBarDivider=0x7f01002b;
-        /**  Custom item state list drawable background for action bar items. 
+        /**  Custom item state list drawable background for action bar items.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int actionBarItemBackground=0x7f01002c;
         /**  Size of the Action Bar, including the contextual
-             bar used to present Action Modes. 
+             bar used to present Action Modes.
          <p>May be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
 in (inches), mm (millimeters).
@@ -61,12 +61,12 @@ containing a value of this type.
         /**  Reference to a style for the split Action Bar. This style
              controls the split component that holds the menu/action
              buttons. actionBarStyle is still used for the primary
-             bar. 
+             bar.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int actionBarSplitStyle=0x7f010028;
-        /**  Reference to a style for the Action Bar 
+        /**  Reference to a style for the Action Bar
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
@@ -75,7 +75,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int actionBarTabBarStyle=0x7f010024;
-        /**  Default style for tabs within an action bar 
+        /**  Default style for tabs within an action bar
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
@@ -104,19 +104,19 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
          */
         public static final int actionDropDownStyle=0x7f010047;
         /**  TextAppearance style that will be applied to text that
-             appears within action menu items. 
+             appears within action menu items.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int actionMenuTextAppearance=0x7f01002d;
-        /**  Color for text that appears within action menu items. 
+        /**  Color for text that appears within action menu items.
          <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
 <p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
          */
         public static final int actionMenuTextColor=0x7f01002e;
-        /**  Background drawable to use for action mode UI 
+        /**  Background drawable to use for action mode UI
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
@@ -125,22 +125,22 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int actionModeCloseButtonStyle=0x7f010030;
-        /**  Drawable to use for the close action mode button 
+        /**  Drawable to use for the close action mode button
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int actionModeCloseDrawable=0x7f010033;
-        /**  PopupWindow style to use for action modes when showing as a window overlay. 
+        /**  PopupWindow style to use for action modes when showing as a window overlay.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int actionModePopupWindowStyle=0x7f010035;
-        /**  Drawable to use for the Share action button in WebView selection action modes 
+        /**  Drawable to use for the Share action button in WebView selection action modes
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int actionModeShareDrawable=0x7f010034;
-        /**  Background drawable to use for action mode UI in the lower split bar 
+        /**  Background drawable to use for action mode UI in the lower split bar
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
@@ -157,12 +157,12 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int actionSpinnerItemStyle=0x7f01004d;
-        /**  Drawable used as a background for activated items. 
+        /**  Drawable used as a background for activated items.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int activatedBackgroundIndicator=0x7f010055;
-        /**  Default ActivityChooserView style. 
+        /**  Default ActivityChooserView style.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
@@ -179,14 +179,14 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
          */
         public static final int backgroundSplit=0x7f010020;
-        /**  Specifies a background drawable for a second stacked row of the action bar. 
+        /**  Specifies a background drawable for a second stacked row of the action bar.
          <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
 <p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
          */
         public static final int backgroundStacked=0x7f01005d;
-        /**  Small Button style. 
+        /**  Small Button style.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
@@ -199,7 +199,7 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int centered=0x7f010005;
-        /**  Screen edge padding. 
+        /**  Screen edge padding.
          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
 in (inches), mm (millimeters).
@@ -210,12 +210,12 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int clipPadding=0x7f010010;
-        /**  Specifies a layout for custom navigation. Overrides navigationMode. 
+        /**  Specifies a layout for custom navigation. Overrides navigationMode.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int customNavigationLayout=0x7f01005e;
-        /**  Options affecting how the action bar is displayed. 
+        /**  Options affecting how the action bar is displayed.
          <p>Must be one or more (separated by '|') of the following constant values.</p>
 <table>
 <colgroup align="left" />
@@ -235,7 +235,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int divider=0x7f010022;
-        /**  Drawable to use for generic vertical dividers. 
+        /**  Drawable to use for generic vertical dividers.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
@@ -259,12 +259,12 @@ containing a value of this type.
              as a clue about the action the chosen activity will perform. For
              example, if share activity is to be chosen the drawable should
              give a clue that sharing is to be performed.
-         
+
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int expandActivityOverflowButtonDrawable=0x7f01006d;
-        /**  Length of the delay to fade the indicator. 
+        /**  Length of the delay to fade the indicator.
          <p>Must be an integer value, such as "<code>100</code>".
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -273,7 +273,7 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int fadeDelay=0x7f01001b;
-        /**  Length of the indicator fade to transparent. 
+        /**  Length of the indicator fade to transparent.
          <p>Must be an integer value, such as "<code>100</code>".
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -282,7 +282,7 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int fadeLength=0x7f01001c;
-        /**  Whether or not the selected indicator fades. 
+        /**  Whether or not the selected indicator fades.
          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -291,7 +291,7 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int fades=0x7f01001a;
-        /**  Color of the filled circle that represents the current page. 
+        /**  Color of the filled circle that represents the current page.
          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
 <p>This may also be a reference to a resource (in the form
@@ -301,7 +301,7 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int fillColor=0x7f010009;
-        /**  Color of the footer line and indicator. 
+        /**  Color of the footer line and indicator.
          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
 <p>This may also be a reference to a resource (in the form
@@ -311,7 +311,7 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int footerColor=0x7f010011;
-        /**  Height of the indicator above the footer line. 
+        /**  Height of the indicator above the footer line.
          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
 in (inches), mm (millimeters).
@@ -322,7 +322,7 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int footerIndicatorHeight=0x7f010014;
-        /**  Style of the indicator. Default is triangle. 
+        /**  Style of the indicator. Default is triangle.
          <p>Must be one of the following constant values.</p>
 <table>
 <colgroup align="left" />
@@ -335,7 +335,7 @@ containing a value of this type.
 </table>
          */
         public static final int footerIndicatorStyle=0x7f010013;
-        /**  Left and right padding of the underline indicator. 
+        /**  Left and right padding of the underline indicator.
          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
 in (inches), mm (millimeters).
@@ -346,7 +346,7 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int footerIndicatorUnderlinePadding=0x7f010015;
-        /**  Height of the footer line. 
+        /**  Height of the footer line.
          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
 in (inches), mm (millimeters).
@@ -357,7 +357,7 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int footerLineHeight=0x7f010012;
-        /**  Padding between the bottom of the title and the footer. 
+        /**  Padding between the bottom of the title and the footer.
          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
 in (inches), mm (millimeters).
@@ -368,7 +368,7 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int footerPadding=0x7f010016;
-        /**  Width of the gap between each indicator line. 
+        /**  Width of the gap between each indicator line.
          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
 in (inches), mm (millimeters).
@@ -379,7 +379,7 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int gapWidth=0x7f01000f;
-        /**  Default background for the menu header. 
+        /**  Default background for the menu header.
          <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
 <p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
@@ -400,27 +400,27 @@ containing a value of this type.
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int homeAsUpIndicator=0x7f010049;
-        /**  Specifies a layout to use for the "home" section of the action bar. 
+        /**  Specifies a layout to use for the "home" section of the action bar.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int homeLayout=0x7f01005f;
-        /**  Default horizontal divider between rows of menu items. 
+        /**  Default horizontal divider between rows of menu items.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int horizontalDivider=0x7f010065;
-        /**  Specifies the drawable used for the application icon. 
+        /**  Specifies the drawable used for the application icon.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int icon=0x7f01005b;
-        /**  Specifies a style resource to use for an indeterminate progress spinner. 
+        /**  Specifies a style resource to use for an indeterminate progress spinner.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int indeterminateProgressStyle=0x7f010061;
-        /**  The maximal number of items initially shown in the activity list. 
+        /**  The maximal number of items initially shown in the activity list.
          <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -429,14 +429,14 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int initialActivityCount=0x7f01006c;
-        /**  Default background for each menu item. 
+        /**  Default background for each menu item.
          <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
 <p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
          */
         public static final int itemBackground=0x7f010068;
-        /**  Default disabled icon alpha for each menu item that shows an icon. 
+        /**  Default disabled icon alpha for each menu item that shows an icon.
          <p>Must be a floating point value, such as "<code>1.2</code>".
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -446,7 +446,7 @@ containing a value of this type.
          */
         public static final int itemIconDisabledAlpha=0x7f01006a;
         /**  Specifies padding that should be applied to the left and right sides of
-             system-provided items in the bar. 
+             system-provided items in the bar.
          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
 in (inches), mm (millimeters).
@@ -457,12 +457,12 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int itemPadding=0x7f010063;
-        /**  Default appearance of menu item text. 
+        /**  Default appearance of menu item text.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int itemTextAppearance=0x7f010064;
-        /**  Width of each indicator line. 
+        /**  Width of each indicator line.
          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
 in (inches), mm (millimeters).
@@ -477,7 +477,7 @@ containing a value of this type.
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int listPopupWindowStyle=0x7f010053;
-        /**  A smaller, sleeker list item height. 
+        /**  A smaller, sleeker list item height.
          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
 in (inches), mm (millimeters).
@@ -488,7 +488,7 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int listPreferredItemHeightSmall=0x7f010040;
-        /**  The preferred padding along the left edge of list items. 
+        /**  The preferred padding along the left edge of list items.
          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
 in (inches), mm (millimeters).
@@ -499,7 +499,7 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int listPreferredItemPaddingLeft=0x7f010041;
-        /**  The preferred padding along the right edge of list items. 
+        /**  The preferred padding along the right edge of list items.
          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
 in (inches), mm (millimeters).
@@ -510,12 +510,12 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int listPreferredItemPaddingRight=0x7f010042;
-        /**  Specifies the drawable used for the application logo. 
+        /**  Specifies the drawable used for the application logo.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int logo=0x7f01005c;
-        /**  The type of navigation to use. 
+        /**  The type of navigation to use.
          <p>Must be one of the following constant values.</p>
 <table>
 <colgroup align="left" />
@@ -528,7 +528,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 </table>
          */
         public static final int navigationMode=0x7f010057;
-        /**  Color of the filled circles that represents pages. 
+        /**  Color of the filled circles that represents pages.
          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
 <p>This may also be a reference to a resource (in the form
@@ -542,7 +542,7 @@ containing a value of this type.
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int popupMenuStyle=0x7f01004b;
-        /**  Whether space should be reserved in layout when an icon is missing. 
+        /**  Whether space should be reserved in layout when an icon is missing.
          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -551,7 +551,7 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int preserveIconSpacing=0x7f01006b;
-        /**  Specifies the horizontal padding on either end for an embedded progress bar. 
+        /**  Specifies the horizontal padding on either end for an embedded progress bar.
          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
 in (inches), mm (millimeters).
@@ -562,12 +562,12 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int progressBarPadding=0x7f010062;
-        /**  Specifies a style resource to use for an embedded progress bar. 
+        /**  Specifies a style resource to use for an embedded progress bar.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int progressBarStyle=0x7f010060;
-        /**  Radius of the circles. This is also the spacing between circles. 
+        /**  Radius of the circles. This is also the spacing between circles.
          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
 in (inches), mm (millimeters).
@@ -578,7 +578,7 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int radius=0x7f01000b;
-        /**  Whether or not the selected item is displayed as bold. 
+        /**  Whether or not the selected item is displayed as bold.
          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -596,7 +596,7 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int selectedColor=0x7f010006;
-        /**  Whether or not the selected indicator snaps to the circles. 
+        /**  Whether or not the selected indicator snaps to the circles.
          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -613,7 +613,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int spinnerItemStyle=0x7f01003e;
-        /**  Color of the open circles. 
+        /**  Color of the open circles.
          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
 <p>This may also be a reference to a resource (in the form
@@ -633,7 +633,7 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int strokeWidth=0x7f010007;
-        /**  Specifies subtitle text used for navigationMode="normal" 
+        /**  Specifies subtitle text used for navigationMode="normal"
          <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -646,22 +646,22 @@ containing a value of this type.
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int subtitleTextStyle=0x7f01001e;
-        /**  Text color, typeface, size, and style for the text inside of a popup menu. 
+        /**  Text color, typeface, size, and style for the text inside of a popup menu.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int textAppearanceLargePopupMenu=0x7f010038;
-        /**  The preferred TextAppearance for the primary text of small list items. 
+        /**  The preferred TextAppearance for the primary text of small list items.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int textAppearanceListItemSmall=0x7f010043;
-        /**  Text color, typeface, size, and style for "small" text. Defaults to secondary text color. 
+        /**  Text color, typeface, size, and style for "small" text. Defaults to secondary text color.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int textAppearanceSmall=0x7f01003a;
-        /**  Text color, typeface, size, and style for small text inside of a popup menu. 
+        /**  Text color, typeface, size, and style for small text inside of a popup menu.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
@@ -693,7 +693,7 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int textColorPrimaryInverse=0x7f01003d;
-        /**  Specifies title text used for navigationMode="normal" 
+        /**  Specifies title text used for navigationMode="normal"
          <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -702,7 +702,7 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int title=0x7f010059;
-        /**  Padding between titles when bumping into each other. 
+        /**  Padding between titles when bumping into each other.
          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
 in (inches), mm (millimeters).
@@ -717,7 +717,7 @@ containing a value of this type.
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int titleTextStyle=0x7f01001d;
-        /**  Padding between titles and the top of the View. 
+        /**  Padding between titles and the top of the View.
          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
 in (inches), mm (millimeters).
@@ -737,32 +737,32 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int unselectedColor=0x7f010008;
-        /**  Default vertical divider between menu items. 
+        /**  Default vertical divider between menu items.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int verticalDivider=0x7f010066;
-        /**  Style of the circle indicator. 
+        /**  Style of the circle indicator.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int vpiCirclePageIndicatorStyle=0x7f010000;
-        /**  Style of the line indicator. 
+        /**  Style of the line indicator.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int vpiLinePageIndicatorStyle=0x7f010001;
-        /**  Style of the tab indicator's tabs. 
+        /**  Style of the tab indicator's tabs.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int vpiTabPageIndicatorStyle=0x7f010003;
-        /**  Style of the title indicator. 
+        /**  Style of the title indicator.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int vpiTitlePageIndicatorStyle=0x7f010002;
-        /**  Style of the underline indicator. 
+        /**  Style of the underline indicator.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
@@ -791,13 +791,13 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int windowActionModeOverlay=0x7f010051;
-        /**  Default animations for the menu. 
+        /**  Default animations for the menu.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int windowAnimationStyle=0x7f010069;
         /**  This Drawable is overlaid over the foreground of the Window's content area, usually
-             to place a shadow below the title.  
+             to place a shadow below the title.
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
@@ -844,19 +844,19 @@ containing a value of this type.
         public static final int abs__action_bar_expanded_action_views_exclusive=0x7f080007;
         /**  Whether action menu items should be displayed in ALLCAPS or not.
          Defaults to true. If this is not appropriate for specific locales
-         it should be disabled in that locale's resources. 
+         it should be disabled in that locale's resources.
          */
         public static final int abs__config_actionMenuItemAllCaps=0x7f080009;
         /**  Whether action menu items should obey the "withText" showAsAction
          flag. This may be set to false for situations where space is
-         extremely limited. 
+         extremely limited.
  Whether action menu items should obey the "withText" showAsAction
          flag. This may be set to false for situations where space is
-         extremely limited. 
+         extremely limited.
          */
         public static final int abs__config_allowActionMenuItemTextWithIcon=0x7f08000a;
         /**  Sets whether menu shortcuts should be displayed on panel menus when
-         a keyboard is present. 
+         a keyboard is present.
          */
         public static final int abs__config_showMenuShortcutsWhenKeyboardPresent=0x7f080008;
         public static final int abs__split_action_bar_is_narrow=0x7f080006;
@@ -923,102 +923,102 @@ containing a value of this type.
         public static final int white=0x7f07001b;
     }
     public static final class dimen {
-        /**  Default height of an action bar. 
- Default height of an action bar. 
- Default height of an action bar. 
- Default height of an action bar. 
- Default height of an action bar. 
- Default height of an action bar. 
- Default height of an action bar. 
- Default height of an action bar. 
+        /**  Default height of an action bar.
+ Default height of an action bar.
+ Default height of an action bar.
+ Default height of an action bar.
+ Default height of an action bar.
+ Default height of an action bar.
+ Default height of an action bar.
+ Default height of an action bar.
          */
         public static final int abs__action_bar_default_height=0x7f0a000e;
-        /**  Vertical padding around action bar icons. 
- Vertical padding around action bar icons. 
- Vertical padding around action bar icons. 
- Vertical padding around action bar icons. 
- Vertical padding around action bar icons. 
- Vertical padding around action bar icons. 
- Vertical padding around action bar icons. 
- Vertical padding around action bar icons. 
+        /**  Vertical padding around action bar icons.
+ Vertical padding around action bar icons.
+ Vertical padding around action bar icons.
+ Vertical padding around action bar icons.
+ Vertical padding around action bar icons.
+ Vertical padding around action bar icons.
+ Vertical padding around action bar icons.
+ Vertical padding around action bar icons.
          */
         public static final int abs__action_bar_icon_vertical_padding=0x7f0a000f;
-        /**  Bottom margin for action bar subtitles 
- Bottom margin for action bar subtitles 
- Bottom margin for action bar subtitles 
- Bottom margin for action bar subtitles 
- Bottom margin for action bar subtitles 
- Bottom margin for action bar subtitles 
- Bottom margin for action bar subtitles 
- Bottom margin for action bar subtitles 
+        /**  Bottom margin for action bar subtitles
+ Bottom margin for action bar subtitles
+ Bottom margin for action bar subtitles
+ Bottom margin for action bar subtitles
+ Bottom margin for action bar subtitles
+ Bottom margin for action bar subtitles
+ Bottom margin for action bar subtitles
+ Bottom margin for action bar subtitles
          */
         public static final int abs__action_bar_subtitle_bottom_margin=0x7f0a0013;
-        /**  Text size for action bar subtitles 
- Text size for action bar subtitles 
- Text size for action bar subtitles 
- Text size for action bar subtitles 
- Text size for action bar subtitles 
- Text size for action bar subtitles 
- Text size for action bar subtitles 
- Text size for action bar subtitles 
+        /**  Text size for action bar subtitles
+ Text size for action bar subtitles
+ Text size for action bar subtitles
+ Text size for action bar subtitles
+ Text size for action bar subtitles
+ Text size for action bar subtitles
+ Text size for action bar subtitles
+ Text size for action bar subtitles
          */
         public static final int abs__action_bar_subtitle_text_size=0x7f0a0011;
-        /**  Top margin for action bar subtitles 
- Top margin for action bar subtitles 
- Top margin for action bar subtitles 
- Top margin for action bar subtitles 
- Top margin for action bar subtitles 
- Top margin for action bar subtitles 
- Top margin for action bar subtitles 
- Top margin for action bar subtitles 
+        /**  Top margin for action bar subtitles
+ Top margin for action bar subtitles
+ Top margin for action bar subtitles
+ Top margin for action bar subtitles
+ Top margin for action bar subtitles
+ Top margin for action bar subtitles
+ Top margin for action bar subtitles
+ Top margin for action bar subtitles
          */
         public static final int abs__action_bar_subtitle_top_margin=0x7f0a0012;
-        /**  Text size for action bar titles 
- Text size for action bar titles 
- Text size for action bar titles 
- Text size for action bar titles 
- Text size for action bar titles 
- Text size for action bar titles 
- Text size for action bar titles 
- Text size for action bar titles 
+        /**  Text size for action bar titles
+ Text size for action bar titles
+ Text size for action bar titles
+ Text size for action bar titles
+ Text size for action bar titles
+ Text size for action bar titles
+ Text size for action bar titles
+ Text size for action bar titles
          */
         public static final int abs__action_bar_title_text_size=0x7f0a0010;
-        /**  Minimum width for an action button in the menu area of an action bar 
- Minimum width for an action button in the menu area of an action bar 
+        /**  Minimum width for an action button in the menu area of an action bar
+ Minimum width for an action button in the menu area of an action bar
          */
         public static final int abs__action_button_min_width=0x7f0a0014;
-        /**  Dialog title height 
+        /**  Dialog title height
          */
         public static final int abs__alert_dialog_title_height=0x7f0a0015;
         /**  The maximum width we would prefer dialogs to be.  0 if there is no
          maximum (let them grow as large as the screen).  Actual values are
-         specified for -large and -xlarge configurations. 
+         specified for -large and -xlarge configurations.
          */
         public static final int abs__config_prefDialogWidth=0x7f0a000d;
         /**  The platform's desired minimum size for a dialog's width when it
          is along the major axis (that is the screen is landscape).  This may
-         be either a fraction or a dimension. 
+         be either a fraction or a dimension.
  The platform's desired minimum size for a dialog's width when it
          is along the major axis (that is the screen is landscape).  This may
-         be either a fraction or a dimension. 
+         be either a fraction or a dimension.
  The platform's desired minimum size for a dialog's width when it
          is along the major axis (that is the screen is landscape).  This may
-         be either a fraction or a dimension. 
+         be either a fraction or a dimension.
          */
         public static final int abs__dialog_min_width_major=0x7f0a0016;
         /**  The platform's desired minimum size for a dialog's width when it
          is along the minor axis (that is the screen is portrait).  This may
-         be either a fraction or a dimension. 
+         be either a fraction or a dimension.
  The platform's desired minimum size for a dialog's width when it
          is along the minor axis (that is the screen is portrait).  This may
-         be either a fraction or a dimension. 
+         be either a fraction or a dimension.
  The platform's desired minimum size for a dialog's width when it
          is along the minor axis (that is the screen is portrait).  This may
-         be either a fraction or a dimension. 
+         be either a fraction or a dimension.
          */
         public static final int abs__dialog_min_width_minor=0x7f0a0017;
-        /**  Minimum width for an action button in the menu area of an action bar 
- Minimum width for an action button in the menu area of an action bar 
+        /**  Minimum width for an action button in the menu area of an action bar
+ Minimum width for an action button in the menu area of an action bar
          */
         public static final int action_button_min_width=0x7f0a0018;
         public static final int default_circle_indicator_radius=0x7f0a0000;
@@ -1366,34 +1366,34 @@ containing a value of this type.
         public static final int shows=0x7f03002c;
     }
     public static final class string {
-        /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
+        /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE]
          */
         public static final int abs__action_bar_home_description=0x7f0c0000;
-        /**  Content description for the action bar "up" affordance. [CHAR LIMIT=NONE] 
+        /**  Content description for the action bar "up" affordance. [CHAR LIMIT=NONE]
          */
         public static final int abs__action_bar_up_description=0x7f0c0001;
-        /**  Content description for the action menu overflow button. [CHAR LIMIT=NONE] 
+        /**  Content description for the action menu overflow button. [CHAR LIMIT=NONE]
          */
         public static final int abs__action_menu_overflow_description=0x7f0c0002;
-        /**  Label for the "Done" button on the far left of action mode toolbars. 
+        /**  Label for the "Done" button on the far left of action mode toolbars.
          */
         public static final int abs__action_mode_done=0x7f0c0003;
-        /**  Title default for a dialog showing possible activities in ActivityChooserView [CHAR LIMIT=25] 
+        /**  Title default for a dialog showing possible activities in ActivityChooserView [CHAR LIMIT=25]
          */
         public static final int abs__activity_chooser_view_dialog_title_default=0x7f0c0005;
-        /**  Title for a button to expand the list of activities in ActivityChooserView [CHAR LIMIT=25] 
+        /**  Title for a button to expand the list of activities in ActivityChooserView [CHAR LIMIT=25]
          */
         public static final int abs__activity_chooser_view_see_all=0x7f0c0004;
-        /**  Description of the shwoing of a popup window with activities to choose from. [CHAR LIMIT=NONE] 
+        /**  Description of the shwoing of a popup window with activities to choose from. [CHAR LIMIT=NONE]
          */
         public static final int abs__activitychooserview_choose_application=0x7f0c0007;
-        /**  Title for a dialog showing possible activities for sharing in ShareActionProvider [CHAR LIMIT=25] 
+        /**  Title for a dialog showing possible activities for sharing in ShareActionProvider [CHAR LIMIT=25]
          */
         public static final int abs__share_action_provider_share_with=0x7f0c0006;
-        /**  Description of the choose target button in a ShareActionProvider (share UI). [CHAR LIMIT=NONE] 
+        /**  Description of the choose target button in a ShareActionProvider (share UI). [CHAR LIMIT=NONE]
          */
         public static final int abs__shareactionprovider_share_with=0x7f0c0008;
-        /**  Description of a share target (both in the list of such or the default share button) in a ShareActionProvider (share UI). [CHAR LIMIT=NONE] 
+        /**  Description of a share target (both in the list of such or the default share button) in a ShareActionProvider (share UI). [CHAR LIMIT=NONE]
          */
         public static final int abs__shareactionprovider_share_with_application=0x7f0c0009;
         public static final int action_watched=0x7f0c0046;
@@ -1633,7 +1633,7 @@ Tabs titles
         /**
           <p>
           @attr description
-           Orientation of the indicator. 
+           Orientation of the indicator.
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_orientation}.
           @attr name android:android_orientation
         */
@@ -1641,7 +1641,7 @@ Tabs titles
         /**
           <p>
           @attr description
-           Whether or not the indicators should be centered. 
+           Whether or not the indicators should be centered.
 
 
           <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
@@ -1657,7 +1657,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Color of the filled circle that represents the current page. 
+           Color of the filled circle that represents the current page.
 
 
           <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
@@ -1674,7 +1674,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Color of the filled circles that represents pages. 
+           Color of the filled circles that represents pages.
 
 
           <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
@@ -1691,7 +1691,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Radius of the circles. This is also the spacing between circles. 
+           Radius of the circles. This is also the spacing between circles.
 
 
           <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
@@ -1709,7 +1709,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Whether or not the selected indicator snaps to the circles. 
+           Whether or not the selected indicator snaps to the circles.
 
 
           <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
@@ -1725,7 +1725,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Color of the open circles. 
+           Color of the open circles.
 
 
           <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
@@ -1742,7 +1742,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Width of the stroke used to draw the circles. 
+           Width of the stroke used to draw the circles.
 
 
           <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
@@ -1784,7 +1784,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Whether or not the indicators should be centered. 
+           Whether or not the indicators should be centered.
 
 
           <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
@@ -1800,7 +1800,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Width of the gap between each indicator line. 
+           Width of the gap between each indicator line.
 
 
           <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
@@ -1818,7 +1818,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Width of each indicator line. 
+           Width of each indicator line.
 
 
           <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
@@ -1836,7 +1836,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Color of the selected line that represents the current page. 
+           Color of the selected line that represents the current page.
 
 
           <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
@@ -1853,7 +1853,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Width of each indicator line's stroke. 
+           Width of each indicator line's stroke.
 
 
           <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
@@ -1871,7 +1871,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Color of the unselected lines that represent the pages. 
+           Color of the unselected lines that represent the pages.
 
 
           <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
@@ -1885,7 +1885,7 @@ containing a value of this type.
           @attr name android:unselectedColor
         */
         public static final int LinePageIndicator_unselectedColor = 3;
-        /**  Attributes used to style the Action Bar. 
+        /**  Attributes used to style the Action Bar.
            <p>Includes the following attributes:</p>
            <table>
            <colgroup align="left" />
@@ -1942,7 +1942,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Specifies a background drawable for the action bar. 
+           Specifies a background drawable for the action bar.
 
 
           <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -1956,7 +1956,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Specifies a background drawable for the bottom component of a split action bar. 
+           Specifies a background drawable for the bottom component of a split action bar.
 
 
           <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -1970,7 +1970,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Specifies a background drawable for a second stacked row of the action bar. 
+           Specifies a background drawable for a second stacked row of the action bar.
 
 
           <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -1984,7 +1984,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Specifies a layout for custom navigation. Overrides navigationMode. 
+           Specifies a layout for custom navigation. Overrides navigationMode.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -1996,7 +1996,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Options affecting how the action bar is displayed. 
+           Options affecting how the action bar is displayed.
 
 
           <p>Must be one or more (separated by '|') of the following constant values.</p>
@@ -2019,7 +2019,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Specifies the drawable used for item dividers. 
+           Specifies the drawable used for item dividers.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -2031,7 +2031,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Specifies a fixed height. 
+           Specifies a fixed height.
 
 
           <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
@@ -2049,7 +2049,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Specifies a layout to use for the "home" section of the action bar. 
+           Specifies a layout to use for the "home" section of the action bar.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -2061,7 +2061,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Specifies the drawable used for the application icon. 
+           Specifies the drawable used for the application icon.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -2073,7 +2073,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Specifies a style resource to use for an indeterminate progress spinner. 
+           Specifies a style resource to use for an indeterminate progress spinner.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -2086,7 +2086,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
           <p>
           @attr description
            Specifies padding that should be applied to the left and right sides of
-             system-provided items in the bar. 
+             system-provided items in the bar.
 
 
           <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
@@ -2104,7 +2104,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Specifies the drawable used for the application logo. 
+           Specifies the drawable used for the application logo.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -2116,7 +2116,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           The type of navigation to use. 
+           The type of navigation to use.
 
 
           <p>Must be one of the following constant values.</p>
@@ -2136,7 +2136,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Specifies the horizontal padding on either end for an embedded progress bar. 
+           Specifies the horizontal padding on either end for an embedded progress bar.
 
 
           <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
@@ -2154,7 +2154,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Specifies a style resource to use for an embedded progress bar. 
+           Specifies a style resource to use for an embedded progress bar.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -2166,7 +2166,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Specifies subtitle text used for navigationMode="normal" 
+           Specifies subtitle text used for navigationMode="normal"
 
 
           <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
@@ -2182,7 +2182,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Specifies a style to use for subtitle text. 
+           Specifies a style to use for subtitle text.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -2194,7 +2194,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Specifies title text used for navigationMode="normal" 
+           Specifies title text used for navigationMode="normal"
 
 
           <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
@@ -2210,7 +2210,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Specifies a style to use for title text. 
+           Specifies a style to use for title text.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -2263,7 +2263,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Specifies a background for the action mode bar. 
+           Specifies a background for the action mode bar.
 
 
           <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -2277,7 +2277,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Specifies a background for the split action mode bar. 
+           Specifies a background for the split action mode bar.
 
 
           <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -2291,7 +2291,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Specifies a fixed height for the action mode bar. 
+           Specifies a fixed height for the action mode bar.
 
 
           <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
@@ -2309,7 +2309,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Specifies a style to use for subtitle text. 
+           Specifies a style to use for subtitle text.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -2321,7 +2321,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Specifies a style to use for title text. 
+           Specifies a style to use for title text.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -2361,7 +2361,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
              as a clue about the action the chosen activity will perform. For
              example, if share activity is to be chosen the drawable should
              give a clue that sharing is to be performed.
-         
+
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -2373,7 +2373,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           The maximal number of items initially shown in the activity list. 
+           The maximal number of items initially shown in the activity list.
 
 
           <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
@@ -2386,7 +2386,7 @@ containing a value of this type.
           @attr name android:initialActivityCount
         */
         public static final int SherlockActivityChooserView_initialActivityCount = 1;
-        /**  Base attributes that are available to all groups. 
+        /**  Base attributes that are available to all groups.
            <p>Includes the following attributes:</p>
            <table>
            <colgroup align="left" />
@@ -2413,7 +2413,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Whether the items are capable of displaying a check mark. 
+           Whether the items are capable of displaying a check mark.
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_checkableBehavior}.
           @attr name android:android_checkableBehavior
         */
@@ -2421,7 +2421,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Whether the items are enabled. 
+           Whether the items are enabled.
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_enabled}.
           @attr name android:android_enabled
         */
@@ -2429,7 +2429,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           The ID of the group. 
+           The ID of the group.
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_id}.
           @attr name android:android_id
         */
@@ -2438,7 +2438,7 @@ containing a value of this type.
           <p>
           @attr description
            The category applied to all items within this group.
-             (This will be or'ed with the orderInCategory attribute.) 
+             (This will be or'ed with the orderInCategory attribute.)
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_menuCategory}.
           @attr name android:android_menuCategory
         */
@@ -2447,7 +2447,7 @@ containing a value of this type.
           <p>
           @attr description
            The order within the category applied to all items within this group.
-             (This will be or'ed with the category attribute.) 
+             (This will be or'ed with the category attribute.)
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_orderInCategory}.
           @attr name android:android_orderInCategory
         */
@@ -2455,12 +2455,12 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Whether the items are shown/visible. 
+           Whether the items are shown/visible.
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_visible}.
           @attr name android:android_visible
         */
         public static final int SherlockMenuGroup_android_visible = 2;
-        /**  Base attributes that are available to all Item objects. 
+        /**  Base attributes that are available to all Item objects.
            <p>Includes the following attributes:</p>
            <table>
            <colgroup align="left" />
@@ -2517,7 +2517,7 @@ containing a value of this type.
           @attr description
            An optional layout to be used as an action view.
              See {@link android.view.MenuItem#setActionView(android.view.View)}
-             for more info. 
+             for more info.
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_actionLayout}.
           @attr name android:android_actionLayout
         */
@@ -2528,7 +2528,7 @@ containing a value of this type.
            The name of an optional ActionProvider class to instantiate an action view
              and perform operations such as default action for that menu item.
              See {@link android.view.MenuItem#setActionProvider(android.view.ActionProvider)}
-             for more info. 
+             for more info.
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_actionProviderClass}.
           @attr name android:android_actionProviderClass
         */
@@ -2538,7 +2538,7 @@ containing a value of this type.
           @attr description
            The name of an optional View class to instantiate and use as an
              action view. See {@link android.view.MenuItem#setActionView(android.view.View)}
-             for more info. 
+             for more info.
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_actionViewClass}.
           @attr name android:android_actionViewClass
         */
@@ -2547,7 +2547,7 @@ containing a value of this type.
           <p>
           @attr description
            The alphabetic shortcut key.  This is the shortcut when using a keyboard
-             with alphabetic keys. 
+             with alphabetic keys.
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_alphabeticShortcut}.
           @attr name android:android_alphabeticShortcut
         */
@@ -2555,7 +2555,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Whether the item is capable of displaying a check mark. 
+           Whether the item is capable of displaying a check mark.
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_checkable}.
           @attr name android:android_checkable
         */
@@ -2564,7 +2564,7 @@ containing a value of this type.
           <p>
           @attr description
            Whether the item is checked.  Note that you must first have enabled checking with
-             the checkable attribute or else the check mark will not appear. 
+             the checkable attribute or else the check mark will not appear.
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_checked}.
           @attr name android:android_checked
         */
@@ -2572,7 +2572,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Whether the item is enabled. 
+           Whether the item is enabled.
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_enabled}.
           @attr name android:android_enabled
         */
@@ -2581,7 +2581,7 @@ containing a value of this type.
           <p>
           @attr description
            The icon associated with this item.  This icon will not always be shown, so
-             the title should be sufficient in describing this item. 
+             the title should be sufficient in describing this item.
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_icon}.
           @attr name android:android_icon
         */
@@ -2589,7 +2589,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           The ID of the item. 
+           The ID of the item.
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_id}.
           @attr name android:android_id
         */
@@ -2598,7 +2598,7 @@ containing a value of this type.
           <p>
           @attr description
            The category applied to the item.
-             (This will be or'ed with the orderInCategory attribute.) 
+             (This will be or'ed with the orderInCategory attribute.)
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_menuCategory}.
           @attr name android:android_menuCategory
         */
@@ -2607,7 +2607,7 @@ containing a value of this type.
           <p>
           @attr description
            The numeric shortcut key.  This is the shortcut when using a numeric (e.g., 12-key)
-             keyboard. 
+             keyboard.
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_numericShortcut}.
           @attr name android:android_numericShortcut
         */
@@ -2616,7 +2616,7 @@ containing a value of this type.
           <p>
           @attr description
            Name of a method on the Context used to inflate the menu that will be
-             called when the item is clicked. 
+             called when the item is clicked.
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_onClick}.
           @attr name android:android_onClick
         */
@@ -2625,7 +2625,7 @@ containing a value of this type.
           <p>
           @attr description
            The order within the category applied to the item.
-             (This will be or'ed with the category attribute.) 
+             (This will be or'ed with the category attribute.)
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_orderInCategory}.
           @attr name android:android_orderInCategory
         */
@@ -2633,7 +2633,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           How this item should display in the Action Bar, if present. 
+           How this item should display in the Action Bar, if present.
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_showAsAction}.
           @attr name android:android_showAsAction
         */
@@ -2641,7 +2641,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           The title associated with the item. 
+           The title associated with the item.
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_title}.
           @attr name android:android_title
         */
@@ -2650,7 +2650,7 @@ containing a value of this type.
           <p>
           @attr description
            The condensed title associated with the item.  This is used in situations where the
-             normal title may be too long to be displayed. 
+             normal title may be too long to be displayed.
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_titleCondensed}.
           @attr name android:android_titleCondensed
         */
@@ -2658,7 +2658,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Whether the item is shown/visible. 
+           Whether the item is shown/visible.
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_visible}.
           @attr name android:android_visible
         */
@@ -2694,7 +2694,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Default background for the menu header. 
+           Default background for the menu header.
 
 
           <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -2708,7 +2708,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Default horizontal divider between rows of menu items. 
+           Default horizontal divider between rows of menu items.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -2720,7 +2720,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Default background for each menu item. 
+           Default background for each menu item.
 
 
           <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -2734,7 +2734,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Default disabled icon alpha for each menu item that shows an icon. 
+           Default disabled icon alpha for each menu item that shows an icon.
 
 
           <p>Must be a floating point value, such as "<code>1.2</code>".
@@ -2750,7 +2750,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Default appearance of menu item text. 
+           Default appearance of menu item text.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -2762,7 +2762,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Whether space should be reserved in layout when an icon is missing. 
+           Whether space should be reserved in layout when an icon is missing.
 
 
           <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
@@ -2778,7 +2778,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Default vertical divider between menu items. 
+           Default vertical divider between menu items.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -2790,7 +2790,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Default animations for the menu. 
+           Default animations for the menu.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -2834,7 +2834,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
           <p>
           @attr description
            Horizontal offset from the spinner widget for positioning the dropdown
-             in spinnerMode="dropdown". 
+             in spinnerMode="dropdown".
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_dropDownHorizontalOffset}.
           @attr name android:android_dropDownHorizontalOffset
         */
@@ -2842,7 +2842,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           List selector to use for spinnerMode="dropdown" display. 
+           List selector to use for spinnerMode="dropdown" display.
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_dropDownSelector}.
           @attr name android:android_dropDownSelector
         */
@@ -2851,7 +2851,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
           <p>
           @attr description
            Vertical offset from the spinner widget for positioning the dropdown in
-             spinnerMode="dropdown". 
+             spinnerMode="dropdown".
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_dropDownVerticalOffset}.
           @attr name android:android_dropDownVerticalOffset
         */
@@ -2859,7 +2859,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Width of the dropdown in spinnerMode="dropdown". 
+           Width of the dropdown in spinnerMode="dropdown".
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_dropDownWidth}.
           @attr name android:android_dropDownWidth
         */
@@ -2867,7 +2867,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Gravity setting for positioning the currently selected item. 
+           Gravity setting for positioning the currently selected item.
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_gravity}.
           @attr name android:android_gravity
         */
@@ -2875,7 +2875,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Background drawable to use for the dropdown in spinnerMode="dropdown". 
+           Background drawable to use for the dropdown in spinnerMode="dropdown".
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_popupBackground}.
           @attr name android:android_popupBackground
         */
@@ -2885,7 +2885,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
           @attr description
            Reference to a layout to use for displaying a prompt in the dropdown for
              spinnerMode="dropdown". This layout must contain a TextView with the id
-             @android:id/text1 to be populated with the prompt text. 
+             @android:id/text1 to be populated with the prompt text.
           <p>This is a private symbol.
           @attr name android:android_popupPromptView
         */
@@ -2893,7 +2893,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           The prompt to display when the spinner's dialog is shown. 
+           The prompt to display when the spinner's dialog is shown.
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_prompt}.
           @attr name android:android_prompt
         */
@@ -3035,7 +3035,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Specified if we are forcing an action item overflow menu. 
+           Specified if we are forcing an action item overflow menu.
 
 
           <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
@@ -3051,7 +3051,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Custom divider drawable to use for elements in the action bar. 
+           Custom divider drawable to use for elements in the action bar.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -3063,7 +3063,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Custom item state list drawable background for action bar items. 
+           Custom item state list drawable background for action bar items.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -3076,7 +3076,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
           <p>
           @attr description
            Size of the Action Bar, including the contextual
-             bar used to present Action Modes. 
+             bar used to present Action Modes.
 
 
           <p>May be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
@@ -3105,7 +3105,7 @@ containing a value of this type.
            Reference to a style for the split Action Bar. This style
              controls the split component that holds the menu/action
              buttons. actionBarStyle is still used for the primary
-             bar. 
+             bar.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -3117,7 +3117,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Reference to a style for the Action Bar 
+           Reference to a style for the Action Bar
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -3139,7 +3139,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Default style for tabs within an action bar 
+           Default style for tabs within an action bar
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -3200,7 +3200,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
           <p>
           @attr description
            TextAppearance style that will be applied to text that
-             appears within action menu items. 
+             appears within action menu items.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -3212,7 +3212,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Color for text that appears within action menu items. 
+           Color for text that appears within action menu items.
 
 
           <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -3226,7 +3226,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Background drawable to use for action mode UI 
+           Background drawable to use for action mode UI
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -3248,7 +3248,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Drawable to use for the close action mode button 
+           Drawable to use for the close action mode button
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -3260,7 +3260,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           PopupWindow style to use for action modes when showing as a window overlay. 
+           PopupWindow style to use for action modes when showing as a window overlay.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -3272,7 +3272,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Drawable to use for the Share action button in WebView selection action modes 
+           Drawable to use for the Share action button in WebView selection action modes
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -3284,7 +3284,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Background drawable to use for action mode UI in the lower split bar 
+           Background drawable to use for action mode UI in the lower split bar
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -3326,7 +3326,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Drawable used as a background for activated items. 
+           Drawable used as a background for activated items.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -3338,7 +3338,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Default ActivityChooserView style. 
+           Default ActivityChooserView style.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -3356,7 +3356,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Small Button style. 
+           Small Button style.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -3368,7 +3368,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Drawable to use for generic vertical dividers. 
+           Drawable to use for generic vertical dividers.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -3426,7 +3426,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           A smaller, sleeker list item height. 
+           A smaller, sleeker list item height.
 
 
           <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
@@ -3444,7 +3444,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           The preferred padding along the left edge of list items. 
+           The preferred padding along the left edge of list items.
 
 
           <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
@@ -3462,7 +3462,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           The preferred padding along the right edge of list items. 
+           The preferred padding along the right edge of list items.
 
 
           <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
@@ -3510,7 +3510,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Text color, typeface, size, and style for the text inside of a popup menu. 
+           Text color, typeface, size, and style for the text inside of a popup menu.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -3522,7 +3522,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           The preferred TextAppearance for the primary text of small list items. 
+           The preferred TextAppearance for the primary text of small list items.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -3534,7 +3534,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Text color, typeface, size, and style for "small" text. Defaults to secondary text color. 
+           Text color, typeface, size, and style for "small" text. Defaults to secondary text color.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -3546,7 +3546,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Text color, typeface, size, and style for small text inside of a popup menu. 
+           Text color, typeface, size, and style for small text inside of a popup menu.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -3646,7 +3646,7 @@ containing a value of this type.
           <p>
           @attr description
            This Drawable is overlaid over the foreground of the Window's content area, usually
-             to place a shadow below the title.  
+             to place a shadow below the title.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -3758,7 +3758,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Color of regular titles. 
+           Color of regular titles.
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_textColor}.
           @attr name android:android_textColor
         */
@@ -3766,7 +3766,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Size of title text. 
+           Size of title text.
           <p>This corresponds to the global attribute          resource symbol {@link ru.myshows.activity.R.attr#android_textSize}.
           @attr name android:android_textSize
         */
@@ -3774,7 +3774,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Screen edge padding. 
+           Screen edge padding.
 
 
           <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
@@ -3792,7 +3792,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Color of the footer line and indicator. 
+           Color of the footer line and indicator.
 
 
           <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
@@ -3809,7 +3809,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Height of the indicator above the footer line. 
+           Height of the indicator above the footer line.
 
 
           <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
@@ -3827,7 +3827,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Style of the indicator. Default is triangle. 
+           Style of the indicator. Default is triangle.
 
 
           <p>Must be one of the following constant values.</p>
@@ -3847,7 +3847,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Left and right padding of the underline indicator. 
+           Left and right padding of the underline indicator.
 
 
           <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
@@ -3865,7 +3865,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Height of the footer line. 
+           Height of the footer line.
 
 
           <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
@@ -3883,7 +3883,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Padding between the bottom of the title and the footer. 
+           Padding between the bottom of the title and the footer.
 
 
           <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
@@ -3901,7 +3901,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Whether or not the selected item is displayed as bold. 
+           Whether or not the selected item is displayed as bold.
 
 
           <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
@@ -3917,7 +3917,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Color of the selected title. 
+           Color of the selected title.
 
 
           <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
@@ -3934,7 +3934,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Padding between titles when bumping into each other. 
+           Padding between titles when bumping into each other.
 
 
           <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
@@ -3952,7 +3952,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Padding between titles and the top of the View. 
+           Padding between titles and the top of the View.
 
 
           <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
@@ -3989,7 +3989,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Length of the delay to fade the indicator. 
+           Length of the delay to fade the indicator.
 
 
           <p>Must be an integer value, such as "<code>100</code>".
@@ -4005,7 +4005,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Length of the indicator fade to transparent. 
+           Length of the indicator fade to transparent.
 
 
           <p>Must be an integer value, such as "<code>100</code>".
@@ -4021,7 +4021,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Whether or not the selected indicator fades. 
+           Whether or not the selected indicator fades.
 
 
           <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
@@ -4037,7 +4037,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Color of the selected line that represents the current page. 
+           Color of the selected line that represents the current page.
 
 
           <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
@@ -4076,7 +4076,7 @@ containing a value of this type.
         /**
           <p>
           @attr description
-           Style of the circle indicator. 
+           Style of the circle indicator.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -4088,7 +4088,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Style of the line indicator. 
+           Style of the line indicator.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -4100,7 +4100,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Style of the tab indicator's tabs. 
+           Style of the tab indicator's tabs.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -4112,7 +4112,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Style of the title indicator. 
+           Style of the title indicator.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -4124,7 +4124,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**
           <p>
           @attr description
-           Style of the underline indicator. 
+           Style of the underline indicator.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.graphics.Typeface;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
+import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -51,16 +52,17 @@ public class MyShows extends Application {
 
         // init image loader
         DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .cacheInMemory()
-                .cacheOnDisc()
+                .cacheInMemory(true)
+                .cacheOnDisc(true)
                 .build();
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
                 .threadPoolSize(3)
                 .threadPriority(Thread.NORM_PRIORITY)
-                .discCache(new UnlimitedDiscCache( /*Utils.isSdAvailable() ? Utils.CACHE_DIR : */ getApplicationContext().getCacheDir()))
-                .denyCacheImageMultipleSizesInMemory()
+                .discCache(new UnlimitedDiscCache(getApplicationContext().getCacheDir()))
+                .memoryCache(new LruMemoryCache(2 * 1024 * 1024))
                 .defaultDisplayImageOptions(options)
+                .denyCacheImageMultipleSizesInMemory()
                 .build();
 
         ImageLoader.getInstance().init(config);

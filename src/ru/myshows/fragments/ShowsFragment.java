@@ -172,31 +172,7 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
             IShow show = shows.get(position);
             if (show != null) {
 
-                ImageLoader.getInstance().displayImage(show.getImageUrl(), holder.logo, new ImageLoadingListener() {
-                    @Override
-                    public void onLoadingStarted() {
-                        //holder.logo.setImageResource(R.drawable.ic_list_logo);
-                       // holder.logo.setScaleType(ImageView.ScaleType.CENTER);
-                    }
-
-                    @Override
-                    public void onLoadingFailed(FailReason failReason) {
-                    }
-
-                    @Override
-                    public void onLoadingComplete() {
-                        holder.logo.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        if (!holder.isAnimated){
-                            Animation myFadeInAnimation = AnimationUtils.loadAnimation(context, R.anim.list_images);
-                            holder.logo.startAnimation(myFadeInAnimation);
-                        }
-                        holder.isAnimated = true;
-                    }
-
-                    @Override
-                    public void onLoadingCancelled() {
-                    }
-                });
+                ImageLoader.getInstance().displayImage(show.getImageUrl(), holder.logo);
 
                 holder.title.setText(show.getTitle());
                 // UserShow userShow = MyShows.getUserShow(show.getShowId());
@@ -206,10 +182,8 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
 
                     if (show.getWatchStatus().equals(MyShowsApi.STATUS.watching)) {
                         int unwatched = getUnwatchedEpisodesCount(show.getShowId());
-                        String value = "";
                         if (unwatched > 0)
-                            value = String.valueOf(unwatched);
-                        holder.unwatched.setText(value);
+                            holder.unwatched.setText(unwatched + "");
                     }
                 }
 

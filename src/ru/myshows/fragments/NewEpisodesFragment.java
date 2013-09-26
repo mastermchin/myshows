@@ -5,11 +5,11 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
@@ -33,7 +33,7 @@ import java.util.*;
  * Time: 1:10
  * To change this template use File | Settings | File Templates.
  */
-public class NewEpisodesFragment extends SherlockFragment implements TaskListener<List<Episode>>, Taskable {
+public class NewEpisodesFragment extends Fragment implements TaskListener<List<Episode>>, Taskable {
 
     private MyExpandableListAdapter adapter;
     private RelativeLayout rootView;

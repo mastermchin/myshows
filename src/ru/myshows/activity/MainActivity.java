@@ -57,30 +57,8 @@ public class MainActivity extends SherlockFragmentActivity {
         pagerTabStrip = (PagerTabStrip) findViewById(R.id.pagerTabStrip);
         pagerTabStrip.setTabIndicatorColorResource(R.color.light_red);
 
-
-
-//        indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageSelected(int position) {
-//                if (!MyShows.isLoggedIn)
-//                    return;
-//                Fragment currentFragment = getFragment(position);
-//                ((Taskable) currentFragment).executeTask();
-//            }
-//
-//            @Override
-//            public void onPageScrolled(int i, float v, int i1) {
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int i) {
-//            }
-//        });
-
-
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         getSupportActionBar().setIcon(R.drawable.ic_list_logo);
 
         BitmapDrawable bg = (BitmapDrawable) getResources().getDrawable(R.drawable.stripe_red);
@@ -194,10 +172,6 @@ public class MainActivity extends SherlockFragmentActivity {
             pager.setCurrentItem(savedInstanceState.getInt("currentTab"));
 
 
-
-//        Fragment f = getFragment(pager.getCurrentItem());
-//        if (f instanceof Taskable)
-//            ((Taskable) f).executeTask();
 
     }
 

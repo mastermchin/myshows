@@ -272,6 +272,7 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
             holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    // TODO NPE HERE???
                     UserShow userShow = (UserShow) getGroup(gp);
                     episode.setChecked(isChecked);
                     if (!isChecked && userShow.isChecked()) {

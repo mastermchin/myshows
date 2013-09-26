@@ -16,7 +16,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import ru.myshows.adapters.TabsAdapter;
@@ -28,11 +27,8 @@ import ru.myshows.util.Settings;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: GGobozov
- * Date: 12.05.2011
- * Time: 15:47:52
- * To change this template use File | Settings | File Templates.
+ * @Author: Georgy Gobozov
+ * @Date: 12.05.2011
  */
 public class MainActivity extends SherlockFragmentActivity {
 

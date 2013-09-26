@@ -20,8 +20,7 @@ import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
 import ru.myshows.api.MyShowsApi;
 import ru.myshows.domain.*;
-import ru.myshows.tasks.BaseTask;
-import ru.myshows.tasks.GetNewEpisodesTask;
+import ru.myshows.tasks.*;
 import ru.myshows.util.EpisodeComparator;
 import ru.myshows.util.Settings;
 
@@ -71,15 +70,20 @@ public class EpisodesFragment extends SherlockFragment {
         this.inflater = inflater;
         View view = inflater.inflate(R.layout.episodes, container, false);
         episodesList = (ExpandableListView) view.findViewById(R.id.episodes_list);
-        if (savedInstanceState != null && show == null) {
-            int showId = savedInstanceState.getInt("showId");
-            show = MyShows.client.getShowInfo(showId);
-            populateWatchedEpisodes(show, MyShows.client.getSeenEpisodes(showId));
-        }
-        refresh(show);
         return view;
     }
 
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null && show == null) {
+            show = (Show) savedInstanceState.getSerializable("show");
+            refresh(show);
+        } else {
+            refresh(show);
+        }
+    }
 
     private void populateWatchedEpisodes(Show show, List<WatchedEpisode> episodes) {
         if (episodes == null || episodes.size() == 0) return;
@@ -131,9 +135,11 @@ public class EpisodesFragment extends SherlockFragment {
 
         @Override
         public void onResult(Boolean result) {
-            Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
-            if (result) {
-                new GetNewEpisodesTask(getActivity(), true).execute();
+            if (isAdded()) {
+                Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
+                if (result) {
+                    new GetNewEpisodesTask(getActivity(), true).execute();
+                }
             }
 
         }
@@ -148,7 +154,8 @@ public class EpisodesFragment extends SherlockFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("showId", show.getShowId());
+        if (show != null)
+            outState.putSerializable("show", show);
     }
 
     public class MyExpandableListAdapter extends BaseExpandableListAdapter {

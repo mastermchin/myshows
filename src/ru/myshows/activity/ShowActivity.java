@@ -209,19 +209,11 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
             links.add(new SiteLink("TV Rage", "http://www.tvrage.com/shows/id-" + show.getTvrageId()));
         LinksAdapter linkAdapter = new LinksAdapter(this, R.layout.external_link, links);
 
-//        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-//        getSupportActionBar().setListNavigationCallbacks(linkAdapter, new ActionBar.OnNavigationListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-//                getSupportActionBar().setSelectedNavigationItem(0);
-//                return false;
-//            }
-//        });
-
 
         View customNav = LayoutInflater.from(this).inflate(R.layout.custom_show_action_bar, null);
         IcsSpinner spinner = (IcsSpinner) customNav.findViewById(R.id.spinner);
         spinner.setAdapter(linkAdapter);
+
 
 
         ImageView refresh = (ImageView) customNav.findViewById(R.id.refresh);
@@ -350,9 +342,14 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("showId", showId);
-        outState.putStringArray("titles", tabsAdapter.getTitles().toArray(new String[0]));
-        outState.putInt("tabsCount", tabsAdapter.getCount());
-        outState.putInt("currentTab", pager.getCurrentItem());
+        if (tabsAdapter != null) {
+            outState.putInt("tabsCount", tabsAdapter.getCount());
+            List<String> titles = tabsAdapter.getTitles();
+            outState.putStringArray("titles", titles.toArray(new String[titles.size()]));
+        }
+        if (pager != null)
+            outState.putInt("currentTab", pager.getCurrentItem());
+
     }
 
     private Fragment getFragment(int position) {

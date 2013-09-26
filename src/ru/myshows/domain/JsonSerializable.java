@@ -2,6 +2,8 @@ package ru.myshows.domain;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by IntelliJ IDEA.
  * User: GGobozov
@@ -9,7 +11,7 @@ import org.json.JSONObject;
  * Time: 16:07:17
  * To change this template use File | Settings | File Templates.
  */
-public interface JsonSerializable {
+public interface JsonSerializable extends Serializable {
 
     Object formJSONObject(JSONObject json);
 

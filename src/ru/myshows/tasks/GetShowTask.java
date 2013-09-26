@@ -37,6 +37,10 @@ public class GetShowTask extends BaseTask<Show> {
         Show show = MyShows.client.getShowInfo(showId);
         populateGenres(show, MyShows.client.getGenresListAsMap());
         populateWatchedEpisodes(show, MyShows.client.getSeenEpisodes(showId));
+
+        if (MyShows.userShows == null)
+            MyShows.userShows =  MyShows.client.getShows();
+
         return show;
     }
 

@@ -66,7 +66,8 @@ public class ProfileFragment extends Fragment implements TaskListener<Profile>, 
 
     @Override
     public void onTaskComplete(Profile result) {
-        populateUI(result, result.getStats());
+        if (isAdded())
+            populateUI(result);
         progress.setIndeterminate(false);
         progress.setVisibility(View.GONE);
         scrollView.setVisibility(View.VISIBLE);
@@ -75,7 +76,7 @@ public class ProfileFragment extends Fragment implements TaskListener<Profile>, 
 
     @Override
     public void onTaskFailed(Exception e) {
-        if (e != null){
+        if (e != null) {
             progress.setVisibility(View.GONE);
         }
         final AlertDialog alert;
@@ -92,7 +93,6 @@ public class ProfileFragment extends Fragment implements TaskListener<Profile>, 
         alert = builder.create();
         alert.show();
     }
-
 
 
     @Override
@@ -113,33 +113,40 @@ public class ProfileFragment extends Fragment implements TaskListener<Profile>, 
         profileTask.execute(Settings.getString(Settings.KEY_LOGIN));
     }
 
-    private void populateUI(Profile profile, ProfileStats stats) {
+    private void populateUI(Profile profile) {
 
+        if (profile == null)
+            return;
 
         avatar = (ImageView) mainView.findViewById(R.id.avatar);
         if (profile.getAvatarUrl() != null) {
             ImageLoader.getInstance().displayImage(profile.getAvatarUrl(), avatar);
         }
 
-        nickName = (TextView) mainView.findViewById(R.id.profile_name);
-        nickName.setText(profile.getLogin());
+        ProfileStats stats = profile.getStats();
+        if (stats != null) {
+
+            nickName = (TextView) mainView.findViewById(R.id.profile_name);
+            nickName.setText(profile.getLogin());
 
 
-        episodesBar = (TextProgressBar) mainView.findViewById(R.id.episodes_bar);
-        episodesBar.setMax(stats.getWatchedEpisodes() + stats.getRemainingEpisodes());
-        episodesBar.setProgress(stats.getWatchedEpisodes());
-        episodesBar.setText(stats.getWatchedEpisodes() + "/" + (stats.getWatchedEpisodes() + stats.getRemainingEpisodes()));
+            episodesBar = (TextProgressBar) mainView.findViewById(R.id.episodes_bar);
+            episodesBar.setMax(stats.getWatchedEpisodes() + stats.getRemainingEpisodes());
+            episodesBar.setProgress(stats.getWatchedEpisodes());
+            episodesBar.setText(stats.getWatchedEpisodes() + "/" + (stats.getWatchedEpisodes() + stats.getRemainingEpisodes()));
 
 
-        hoursBar = (TextProgressBar) mainView.findViewById(R.id.hours_bar);
-        hoursBar.setMax((int) stats.getWatchedHours().doubleValue() + (int) stats.getRemainingHours().doubleValue());
-        hoursBar.setProgress((int) stats.getWatchedHours().doubleValue());
-        hoursBar.setText((int) stats.getWatchedHours().doubleValue() + "/" + (int) (stats.getWatchedHours() + stats.getRemainingHours()));
+            hoursBar = (TextProgressBar) mainView.findViewById(R.id.hours_bar);
+            hoursBar.setMax((int) stats.getWatchedHours().doubleValue() + (int) stats.getRemainingHours().doubleValue());
+            hoursBar.setProgress((int) stats.getWatchedHours().doubleValue());
+            hoursBar.setText((int) stats.getWatchedHours().doubleValue() + "/" + (int) (stats.getWatchedHours() + stats.getRemainingHours()));
 
-        daysBar = (TextProgressBar) mainView.findViewById(R.id.days_bar);
-        daysBar.setMax(stats.getWatchedDays() + stats.getRemainingDays());
-        daysBar.setProgress(stats.getWatchedDays());
-        daysBar.setText(stats.getWatchedDays() + "/" + (stats.getWatchedDays() + stats.getRemainingDays()));
+            daysBar = (TextProgressBar) mainView.findViewById(R.id.days_bar);
+            daysBar.setMax(stats.getWatchedDays() + stats.getRemainingDays());
+            daysBar.setProgress(stats.getWatchedDays());
+            daysBar.setText(stats.getWatchedDays() + "/" + (stats.getWatchedDays() + stats.getRemainingDays()));
+
+        }
 
         Log.d("MyShows", "Current login = " + profile.getLogin());
         Log.d("MyShows", "Current user = " + Settings.getString(Settings.KEY_LOGIN));

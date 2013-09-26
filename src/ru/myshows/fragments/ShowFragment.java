@@ -63,21 +63,24 @@ public class ShowFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.show, container, false);
-
-        if (savedInstanceState != null && show == null) {
-            int showId = savedInstanceState.getInt("showId");
-            if (MyShows.userShows == null)
-                MyShows.userShows = MyShows.client.getShows();
-            show = MyShows.client.getShowInfo(showId);
-            UserShow userShow = MyShows.getUserShow(showId);
-            show.setWatchStatus(userShow == null ? MyShowsApi.STATUS.remove :userShow.getWatchStatus());
-            watchStatus = show.getWatchStatus();
-            yoursRating = savedInstanceState.getDouble("yoursRating");
-        }
-        populateUI(show);
         return view;
     }
 
+    @Override
+    public void onActivityCreated(final Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null && show == null) {
+            show = (Show) savedInstanceState.getSerializable("show");
+            UserShow userShow = MyShows.getUserShow(show.getShowId());
+            show.setWatchStatus(userShow == null ? MyShowsApi.STATUS.remove : userShow.getWatchStatus());
+            watchStatus = show.getWatchStatus();
+            yoursRating = savedInstanceState.getDouble("yoursRating");
+            populateUI(show);
+        } else {
+            populateUI(show);
+        }
+
+    }
 
     private void populateUI(Show show) {
         showLogo = (ImageView) view.findViewById(R.id.show_logo);
@@ -133,7 +136,6 @@ public class ShowFragment extends Fragment {
                 }
             });
 
-            // show status buttons
             statusButtonsLayoyt.setVisibility(View.VISIBLE);
             updateStatusButtons();
         }
@@ -144,8 +146,12 @@ public class ShowFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("showId", show.getShowId());
-        outState.putDouble("yoursRating", yoursRating);
+        if (show != null){
+            outState.putSerializable("show", show);
+        }
+        if (yoursRating != null)
+            outState.putDouble("yoursRating", yoursRating);
+
     }
 
     public class ChangeShowRatioTask extends BaseTask<Boolean> {
@@ -164,7 +170,8 @@ public class ShowFragment extends Fragment {
 
         @Override
         public void onResult(Boolean result) {
-            Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
+            if (isAdded())
+                Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
             if (result) {
                 UserShow us = MyShows.getUserShow(show.getShowId());
                 if (us != null)
@@ -180,19 +187,19 @@ public class ShowFragment extends Fragment {
     }
 
     private void updateStatusButtons() {
-        boolean isWatching = watchStatus.equals(MyShowsApi.STATUS.watching) || watchStatus.equals(MyShowsApi.STATUS.finished);
-        watchingButton.setBackgroundDrawable(isWatching ? getResources().getDrawable(R.drawable.red_label) : null);
+        if (isAdded()) {
+            boolean isWatching = watchStatus.equals(MyShowsApi.STATUS.watching) || watchStatus.equals(MyShowsApi.STATUS.finished);
+            watchingButton.setBackgroundDrawable(isWatching ? getResources().getDrawable(R.drawable.red_label) : null);
 
-        boolean isLater = watchStatus.equals(MyShowsApi.STATUS.later);
-        willWatchButton.setBackgroundDrawable(isLater ? getResources().getDrawable(R.drawable.red_label) : null);
+            boolean isLater = watchStatus.equals(MyShowsApi.STATUS.later);
+            willWatchButton.setBackgroundDrawable(isLater ? getResources().getDrawable(R.drawable.red_label) : null);
 
-        boolean isCancelled = watchStatus.equals(MyShowsApi.STATUS.cancelled);
-        cancelledButton.setBackgroundDrawable(isCancelled ? getResources().getDrawable(R.drawable.red_label) : null);
+            boolean isCancelled = watchStatus.equals(MyShowsApi.STATUS.cancelled);
+            cancelledButton.setBackgroundDrawable(isCancelled ? getResources().getDrawable(R.drawable.red_label) : null);
 
-        boolean isRemove = watchStatus.equals(MyShowsApi.STATUS.remove);
-        removeButton.setBackgroundDrawable(isRemove ? getResources().getDrawable(R.drawable.red_label) : null);
-
-
+            boolean isRemove = watchStatus.equals(MyShowsApi.STATUS.remove);
+            removeButton.setBackgroundDrawable(isRemove ? getResources().getDrawable(R.drawable.red_label) : null);
+        }
     }
 
     public void changeShowStatus(View v) {
@@ -241,7 +248,8 @@ public class ShowFragment extends Fragment {
 
         @Override
         public void onResult(Boolean result) {
-            Toast.makeText(context, result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
+            if (isAdded())
+                Toast.makeText(context, result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
             if (result) {
                 show.setWatchStatus(watchStatus);
                 UserShow us = MyShows.getUserShow(show.getShowId());
@@ -258,8 +266,9 @@ public class ShowFragment extends Fragment {
                     }
                 }
                 MyShows.isUserShowsChanged = true;
-                updateStatusButtons();
                 yoursRatingBar.setIsIndicator(watchStatus.equals(MyShowsApi.STATUS.remove));
+                updateStatusButtons();
+
             }
         }
 

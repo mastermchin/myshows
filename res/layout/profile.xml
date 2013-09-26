@@ -9,7 +9,6 @@
 
     <ProgressBar
             android:id="@+id/progress_profile"
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:indeterminate="true"
@@ -19,6 +18,7 @@
     <ScrollView android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:id="@+id/scroll_layout"
+                android:visibility="gone"
             >
         <RelativeLayout android:layout_width="fill_parent"
                         android:layout_height="fill_parent"

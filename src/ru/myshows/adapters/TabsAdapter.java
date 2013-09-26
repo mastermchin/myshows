@@ -28,6 +28,8 @@ public class TabsAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+        if (fragments == null)
+            return null;
         return fragments.get(position);
     }
 

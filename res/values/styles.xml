@@ -2,10 +2,9 @@
 <resources>
 
 
-     <style name="Theme.MyShows" parent="Theme.Sherlock.ForceOverflow">
+     <style name="Theme.MyShows" parent="Theme.Sherlock">
          <item name="actionBarStyle">@style/MyShows.ActionBar</item>
          <item name="android:actionBarStyle">@style/MyShows.ActionBar</item>
-         <item name="vpiTitlePageIndicatorStyle">@style/CustomTitlePageIndicator</item>
          <item name="android:listViewStyle">@style/MyShows.ListView</item>
          <item name="android:editTextStyle">@style/MyShows.EditText</item>
          <item name="actionModeCloseDrawable">@drawable/ic_exit</item>
@@ -30,17 +29,6 @@
 
     </style>
 
-
-    <style name="CustomTitlePageIndicator">
-        <item name="android:background">@android:color/transparent</item>
-        <item name="footerColor">@color/dark_red</item>
-        <item name="footerLineHeight">1dp</item>
-        <item name="footerIndicatorHeight">3dp</item>
-        <item name="footerIndicatorStyle">underline</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="selectedColor">@color/white</item>
-        <item name="selectedBold">true</item>
-    </style>
 
 
 

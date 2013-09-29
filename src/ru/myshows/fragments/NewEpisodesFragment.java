@@ -5,17 +5,16 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
-import android.view.*;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
-import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
-import ru.myshows.adapters.SectionedAdapter;
 import ru.myshows.components.RatingDialog;
 import ru.myshows.domain.Episode;
-import ru.myshows.domain.Season;
 import ru.myshows.domain.UserShow;
 import ru.myshows.tasks.BaseTask;
 import ru.myshows.tasks.GetNewEpisodesTask;
@@ -34,7 +33,7 @@ import java.util.*;
  * Time: 1:10
  * To change this template use File | Settings | File Templates.
  */
-public class NewEpisodesFragment extends SherlockFragment implements TaskListener<List<Episode>>, Taskable {
+public class NewEpisodesFragment extends Fragment implements TaskListener<List<Episode>>, Taskable {
 
     private MyExpandableListAdapter adapter;
     private RelativeLayout rootView;
@@ -57,6 +56,12 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
         progress = (ProgressBar) rootView.findViewById(R.id.progress_new_episodes);
         list = (ExpandableListView) rootView.findViewById(R.id.new_episodes_list);
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        executeTask();
     }
 
 
@@ -113,7 +118,6 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
         alert = builder.create();
         alert.show();
     }
-
 
 
     public class MyExpandableListAdapter extends BaseExpandableListAdapter {
@@ -209,30 +213,32 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.title.setText(userShow.getTitle());
-            holder.unwatched.setVisibility(View.VISIBLE);
-            holder.unwatched.setText(getActivity().getResources().getString(R.string.unwatched) + ": " + getChildrenCount(groupPosition));
-            holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    userShow.setChecked(isChecked);
-                }
-            });
-            holder.checkBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    CheckBox checkBox = (CheckBox) v;
-                    boolean isChecked = checkBox.isChecked();
-                    for (Episode e : (List<Episode>) getGroupChildren(gp)) {
-                        e.setChecked(isChecked);
+            if (userShow != null) {
+                holder.title.setText(userShow.getTitle());
+                holder.unwatched.setVisibility(View.VISIBLE);
+                holder.unwatched.setText(getActivity().getResources().getString(R.string.unwatched) + ": " + getChildrenCount(groupPosition));
+                holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        userShow.setChecked(isChecked);
                     }
-                    SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
-                    if (mMode == null)
-                        mMode = activity.startActionMode(new CheckNewEpisodesActionMode());
-                    adapter.notifyDataSetChanged();
-                }
-            });
-            holder.checkBox.setChecked(userShow.isChecked());
+                });
+                holder.checkBox.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        CheckBox checkBox = (CheckBox) v;
+                        boolean isChecked = checkBox.isChecked();
+                        for (Episode e : (List<Episode>) getGroupChildren(gp)) {
+                            e.setChecked(isChecked);
+                        }
+                        SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
+                        if (mMode == null)
+                            mMode = activity.startActionMode(new CheckNewEpisodesActionMode());
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+                holder.checkBox.setChecked(userShow.isChecked());
+            }
             return convertView;
         }
 
@@ -266,6 +272,7 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
             holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    // TODO NPE HERE???
                     UserShow userShow = (UserShow) getGroup(gp);
                     episode.setChecked(isChecked);
                     if (!isChecked && userShow.isChecked()) {
@@ -305,6 +312,10 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
                 @Override
                 public void onClick(View v) {
                     holder.checkBox.setChecked(!holder.checkBox.isChecked());
+                    if (mMode == null){
+                        SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
+                        mMode = activity.startActionMode(new CheckNewEpisodesActionMode());
+                    }
                 }
             });
 
@@ -328,6 +339,7 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
         public boolean isChildSelectable(int groupPosition, int childPosition) {
             return true;
         }
+
 
         public boolean hasStableIds() {
             return true;
@@ -365,7 +377,8 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
                 new Thread() {
                     public void run() {
                         UserShow userShow = MyShows.getUserShow(showId);
-                        userShow.setWatchedEpisodes(userShow.getWatchedEpisodes() + episodesIds.split(",").length);
+                        if (userShow != null)
+                            userShow.setWatchedEpisodes(userShow.getWatchedEpisodes() + episodesIds.split(",").length);
                         //app.setUserShowsChanged(true);
                         MyShows.client.syncAllShowEpisodes(showId, episodesIds, null);
                     }
@@ -376,14 +389,16 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
 
         @Override
         public void onResult(Boolean result) {
-            Toast.makeText(getActivity(), exception == null ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
-            if (result) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        executeUpdateTask();
-                    }
-                }, 1000);
+            if (isAdded()) {
+                Toast.makeText(getActivity(), exception == null ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
+                if (result) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            executeUpdateTask();
+                        }
+                    }, 1000);
+                }
             }
         }
 
@@ -459,7 +474,8 @@ public class NewEpisodesFragment extends SherlockFragment implements TaskListene
 
         @Override
         public void onResult(Boolean result) {
-            Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
+            if (isAdded())
+                Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
         }
 
         @Override

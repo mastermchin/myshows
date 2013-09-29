@@ -1,15 +1,10 @@
 package ru.myshows.fragments;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +16,6 @@ import ru.myshows.api.MyShowsApi;
 import ru.myshows.domain.Episode;
 import ru.myshows.domain.Searchable;
 import ru.myshows.domain.UserShow;
-import ru.myshows.tasks.GetNewEpisodesTask;
 import ru.myshows.tasks.GetNextEpisodesTask;
 import ru.myshows.tasks.TaskListener;
 import ru.myshows.tasks.Taskable;
@@ -62,6 +56,12 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
 
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        executeTask();
+    }
+
+    @Override
     public void executeTask() {
         if (isTaskExecuted)
             return;
@@ -81,7 +81,8 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
 
     @Override
     public void onTaskComplete(List<Episode> result) {
-        list.setAdapter(populateAdapter(result));
+        if (isAdded())
+            list.setAdapter(populateAdapter(result));
         progress.setVisibility(View.GONE);
         progress.setIndeterminate(false);
         list.setVisibility(View.VISIBLE);
@@ -237,13 +238,14 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
 
 
         List<SectionedAdapter.Section> sectionList = new ArrayList<SectionedAdapter.Section>();
-
+        EpisodeComparator comparator = new EpisodeComparator("date");
         for (Map.Entry<String, List<Episode>> entry : episodesByMonth.entrySet()) {
             String dateString = entry.getKey();
             List<Episode> episodes = entry.getValue();
-            Collections.sort(episodes, new EpisodeComparator("date"));
+            Collections.sort(episodes, comparator);
             String[] array = dateString.split(":");
-            String m = getResources().getStringArray(R.array.months)[Integer.valueOf(array[0])];
+            int month = Integer.valueOf(array[0]);
+            String m = getResources() != null ? getResources().getStringArray(R.array.months)[month] : getMonth(month);
             sectionList.add(new SectionedAdapter.Section(m + " " + array[1], new EpisodesAdapter(getActivity(), R.layout.episode, episodes)));
         }
         adapter = new SectionedAdapter(getActivity(), R.layout.header, sectionList);
@@ -255,5 +257,9 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
     @Override
     public ArrayAdapter getAdapter() {
         return adapter;
+    }
+
+    public String getMonth(int month) {
+        return new DateFormatSymbols().getMonths()[month-1];
     }
 }

@@ -30,7 +30,6 @@ public class LoginFragment extends Fragment {
     private EditText loginField;
     private EditText passwordField;
     private MyShowsClient client = MyShowsClient.getInstance();
-    MyShows app;
     private LayoutInflater inflater;
 
     public LoginFragment() {
@@ -93,7 +92,8 @@ public class LoginFragment extends Fragment {
     }
 
     private void showError() {
-        Toast.makeText(getActivity(), R.string.wrong_login_or_password, Toast.LENGTH_SHORT).show();
+        if (isAdded())
+            Toast.makeText(getActivity(), R.string.wrong_login_or_password, Toast.LENGTH_SHORT).show();
     }
 
     private class LoginTask extends AsyncTask {

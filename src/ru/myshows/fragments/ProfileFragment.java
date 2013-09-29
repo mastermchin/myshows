@@ -1,11 +1,7 @@
 package ru.myshows.fragments;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -14,18 +10,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import ru.myshows.activity.MainActivity;
 import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
 import ru.myshows.api.MyShowsApi;
 import ru.myshows.components.TextProgressBar;
-import ru.myshows.domain.*;
-import ru.myshows.tasks.BaseTask;
+import ru.myshows.domain.IShow;
+import ru.myshows.domain.Profile;
+import ru.myshows.domain.ProfileStats;
+import ru.myshows.domain.UserShow;
 import ru.myshows.tasks.GetProfileTask;
 import ru.myshows.tasks.TaskListener;
 import ru.myshows.tasks.Taskable;
 import ru.myshows.util.Settings;
-import ru.myshows.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,8 +61,15 @@ public class ProfileFragment extends Fragment implements TaskListener<Profile>, 
 
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        executeTask();
+    }
+
+    @Override
     public void onTaskComplete(Profile result) {
-        populateUI(result, result.getStats());
+        if (isAdded())
+            populateUI(result);
         progress.setIndeterminate(false);
         progress.setVisibility(View.GONE);
         scrollView.setVisibility(View.VISIBLE);
@@ -75,7 +78,7 @@ public class ProfileFragment extends Fragment implements TaskListener<Profile>, 
 
     @Override
     public void onTaskFailed(Exception e) {
-        if (e != null){
+        if (e != null) {
             progress.setVisibility(View.GONE);
         }
         final AlertDialog alert;
@@ -92,7 +95,6 @@ public class ProfileFragment extends Fragment implements TaskListener<Profile>, 
         alert = builder.create();
         alert.show();
     }
-
 
 
     @Override
@@ -113,33 +115,40 @@ public class ProfileFragment extends Fragment implements TaskListener<Profile>, 
         profileTask.execute(Settings.getString(Settings.KEY_LOGIN));
     }
 
-    private void populateUI(Profile profile, ProfileStats stats) {
+    private void populateUI(Profile profile) {
 
+        if (profile == null)
+            return;
 
         avatar = (ImageView) mainView.findViewById(R.id.avatar);
         if (profile.getAvatarUrl() != null) {
             ImageLoader.getInstance().displayImage(profile.getAvatarUrl(), avatar);
         }
 
-        nickName = (TextView) mainView.findViewById(R.id.profile_name);
-        nickName.setText(profile.getLogin());
+        ProfileStats stats = profile.getStats();
+        if (stats != null) {
+
+            nickName = (TextView) mainView.findViewById(R.id.profile_name);
+            nickName.setText(profile.getLogin());
 
 
-        episodesBar = (TextProgressBar) mainView.findViewById(R.id.episodes_bar);
-        episodesBar.setMax(stats.getWatchedEpisodes() + stats.getRemainingEpisodes());
-        episodesBar.setProgress(stats.getWatchedEpisodes());
-        episodesBar.setText(stats.getWatchedEpisodes() + "/" + (stats.getWatchedEpisodes() + stats.getRemainingEpisodes()));
+            episodesBar = (TextProgressBar) mainView.findViewById(R.id.episodes_bar);
+            episodesBar.setMax(stats.getWatchedEpisodes() + stats.getRemainingEpisodes());
+            episodesBar.setProgress(stats.getWatchedEpisodes());
+            episodesBar.setText(stats.getWatchedEpisodes() + "/" + (stats.getWatchedEpisodes() + stats.getRemainingEpisodes()));
 
 
-        hoursBar = (TextProgressBar) mainView.findViewById(R.id.hours_bar);
-        hoursBar.setMax((int) stats.getWatchedHours().doubleValue() + (int) stats.getRemainingHours().doubleValue());
-        hoursBar.setProgress((int) stats.getWatchedHours().doubleValue());
-        hoursBar.setText((int) stats.getWatchedHours().doubleValue() + "/" + (int) (stats.getWatchedHours() + stats.getRemainingHours()));
+            hoursBar = (TextProgressBar) mainView.findViewById(R.id.hours_bar);
+            hoursBar.setMax((int) stats.getWatchedHours().doubleValue() + (int) stats.getRemainingHours().doubleValue());
+            hoursBar.setProgress((int) stats.getWatchedHours().doubleValue());
+            hoursBar.setText((int) stats.getWatchedHours().doubleValue() + "/" + (int) (stats.getWatchedHours() + stats.getRemainingHours()));
 
-        daysBar = (TextProgressBar) mainView.findViewById(R.id.days_bar);
-        daysBar.setMax(stats.getWatchedDays() + stats.getRemainingDays());
-        daysBar.setProgress(stats.getWatchedDays());
-        daysBar.setText(stats.getWatchedDays() + "/" + (stats.getWatchedDays() + stats.getRemainingDays()));
+            daysBar = (TextProgressBar) mainView.findViewById(R.id.days_bar);
+            daysBar.setMax(stats.getWatchedDays() + stats.getRemainingDays());
+            daysBar.setProgress(stats.getWatchedDays());
+            daysBar.setText(stats.getWatchedDays() + "/" + (stats.getWatchedDays() + stats.getRemainingDays()));
+
+        }
 
         Log.d("MyShows", "Current login = " + profile.getLogin());
         Log.d("MyShows", "Current user = " + Settings.getString(Settings.KEY_LOGIN));

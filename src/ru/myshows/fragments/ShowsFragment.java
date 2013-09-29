@@ -6,11 +6,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
-import android.util.Log;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
@@ -26,14 +25,11 @@ import ru.myshows.domain.Episode;
 import ru.myshows.domain.IShow;
 import ru.myshows.domain.Searchable;
 import ru.myshows.domain.UserShow;
-import ru.myshows.tasks.BaseTask;
 import ru.myshows.tasks.GetShowsTask;
 import ru.myshows.tasks.TaskListener;
 import ru.myshows.tasks.Taskable;
-import ru.myshows.util.EpisodeComparator;
 import ru.myshows.util.Settings;
 import ru.myshows.util.ShowsComparator;
-import ru.myshows.util.Utils;
 
 import java.util.*;
 
@@ -82,8 +78,15 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        executeTask();
+    }
+
+    @Override
     public void onTaskComplete(List<IShow> result) {
-        list.setAdapter(populateAdapter(action, result));
+        if (isAdded())
+            list.setAdapter(populateAdapter(action, result));
         progress.setVisibility(View.GONE);
         progress.setIndeterminate(false);
         list.setVisibility(View.VISIBLE);
@@ -169,31 +172,7 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
             IShow show = shows.get(position);
             if (show != null) {
 
-                ImageLoader.getInstance().displayImage(show.getImageUrl(), holder.logo, new ImageLoadingListener() {
-                    @Override
-                    public void onLoadingStarted() {
-                        //holder.logo.setImageResource(R.drawable.ic_list_logo);
-                       // holder.logo.setScaleType(ImageView.ScaleType.CENTER);
-                    }
-
-                    @Override
-                    public void onLoadingFailed(FailReason failReason) {
-                    }
-
-                    @Override
-                    public void onLoadingComplete() {
-                        holder.logo.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        if (!holder.isAnimated){
-                            Animation myFadeInAnimation = AnimationUtils.loadAnimation(context, R.anim.list_images);
-                            holder.logo.startAnimation(myFadeInAnimation);
-                        }
-                        holder.isAnimated = true;
-                    }
-
-                    @Override
-                    public void onLoadingCancelled() {
-                    }
-                });
+                ImageLoader.getInstance().displayImage(show.getImageUrl(), holder.logo);
 
                 holder.title.setText(show.getTitle());
                 // UserShow userShow = MyShows.getUserShow(show.getShowId());
@@ -203,10 +182,8 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
 
                     if (show.getWatchStatus().equals(MyShowsApi.STATUS.watching)) {
                         int unwatched = getUnwatchedEpisodesCount(show.getShowId());
-                        String value = "";
                         if (unwatched > 0)
-                            value = String.valueOf(unwatched);
-                        holder.unwatched.setText(value);
+                            holder.unwatched.setText(unwatched + "");
                     }
                 }
 

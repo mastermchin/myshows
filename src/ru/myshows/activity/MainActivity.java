@@ -30,7 +30,7 @@ import java.util.List;
  * @Author: Georgy Gobozov
  * @Date: 12.05.2011
  */
-public class MainActivity extends SherlockFragmentActivity {
+public class MainActivity extends MenuActivity {
 
     private ViewPager pager;
     private PagerTabStrip pagerTabStrip;
@@ -40,9 +40,14 @@ public class MainActivity extends SherlockFragmentActivity {
 
 
     @Override
+    protected int getContentViewId() {
+        return R.layout.main;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        //setContentView(R.layout.main);
         this.savedInstanceState = savedInstanceState;
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
@@ -53,9 +58,9 @@ public class MainActivity extends SherlockFragmentActivity {
         pagerTabStrip = (PagerTabStrip) findViewById(R.id.pagerTabStrip);
         pagerTabStrip.setTabIndicatorColorResource(R.color.light_red);
 
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setIcon(R.drawable.ic_list_logo);
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        getSupportActionBar().setDisplayShowTitleEnabled(true);
+//        getSupportActionBar().setIcon(R.drawable.ic_list_logo);
 
         BitmapDrawable bg = (BitmapDrawable) getResources().getDrawable(R.drawable.stripe_red);
         bg.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
@@ -78,6 +83,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
     @Override
     public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
+        super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
             case 1:
                 int position = pager.getCurrentItem();

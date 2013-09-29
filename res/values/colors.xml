@@ -33,6 +33,6 @@
 
 
     <color name="transparent">#00000000</color>
-
+    <color name="very_dark_gray">#ff2f2f2f</color>
 
 </resources>

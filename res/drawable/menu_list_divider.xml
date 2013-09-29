@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layer-list>
+
+
+
+    <item>
+        <inset xmlns:android="http://schemas.android.com/apk/res/android"
+               android:insetLeft="15dp"
+               android:insetRight="15dp">
+            <shape android:shape="line">
+                <stroke android:color="@color/black"/>
+                <size android:height="1dp"/>
+
+            </shape>
+
+        </inset>
+    </item>
+
+    <!--<item>-->
+        <!--<inset xmlns:android="http://schemas.android.com/apk/res/android">-->
+
+            <!--<shape android:dither="true">-->
+                <!--<gradient-->
+                        <!--android:startColor="@color/dark_gray"-->
+                        <!--android:endColor="@color/very_dark_gray"-->
+                        <!--android:angle="270"-->
+                        <!--/>-->
+                <!--<corners android:radius="2dp"/>-->
+                <!--<size android:height="2dp"/>-->
+            <!--</shape>-->
+
+        <!--</inset>-->
+
+    <!--</item>-->
+
+</layer-list>

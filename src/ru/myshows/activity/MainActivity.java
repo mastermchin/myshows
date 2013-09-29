@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
@@ -160,10 +161,10 @@ public class MainActivity extends MenuActivity {
             adapter.addFragment(new SearchFragment(), getResources().getString(R.string.tab_search_title));
 
         } else {
-            Integer  count  = savedInstanceState.getInt("tabsCount");
+            Integer count = savedInstanceState.getInt("tabsCount");
             String[] titles = savedInstanceState.getStringArray("titles");
-            for (int i = 0; i < count; i++){
-                 adapter.addFragment(getFragment(i), titles[i]);
+            for (int i = 0; i < count; i++) {
+                adapter.addFragment(getFragment(i), titles[i]);
             }
         }
 
@@ -172,7 +173,6 @@ public class MainActivity extends MenuActivity {
 
         if (savedInstanceState != null)
             pager.setCurrentItem(savedInstanceState.getInt("currentTab"));
-
 
 
     }
@@ -198,9 +198,7 @@ public class MainActivity extends MenuActivity {
     }
 
     private void getPublicTabs() {
-        //adapter.addFragment(new SearchFragment(), getResources().getString(R.string.tab_search_title));
         adapter.addFragment(new LoginFragment(), getResources().getString(R.string.tab_login_title));
-       // indicator.notifyDataSetChanged();
         adapter.notifyDataSetChanged();
     }
 
@@ -208,13 +206,9 @@ public class MainActivity extends MenuActivity {
     private class LoginTask extends AsyncTask<Object, Void, Boolean> {
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
         protected Boolean doInBackground(Object... objects) {
             if (MyShows.isLoggedIn) return true;
+            // if credentials exists in preferences, try to login
             if (Settings.getBoolean(Settings.KEY_LOGGED_IN)) {
                 String login = Settings.getString(Settings.KEY_LOGIN);
                 String pass = Settings.getString(Settings.KEY_PASSWORD);
@@ -225,8 +219,21 @@ public class MainActivity extends MenuActivity {
 
         @Override
         protected void onPostExecute(Boolean result) {
-            if (result) getPrivateTabs();
-            else getPublicTabs();
+
+            Fragment fragment = null;
+
+            if (result) {
+                getPrivateTabs();
+                fragment = new NewEpisodesFragment();
+                setupDrawer();
+            } else {
+                getPublicTabs();
+                fragment = new LoginFragment();
+            }
+
+           // FragmentManager fragmentManager = getSupportFragmentManager();
+           // fragmentManager.beginTransaction().replace(R.id.main, fragment).commit();
+
         }
 
     }

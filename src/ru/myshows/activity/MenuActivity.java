@@ -41,15 +41,12 @@ public abstract class MenuActivity extends SherlockFragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(getContentViewId());
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-        setupDrawer();
+        if (MyShows.isLoggedIn)
+            setupDrawer();
     }
 
     protected void setupDrawer() {
-        menu = getResources().getStringArray(R.array.left_menu_anonymous);
-
-        if (MyShows.isLoggedIn)
-            menu = getResources().getStringArray(R.array.left_menu);
-
+        menu = getResources().getStringArray(R.array.left_menu);
 
         mTitle = mDrawerTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -68,12 +65,10 @@ public abstract class MenuActivity extends SherlockFragmentActivity {
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
 
             public void onDrawerClosed(View view) {
-                //getActionBar().setTitle(mTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             public void onDrawerOpened(View drawerView) {
-                //getActionBar().setTitle(mDrawerTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 
                 if (adapter != null)
@@ -85,30 +80,13 @@ public abstract class MenuActivity extends SherlockFragmentActivity {
     }
 
 
-    //    @Override
+    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        // The action bar home/up action should open or close the drawer.
-        // ActionBarDrawerToggle will take care of this.
-        if (mDrawerToggle.onOptionsItemSelected(getMenuItem(item))) {
+        if (mDrawerToggle.onOptionsItemSelected(getMenuItem(item)))
             return true;
-        }
-//        switch (item.getItemId()) {
-//
-//
-//
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
-        //MenuInflater inflater = getMenuInflater();
-        // inflater.inflate(R.menu.main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
 
     /* The click listner for ListView in the navigation drawer */
     protected class DrawerItemClickListener implements ListView.OnItemClickListener {
@@ -402,235 +380,196 @@ public abstract class MenuActivity extends SherlockFragmentActivity {
 
             @Override
             public boolean collapseActionView() {
-                // TODO Auto-generated method stub
                 return false;
             }
 
             @Override
             public boolean expandActionView() {
-                // TODO Auto-generated method stub
                 return false;
             }
 
             @Override
             public ActionProvider getActionProvider() {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public View getActionView() {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public char getAlphabeticShortcut() {
-                // TODO Auto-generated method stub
                 return 0;
             }
 
             @Override
             public int getGroupId() {
-                // TODO Auto-generated method stub
                 return 0;
             }
 
             @Override
             public Drawable getIcon() {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public Intent getIntent() {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public ContextMenu.ContextMenuInfo getMenuInfo() {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public char getNumericShortcut() {
-                // TODO Auto-generated method stub
                 return 0;
             }
 
             @Override
             public int getOrder() {
-                // TODO Auto-generated method stub
                 return 0;
             }
 
             @Override
             public SubMenu getSubMenu() {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public CharSequence getTitle() {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public CharSequence getTitleCondensed() {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public boolean hasSubMenu() {
-                // TODO Auto-generated method stub
                 return false;
             }
 
             @Override
             public boolean isActionViewExpanded() {
-                // TODO Auto-generated method stub
                 return false;
             }
 
             @Override
             public boolean isCheckable() {
-                // TODO Auto-generated method stub
                 return false;
             }
 
             @Override
             public boolean isChecked() {
-                // TODO Auto-generated method stub
                 return false;
             }
 
             @Override
             public boolean isVisible() {
-                // TODO Auto-generated method stub
                 return false;
             }
 
             @Override
             public android.view.MenuItem setActionProvider(ActionProvider actionProvider) {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public android.view.MenuItem setActionView(View view) {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public android.view.MenuItem setActionView(int resId) {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public android.view.MenuItem setAlphabeticShortcut(char alphaChar) {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public android.view.MenuItem setCheckable(boolean checkable) {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public android.view.MenuItem setChecked(boolean checked) {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public android.view.MenuItem setEnabled(boolean enabled) {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public android.view.MenuItem setIcon(Drawable icon) {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public android.view.MenuItem setIcon(int iconRes) {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public android.view.MenuItem setIntent(Intent intent) {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public android.view.MenuItem setNumericShortcut(char numericChar) {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public android.view.MenuItem setOnActionExpandListener(OnActionExpandListener listener) {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public android.view.MenuItem setOnMenuItemClickListener(OnMenuItemClickListener menuItemClickListener) {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public android.view.MenuItem setShortcut(char numericChar, char alphaChar) {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public void setShowAsAction(int actionEnum) {
-                // TODO Auto-generated method stub
 
             }
 
             @Override
             public android.view.MenuItem setShowAsActionFlags(int actionEnum) {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public android.view.MenuItem setTitle(CharSequence title) {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public android.view.MenuItem setTitle(int title) {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public android.view.MenuItem setTitleCondensed(CharSequence title) {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public android.view.MenuItem setVisible(boolean visible) {
-                // TODO Auto-generated method stub
                 return null;
             }
         };

@@ -233,7 +233,8 @@ public class MainActivity extends MenuActivity {
             }
 
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().add(R.id.main, fragment).commit();
+           // fragmentManager.beginTransaction().add(R.id.main, fragment).commit();
+            fragmentManager.beginTransaction().add(R.id.main, fragment).commitAllowingStateLoss();
 
         }
 

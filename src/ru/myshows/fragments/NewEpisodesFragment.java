@@ -16,10 +16,7 @@ import ru.myshows.activity.R;
 import ru.myshows.components.RatingDialog;
 import ru.myshows.domain.Episode;
 import ru.myshows.domain.UserShow;
-import ru.myshows.tasks.BaseTask;
-import ru.myshows.tasks.GetNewEpisodesTask;
-import ru.myshows.tasks.TaskListener;
-import ru.myshows.tasks.Taskable;
+import ru.myshows.tasks.*;
 import ru.myshows.util.EpisodeComparator;
 
 import java.text.DateFormat;
@@ -61,7 +58,22 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        executeTask();
+
+        GetShowsTask task = new GetShowsTask(getActivity(), GetShowsTask.SHOWS_USER);
+        task.setTaskListener(new TaskListener() {
+            @Override
+            public void onTaskComplete(Object result) {
+                executeTask();
+            }
+
+            @Override
+            public void onTaskFailed(Exception e) {
+
+            }
+        });
+        task.execute();
+
+
     }
 
 

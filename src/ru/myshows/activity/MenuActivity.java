@@ -102,7 +102,7 @@ public abstract class MenuActivity extends SherlockFragmentActivity {
 //                    adapter.notifyDataSetChanged();
 //            }
 //        };
-            //mDrawerLayout.setDrawerListener(mDrawerToggle);
+            mDrawerLayout.setDrawerListener(mDrawerToggle);
             //mDrawerLayout.setVisibility(View.VISIBLE);
         } else {
             mDrawerList.setVisibility(View.GONE);

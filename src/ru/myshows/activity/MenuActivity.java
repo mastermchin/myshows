@@ -41,42 +41,75 @@ public abstract class MenuActivity extends SherlockFragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(getContentViewId());
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-        if (MyShows.isLoggedIn)
-            setupDrawer();
-    }
-
-    protected void setupDrawer() {
-        menu = getResources().getStringArray(R.array.left_menu);
 
         mTitle = mDrawerTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-        // set a custom shadow that overlays the main content when the drawer opens
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        adapter = new MenuAdapter(this, R.layout.drawer_list_item, menu);
-        mDrawerList.setAdapter(adapter);
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         getSupportActionBar().setIcon(R.drawable.ic_list_logo);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setHomeButtonEnabled(true);
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
 
             public void onDrawerClosed(View view) {
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                invalidateOptionsMenu();
             }
 
             public void onDrawerOpened(View drawerView) {
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-
+                invalidateOptionsMenu();
                 if (adapter != null)
                     adapter.notifyDataSetChanged();
-
             }
         };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+
+//        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        //if (MyShows.isLoggedIn)
+        //    setupDrawer();
+    }
+
+    protected void setupDrawer() {
+
+        if (MyShows.isLoggedIn) {
+            menu = getResources().getStringArray(R.array.left_menu);
+
+//        mTitle = mDrawerTitle = getTitle();
+//        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+            // set a custom shadow that overlays the main content when the drawer opens
+            mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+            adapter = new MenuAdapter(this, R.layout.drawer_list_item, menu);
+            mDrawerList.setAdapter(adapter);
+            mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+            getSupportActionBar().setIcon(R.drawable.ic_list_logo);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+
+//        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
+//
+//            public void onDrawerClosed(View view) {
+//                invalidateOptionsMenu();
+//            }
+//
+//            public void onDrawerOpened(View drawerView) {
+//                invalidateOptionsMenu();
+//                if (adapter != null)
+//                    adapter.notifyDataSetChanged();
+//            }
+//        };
+            //mDrawerLayout.setDrawerListener(mDrawerToggle);
+            //mDrawerLayout.setVisibility(View.VISIBLE);
+        } else {
+            mDrawerList.setVisibility(View.GONE);
+            //mDrawerLayout.setVisibility(View.GONE);
+          //  mDrawerLayout.setEnabled(false);
+        }
+
     }
 
 

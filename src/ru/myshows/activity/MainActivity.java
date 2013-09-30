@@ -52,12 +52,12 @@ public class MainActivity extends MenuActivity {
         this.savedInstanceState = savedInstanceState;
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
-        adapter = new TabsAdapter(getSupportFragmentManager(), false);
-        pager = (ViewPager) findViewById(R.id.pager);
-        pager.setOffscreenPageLimit(6);
-        pager.setAdapter(adapter);
-        pagerTabStrip = (PagerTabStrip) findViewById(R.id.pagerTabStrip);
-        pagerTabStrip.setTabIndicatorColorResource(R.color.light_red);
+//        adapter = new TabsAdapter(getSupportFragmentManager(), false);
+//        pager = (ViewPager) findViewById(R.id.pager);
+//        pager.setOffscreenPageLimit(6);
+//        pager.setAdapter(adapter);
+//        pagerTabStrip = (PagerTabStrip) findViewById(R.id.pagerTabStrip);
+//        pagerTabStrip.setTabIndicatorColorResource(R.color.light_red);
 
 //        getSupportActionBar().setDisplayShowHomeEnabled(true);
 //        getSupportActionBar().setDisplayShowTitleEnabled(true);
@@ -223,16 +223,17 @@ public class MainActivity extends MenuActivity {
             Fragment fragment = null;
 
             if (result) {
-                getPrivateTabs();
+                //getPrivateTabs();
                 fragment = new NewEpisodesFragment();
                 setupDrawer();
             } else {
-                getPublicTabs();
+                //getPublicTabs();
+                setupDrawer();
                 fragment = new LoginFragment();
             }
 
-           // FragmentManager fragmentManager = getSupportFragmentManager();
-           // fragmentManager.beginTransaction().replace(R.id.main, fragment).commit();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().add(R.id.main, fragment).commit();
 
         }
 

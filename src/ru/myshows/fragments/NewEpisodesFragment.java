@@ -6,11 +6,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.view.ActionMode;
+import android.view.*;
 import android.widget.*;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
 import ru.myshows.components.RatingDialog;
@@ -39,7 +38,7 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
     DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
     private LayoutInflater inflater;
     private boolean isTaskExecuted = false;
-    private com.actionbarsherlock.view.ActionMode mMode;
+    private ActionMode mMode;
 
 
     public NewEpisodesFragment() {
@@ -243,9 +242,9 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
                         for (Episode e : (List<Episode>) getGroupChildren(gp)) {
                             e.setChecked(isChecked);
                         }
-                        SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
+                        ActionBarActivity activity = (ActionBarActivity) getActivity();
                         if (mMode == null)
-                            mMode = activity.startActionMode(new CheckNewEpisodesActionMode());
+                            mMode = activity.startSupportActionMode(new CheckNewEpisodesActionMode());
                         adapter.notifyDataSetChanged();
                     }
                 });
@@ -311,9 +310,9 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
             holder.checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
+                    ActionBarActivity activity = (ActionBarActivity) getActivity();
                     if (mMode == null)
-                        mMode = activity.startActionMode(new CheckNewEpisodesActionMode());
+                        mMode = activity.startSupportActionMode(new CheckNewEpisodesActionMode());
                 }
             });
 
@@ -325,8 +324,8 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
                 public void onClick(View v) {
                     holder.checkBox.setChecked(!holder.checkBox.isChecked());
                     if (mMode == null){
-                        SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
-                        mMode = activity.startActionMode(new CheckNewEpisodesActionMode());
+                        ActionBarActivity activity = (ActionBarActivity) getActivity();
+                        mMode = activity.startSupportActionMode(new CheckNewEpisodesActionMode());
                     }
                 }
             });
@@ -421,22 +420,22 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
     }
 
 
-    private final class CheckNewEpisodesActionMode implements com.actionbarsherlock.view.ActionMode.Callback {
+    private final class CheckNewEpisodesActionMode implements ActionMode.Callback {
         @Override
-        public boolean onCreateActionMode(com.actionbarsherlock.view.ActionMode mode, com.actionbarsherlock.view.Menu menu) {
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             //Used to put dark icons on light action bar
-            menu.add(0, 1, 1, R.string.save).setIcon(R.drawable.ic_save).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
-            menu.add(0, 2, 2, R.string.episode_rating).setIcon(R.drawable.ic_rating_important).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            menu.add(0, 1, 1, R.string.save).setIcon(R.drawable.ic_save).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            menu.add(0, 2, 2, R.string.episode_rating).setIcon(R.drawable.ic_rating_important).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
             return true;
         }
 
         @Override
-        public boolean onPrepareActionMode(com.actionbarsherlock.view.ActionMode mode, com.actionbarsherlock.view.Menu menu) {
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             return false;
         }
 
         @Override
-        public boolean onActionItemClicked(com.actionbarsherlock.view.ActionMode mode, com.actionbarsherlock.view.MenuItem item) {
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case 1:
                     new CheckNewEpisodesTask().execute();
@@ -460,7 +459,7 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
         }
 
         @Override
-        public void onDestroyActionMode(com.actionbarsherlock.view.ActionMode mode) {
+        public void onDestroyActionMode(ActionMode mode) {
             mMode = null;
         }
     }

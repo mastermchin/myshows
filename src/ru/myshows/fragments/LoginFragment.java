@@ -11,7 +11,6 @@ import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import ru.myshows.activity.MainActivity;
-import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
 import ru.myshows.api.MyShowsClient;
 import ru.myshows.util.Settings;

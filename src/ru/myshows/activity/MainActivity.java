@@ -15,10 +15,10 @@ import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 import ru.myshows.adapters.TabsAdapter;
 import ru.myshows.domain.Searchable;
 import ru.myshows.fragments.*;
@@ -52,12 +52,12 @@ public class MainActivity extends MenuActivity {
         this.savedInstanceState = savedInstanceState;
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
-//        adapter = new TabsAdapter(getSupportFragmentManager(), false);
-//        pager = (ViewPager) findViewById(R.id.pager);
-//        pager.setOffscreenPageLimit(6);
-//        pager.setAdapter(adapter);
-//        pagerTabStrip = (PagerTabStrip) findViewById(R.id.pagerTabStrip);
-//        pagerTabStrip.setTabIndicatorColorResource(R.color.light_red);
+        adapter = new TabsAdapter(getSupportFragmentManager(), false);
+        pager = (ViewPager) findViewById(R.id.pager);
+        pager.setOffscreenPageLimit(6);
+        pager.setAdapter(adapter);
+        pagerTabStrip = (PagerTabStrip) findViewById(R.id.pagerTabStrip);
+        pagerTabStrip.setTabIndicatorColorResource(R.color.light_red);
 
 //        getSupportActionBar().setDisplayShowHomeEnabled(true);
 //        getSupportActionBar().setDisplayShowTitleEnabled(true);
@@ -71,7 +71,7 @@ public class MainActivity extends MenuActivity {
     }
 
 
-    public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) {
 
         menu.add(0, 1, 1, R.string.menu_update).setIcon(R.drawable.ic_navigation_refresh).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         menu.add(0, 2, 2, R.string.menu_settings).setIcon(R.drawable.ic_action_settings).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
@@ -83,7 +83,7 @@ public class MainActivity extends MenuActivity {
 
 
     @Override
-    public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
             case 1:
@@ -223,18 +223,18 @@ public class MainActivity extends MenuActivity {
             Fragment fragment = null;
 
             if (result) {
-                //getPrivateTabs();
+                getPrivateTabs();
                 fragment = new NewEpisodesFragment();
                 setupDrawer();
             } else {
-                //getPublicTabs();
+                getPublicTabs();
                 setupDrawer();
                 fragment = new LoginFragment();
             }
 
-            FragmentManager fragmentManager = getSupportFragmentManager();
+           // FragmentManager fragmentManager = getSupportFragmentManager();
            // fragmentManager.beginTransaction().add(R.id.main, fragment).commit();
-            fragmentManager.beginTransaction().add(R.id.main, fragment).commitAllowingStateLoss();
+          //  fragmentManager.beginTransaction().add(R.id.main, fragment).commitAllowingStateLoss();
 
         }
 

@@ -7,15 +7,16 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 import ru.myshows.fragments.ShowsFragment;
 import ru.myshows.tasks.GetShowsTask;
 
@@ -26,7 +27,7 @@ import ru.myshows.tasks.GetShowsTask;
  * Time: 13:36
  * To change this template use File | Settings | File Templates.
  */
-public class SearchActivity extends SherlockFragmentActivity {
+public class SearchActivity extends ActionBarActivity {
 
     private String search;
     private EditText searchField;
@@ -80,7 +81,7 @@ public class SearchActivity extends SherlockFragmentActivity {
         }
     }
 
-    public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) {
 
         menu.add(0, 1, 1, R.string.menu_update).setIcon(R.drawable.ic_navigation_refresh).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         if (MyShows.isLoggedIn)
@@ -92,7 +93,7 @@ public class SearchActivity extends SherlockFragmentActivity {
 
 
     @Override
-    public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();

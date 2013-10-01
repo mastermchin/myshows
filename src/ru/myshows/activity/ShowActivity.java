@@ -11,14 +11,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.view.*;
 import android.widget.*;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.internal.widget.IcsSpinner;
 import ru.myshows.adapters.TabsAdapter;
 import ru.myshows.api.MyShowsApi;
 import ru.myshows.domain.Show;
@@ -38,7 +34,7 @@ import java.util.List;
  * Time: 17:53:42
  * To change this template use File | Settings | File Templates.
  */
-public class ShowActivity extends SherlockFragmentActivity implements TaskListener<Show> {
+public class ShowActivity extends ActionBarActivity implements TaskListener<Show> {
 
 
     private Integer showId;
@@ -158,7 +154,7 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
 
 
     @Override
-    public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
@@ -194,7 +190,8 @@ public class ShowActivity extends SherlockFragmentActivity implements TaskListen
 
 
         View customNav = LayoutInflater.from(this).inflate(R.layout.custom_show_action_bar, null);
-        IcsSpinner spinner = (IcsSpinner) customNav.findViewById(R.id.spinner);
+        //getSupportActionBar().setListNavigationCallbacks(linkAdapter, );
+        Spinner spinner = (Spinner) customNav.findViewById(R.id.spinner);
         spinner.setAdapter(linkAdapter);
 
 

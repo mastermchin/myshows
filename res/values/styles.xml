@@ -2,7 +2,7 @@
 <resources>
 
 
-     <style name="Theme.MyShows" parent="Theme.Sherlock">
+     <style name="Theme.MyShows" parent="@style/Theme.AppCompat">
          <item name="actionBarStyle">@style/MyShows.ActionBar</item>
          <item name="android:actionBarStyle">@style/MyShows.ActionBar</item>
          <item name="android:listViewStyle">@style/MyShows.ListView</item>
@@ -23,7 +23,7 @@
         <item name="android:cacheColorHint">@android:color/transparent</item>
     </style>
 
-    <style name="MyShows.ActionBar" parent="Widget.Sherlock.ActionBar">
+    <style name="MyShows.ActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@drawable/tiled_background</item>
         <item name="background">@drawable/tiled_background</item>
 

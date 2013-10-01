@@ -1,26 +1,16 @@
 package ru.myshows.fragments;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.view.ActionMode;
+import android.view.*;
 import android.widget.*;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
 import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
-import ru.myshows.api.MyShowsApi;
 import ru.myshows.domain.*;
-import ru.myshows.tasks.*;
+import ru.myshows.tasks.BaseTask;
+import ru.myshows.tasks.GetNewEpisodesTask;
 import ru.myshows.util.EpisodeComparator;
 import ru.myshows.util.Settings;
 
@@ -35,7 +25,7 @@ import java.util.*;
  * Time: 1:44
  * To change this template use File | Settings | File Templates.
  */
-public class EpisodesFragment extends SherlockFragment {
+public class EpisodesFragment extends Fragment {
 
     private Show show;
     private LayoutInflater inflater;
@@ -298,9 +288,9 @@ public class EpisodesFragment extends SherlockFragment {
                             if (e.getAirDate() != null && e.getAirDate().before(new Date()))
                                 e.setChecked(isChecked);
                         }
-                        SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
+                        ActionBarActivity activity = (ActionBarActivity) getActivity();
                         if (mMode == null)
-                            mMode = activity.startActionMode(new SaveEpisodesActionMode());
+                            mMode = activity.startSupportActionMode(new SaveEpisodesActionMode());
                         adapter.notifyDataSetChanged();
                     }
                 });
@@ -373,9 +363,9 @@ public class EpisodesFragment extends SherlockFragment {
                 holder.checkBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
+                        ActionBarActivity activity = (ActionBarActivity) getActivity();
                         if (mMode == null)
-                            mMode = activity.startActionMode(new SaveEpisodesActionMode());
+                            mMode = activity.startSupportActionMode(new SaveEpisodesActionMode());
                     }
                 });
 
@@ -386,9 +376,9 @@ public class EpisodesFragment extends SherlockFragment {
                     @Override
                     public void onClick(View v) {
                         holder.checkBox.setChecked(!holder.checkBox.isChecked());
-                        SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
+                        ActionBarActivity activity = (ActionBarActivity) getActivity();
                         if (mMode == null)
-                            mMode = activity.startActionMode(new SaveEpisodesActionMode());
+                            mMode = activity.startSupportActionMode(new SaveEpisodesActionMode());
                     }
                 });
             } else {
@@ -427,8 +417,8 @@ public class EpisodesFragment extends SherlockFragment {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             //Used to put dark icons on light action bar
-            menu.add(0, 1, 1, R.string.save).setIcon(R.drawable.ic_save).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
-            menu.add(0, 2, 2, R.string.menu_check_all).setIcon(R.drawable.ic_check_all).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            menu.add(0, 1, 1, R.string.save).setIcon(R.drawable.ic_save).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            menu.add(0, 2, 2, R.string.menu_check_all).setIcon(R.drawable.ic_check_all).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
             return true;
         }
 
@@ -438,7 +428,7 @@ public class EpisodesFragment extends SherlockFragment {
         }
 
         @Override
-        public boolean onActionItemClicked(ActionMode mode, com.actionbarsherlock.view.MenuItem item) {
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case 1:
                     new CheckEpisodesTask().execute();

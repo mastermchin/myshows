@@ -34,7 +34,7 @@ import java.util.List;
  * Time: 17:53:42
  * To change this template use File | Settings | File Templates.
  */
-public class ShowActivity extends ActionBarActivity implements TaskListener<Show> {
+public class ShowActivity extends MenuActivity implements TaskListener<Show> {
 
 
     private Integer showId;
@@ -52,10 +52,16 @@ public class ShowActivity extends ActionBarActivity implements TaskListener<Show
     public ShowActivity() {
     }
 
+
+    @Override
+    protected int getContentViewId() {
+        return R.layout.show_info;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.show_info);
+        //setContentView(R.layout.show_info);
         this.savedInstanceState = savedInstanceState;
 
         tabsAdapter = new TabsAdapter(getSupportFragmentManager(), true);
@@ -74,6 +80,7 @@ public class ShowActivity extends ActionBarActivity implements TaskListener<Show
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+
         getSupportActionBar().setIcon(R.drawable.ic_list_logo);
         if (title != null)
             getSupportActionBar().setTitle(title);
@@ -96,6 +103,7 @@ public class ShowActivity extends ActionBarActivity implements TaskListener<Show
         getShowTask.setTaskListener(this);
         getShowTask.execute(showId);
 
+        setupDrawer();
 
 
     }

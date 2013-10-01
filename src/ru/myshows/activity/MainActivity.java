@@ -66,9 +66,9 @@ public class MainActivity extends MenuActivity {
 //        getSupportActionBar().setDisplayShowTitleEnabled(true);
 //        getSupportActionBar().setIcon(R.drawable.ic_list_logo);
 
-        BitmapDrawable bg = (BitmapDrawable) getResources().getDrawable(R.drawable.stripe_red);
-        bg.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
-        getSupportActionBar().setBackgroundDrawable(bg);
+//        BitmapDrawable bg = (BitmapDrawable) getResources().getDrawable(R.drawable.stripe_red);
+//        bg.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+//        getSupportActionBar().setBackgroundDrawable(bg);
         new LoginTask().execute();
 
     }
@@ -78,7 +78,7 @@ public class MainActivity extends MenuActivity {
         menu.add(0, 1, 1, R.string.menu_update).setIcon(R.drawable.ic_navigation_refresh).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 //        menu.add(0, 2, 2, R.string.menu_settings).setIcon(R.drawable.ic_action_settings).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 //        menu.add(0, 3, 3, R.string.menu_search).setIcon(R.drawable.ic_action_search).setActionView(R.layout.action_search).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-        menu.add(0, 4, 4, R.string.menu_exit).setIcon(R.drawable.ic_exit).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+       // menu.add(0, 4, 4, R.string.menu_exit).setIcon(R.drawable.ic_exit).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -114,26 +114,26 @@ public class MainActivity extends MenuActivity {
 //                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 //                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 //                break;
-            case 4:
-                final AlertDialog alert;
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
-                        .setTitle(R.string.request_exit)
-                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Settings.setString(Settings.KEY_LOGIN, null);
-                                Settings.setString(Settings.KEY_PASSWORD, null);
-                                Settings.setBoolean(Settings.KEY_LOGGED_IN, false);
-                                MyShows.isLoggedIn = false;
-                                MyShows.invalidateUserData();
-                                finish();
-                                startActivity(new Intent(MainActivity.this, MainActivity.class));
-                            }
-                        })
-                        .setNegativeButton(R.string.no, null);
-                alert = builder.create();
-                alert.show();
-                break;
+//            case 4:
+//                final AlertDialog alert;
+//                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
+//                        .setTitle(R.string.request_exit)
+//                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                Settings.setString(Settings.KEY_LOGIN, null);
+//                                Settings.setString(Settings.KEY_PASSWORD, null);
+//                                Settings.setBoolean(Settings.KEY_LOGGED_IN, false);
+//                                MyShows.isLoggedIn = false;
+//                                MyShows.invalidateUserData();
+//                                finish();
+//                                startActivity(new Intent(MainActivity.this, MainActivity.class));
+//                            }
+//                        })
+//                        .setNegativeButton(R.string.no, null);
+//                alert = builder.create();
+//                alert.show();
+//                break;
         }
         return true;
     }

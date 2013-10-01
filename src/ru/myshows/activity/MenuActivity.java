@@ -1,9 +1,13 @@
 package ru.myshows.activity;
 
 import android.app.ActivityManager;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -14,6 +18,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
+import ru.myshows.fragments.ShowsFragment;
+import ru.myshows.util.Settings;
 
 
 import java.util.List;
@@ -50,6 +56,10 @@ public abstract class MenuActivity extends ActionBarActivity {
         getSupportActionBar().setIcon(R.drawable.ic_list_logo);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //        getSupportActionBar().setHomeButtonEnabled(true);
+
+        BitmapDrawable bg = (BitmapDrawable) getResources().getDrawable(R.drawable.stripe_red);
+        bg.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+        getSupportActionBar().setBackgroundDrawable(bg);
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
 
@@ -129,137 +139,74 @@ public abstract class MenuActivity extends ActionBarActivity {
             mDrawerLayout.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-//                    Context context = MenuActivity.this;
-//                    Intent intent;
-//                    if (MyShows.isLoggedIn) {
-//
-//                        switch (position) {
-//                            // main page
-//                            case 0:
-//                                if (!(MenuActivity.this instanceof MainActivity)) {
-//                                    if (getActivityDepth() == 2) {
-//                                        finish();
-//                                    } else {
-//                                        intent = new Intent(context, MainActivity.class);
-//                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                                        startActivity(intent);
-//                                    }
-//                                }
-//                                break;
-//                            //profile
-//                            case 1:
-//                                intent = new Intent(context, ProfileActivity.class);
-//                                intent.putExtra("profileUrl", Settings.getString(Settings.KEY_PROFILE_LINK));
-//                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                                startActivity(intent);
-//                                break;
-//                            //Tracker
-//                            case 2:
-//                                intent = new Intent(context, TrackerActivity.class);
-//                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                                startActivity(intent);
-//                                break;
-//                            //Messages
-//                            case 3:
-//                                intent = new Intent(context, DiscussionsActivity.class);
-//                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                                startActivity(intent);
-//                                break;
-//                            //Favourites
-//                            case 4:
-//                                intent = new Intent(context, PostsActivity.class);
-//                                intent.putExtra("url", " http://autokadabra.ru/shouts/favorites");
-//                                intent.putExtra("title", getResources().getString(R.string.favourites));
-//                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                                startActivity(intent);
-//                                break;
-//                            //PDD
-//                            case 5:
-//                                intent = new Intent(context, TextListActivity.class);
-//                                intent.putExtra("title", getResources().getString(R.string.pdds));
-//                                intent.putExtra("type", TextListActivity.CATEGORY_PDD);
-//                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                                startActivity(intent);
-//                                break;
-//                            //sings
-//                            case 6:
-//                                intent = new Intent(context, TextListActivity.class);
-//                                intent.putExtra("title", getResources().getString(R.string.signs));
-//                                intent.putExtra("type", TextListActivity.CATEGORY_SIGNS);
-//                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                                startActivity(intent);
-//                                break;
-//
-//                            //KOAP
-//                            case 7:
-//                                intent = new Intent(context, TextListActivity.class);
-//                                intent.putExtra("title", getResources().getString(R.string.koaps));
-//                                intent.putExtra("type", TextListActivity.CATEGORY_KOAP);
-//                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                                startActivity(intent);
-//                                break;
-//                            //exit
-//                            case 8:
-//                                CookieSyncManager.createInstance(context);
-//                                CookieManager.getInstance().removeAllCookie();
-//                                Settings.setString(Settings.KEY_COOKIE_VALUE, "");
-//                                Autokadabra.isLoggedIn = false;
-//                                finish();
-//
-//                                intent = new Intent(context, MainActivity.class);
-//                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                                startActivity(intent);
-//                                break;
-//                        }
-//
-//                    } else {
-//
-//                        intent = new Intent(context, TextListActivity.class);
-//                        switch (position) {
-//                            // main page
-//                            case 0:
-//                                if (!(MenuDrawerActivity.this instanceof MainActivity)) {
-//                                    if (getActivityDepth() == 2) {
-//                                        finish();
-//                                    } else {
-//                                        intent = new Intent(context, MainActivity.class);
-//                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                                        startActivity(intent);
-//                                    }
-//                                }
-//                                break;
-//                            //login
-//                            case 1:
-//                                intent = new Intent(context, LoginActivity.class);
-//                                startActivity(intent);
-//                                break;
-//                            //PDD
-//                            case 2:
-//                                intent.putExtra("title", getResources().getString(R.string.pdds));
-//                                intent.putExtra("type", TextListActivity.CATEGORY_PDD);
-//                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                                startActivity(intent);
-//                                break;
-//                            //signs
-//                            case 3:
-//
-//                                intent.putExtra("title", getResources().getString(R.string.signs));
-//                                intent.putExtra("type", TextListActivity.CATEGORY_SIGNS);
-//                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                                startActivity(intent);
-//                                break;
-//                            //KOAP
-//                            case 4:
-//                                intent.putExtra("title", getResources().getString(R.string.koaps));
-//                                intent.putExtra("type", TextListActivity.CATEGORY_KOAP);
-//                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                                startActivity(intent);
-//                                break;
-//
-//                        }
-//
-//
-//                    }
+                    Context context = MenuActivity.this;
+                    Intent intent;
+                        switch (position) {
+                            // main page
+                            case 0:
+                                if (!(MenuActivity.this instanceof MainActivity)) {
+                                    if (getActivityDepth() == 2) {
+                                        finish();
+                                    } else {
+                                        intent = new Intent(context, MainActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        startActivity(intent);
+                                    }
+                                }
+                                break;
+                            //profile
+                            case 1:
+                                intent = new Intent(context, ShowsActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                break;
+                            //Tracker
+                            case 2:
+                                intent = new Intent(context, ProfileActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                break;
+                            //Messages
+                            case 3:
+
+                                break;
+                            //Favourites
+                            case 4:
+                                intent = new Intent(context, ShowsActivity.class);
+                                intent.putExtra("action", ShowsFragment.SHOWS_TOP);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                break;
+                            //PDD
+                            case 5:
+                                intent = new Intent(context, SettingsAcrivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                break;
+                            //sings
+                            case 6:
+                                final AlertDialog alert;
+                                AlertDialog.Builder builder = new AlertDialog.Builder(MenuActivity.this)
+                                        .setTitle(R.string.request_exit)
+                                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Settings.setString(Settings.KEY_LOGIN, null);
+                                                Settings.setString(Settings.KEY_PASSWORD, null);
+                                                Settings.setBoolean(Settings.KEY_LOGGED_IN, false);
+                                                MyShows.isLoggedIn = false;
+                                                MyShows.invalidateUserData();
+                                                finish();
+                                                startActivity(new Intent(MenuActivity.this, MainActivity.class));
+                                            }
+                                        })
+                                        .setNegativeButton(R.string.no, null);
+                                alert = builder.create();
+                                alert.show();
+                                break;
+                        }
+
+
                 }
             }, 200);
         }

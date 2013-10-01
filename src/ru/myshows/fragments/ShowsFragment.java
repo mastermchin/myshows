@@ -117,11 +117,8 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
 
     @Override
     public void executeTask() {
-        if (isTaskExecuted) {
-            adapter.notifyDataSetChanged();
-            return;
-        }
-        GetShowsTask task = new GetShowsTask(getActivity(), GetShowsTask.SHOWS_USER);
+        action = getArguments().getInt("action");
+        GetShowsTask task = new GetShowsTask(getActivity(), action );
         task.setTaskListener(this);
         task.execute();
     }
@@ -214,7 +211,6 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
             protected TextView title;
             protected RatingBar rating;
             protected TextView unwatched;
-            boolean isAnimated;
         }
 
         public List<IShow> getShows() {

@@ -3,11 +3,9 @@
 
 
      <style name="Theme.MyShows" parent="@style/Theme.AppCompat">
-         <item name="actionBarStyle">@style/MyShows.ActionBar</item>
          <item name="android:actionBarStyle">@style/MyShows.ActionBar</item>
          <item name="android:listViewStyle">@style/MyShows.ListView</item>
          <item name="android:editTextStyle">@style/MyShows.EditText</item>
-         <item name="actionModeCloseDrawable">@drawable/ic_exit</item>
          <item name="android:actionModeCloseDrawable">@drawable/ic_exit</item>
      </style>
 
@@ -23,7 +21,7 @@
         <item name="android:cacheColorHint">@android:color/transparent</item>
     </style>
 
-    <style name="MyShows.ActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+    <style name="MyShows.ActionBar" parent="@style/Widget.AppCompat.ActionBar.Solid">
         <item name="android:background">@drawable/tiled_background</item>
         <item name="background">@drawable/tiled_background</item>
 

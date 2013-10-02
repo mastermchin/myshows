@@ -156,11 +156,9 @@
 
     <string-array name="left_menu">
         <item>Episodes</item>
-        <item>Shows</item>
         <item>Profile</item>
         <item>Friends News</item>
-        <item>Rating</item>
-        <item>Settings</item>
+        <item>Shows Rating</item>
         <item>Logout</item>
     </string-array>
 
@@ -171,6 +169,11 @@
     <string-array name="episodes_titles">
         <item>New Episodes</item>
         <item>Soon</item>
+    </string-array>
+
+    <string-array name="profile_titles">
+        <item>Shows</item>
+        <item>Stats</item>
     </string-array>
 
     <string-array name="login">

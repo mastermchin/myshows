@@ -138,11 +138,9 @@
 
     <string-array name="left_menu">
         <item>Эпизоды</item>
-        <item>Мои сериалы</item>
         <item>Профиль</item>
         <item>Новости</item>
-        <item>Рейтинг</item>
-        <item>Настройки</item>
+        <item>Рейтинг Сериалов</item>
         <item>Выйти</item>
     </string-array>
 
@@ -154,6 +152,11 @@
     <string-array name="episodes_titles">
         <item>Новые</item>
         <item>Скоро</item>
+    </string-array>
+
+    <string-array name="profile_titles">
+        <item>Сериалы</item>
+        <item>Статистика</item>
     </string-array>
 
     <string-array name="login">

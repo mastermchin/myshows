@@ -241,7 +241,7 @@ public class ShowActivity extends MenuActivity implements TaskListener<Show> {
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(ShowActivity.this, SettingsAcrivity.class));
+                //startActivity(new Intent(ShowActivity.this, SettingsAcrivity.class));
             }
         });
 

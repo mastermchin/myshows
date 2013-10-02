@@ -176,6 +176,10 @@
         <item>Stats</item>
     </string-array>
 
+    <string-array name="stats_titles">
+        <item>Stats</item>
+    </string-array>
+
     <string-array name="show_titles">
         <item>Show</item>
         <item>Episodes</item>

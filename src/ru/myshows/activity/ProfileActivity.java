@@ -1,29 +1,26 @@
 package ru.myshows.activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.SearchView;
 import android.view.MenuItem;
-import android.view.View;
-import ru.myshows.adapters.EpisodesAdapter;
-import ru.myshows.adapters.ProfileAdapter;
+import ru.myshows.adapters.FragmentAdapter;
 import ru.myshows.fragments.ProfileFragment;
-import ru.myshows.tasks.GetProfileTask;
-import ru.myshows.tasks.GetShowsTask;
+import ru.myshows.fragments.ShowsFragment;
+import ru.myshows.tasks.Taskable;
 import ru.myshows.util.Settings;
+
+import java.util.LinkedList;
+import java.util.List;
 
 
 public class ProfileActivity extends MenuActivity {
 
     private ViewPager pager;
     private PagerTabStrip pagerTabStrip;
-    private ProfileAdapter adapter;
+    private FragmentAdapter adapter;
     //private SearchView search;
 
     @Override
@@ -42,8 +39,9 @@ public class ProfileActivity extends MenuActivity {
         pagerTabStrip.setTabIndicatorColorResource(R.color.light_red);
 
 
+        String login = (String) getBundleValue(getIntent(), "login", Settings.getString(Settings.KEY_LOGIN));
 
-//        String login = (String) getBundleValue(getIntent(), "login", Settings.getString(Settings.KEY_LOGIN));
+
 //
 //        if (login != null) {
 //
@@ -63,17 +61,50 @@ public class ProfileActivity extends MenuActivity {
 //        }
 
 
-        adapter = new ProfileAdapter(ProfileActivity.this, getSupportFragmentManager());
-        pager.setAdapter(adapter);
-        setupDrawer();
+        //adapter = new ProfileAdapter(ProfileActivity.this, getSupportFragmentManager());
+
+         boolean isOwner = login.equalsIgnoreCase(Settings.getString(Settings.KEY_LOGIN));
+
+            List<Fragment> fragments = new LinkedList<Fragment>();
+            if (isOwner)
+                fragments.add(new ShowsFragment());
+            fragments.add(new ProfileFragment());
+
+            Bundle args = new Bundle();
+            if (isOwner)
+                args.putInt("action", ShowsFragment.SHOWS_USER);
+            args.putString("login", login);
+
+            adapter = new FragmentAdapter(ProfileActivity.this, getSupportFragmentManager(), fragments, args, isOwner ? R.array.profile_titles : R.array.stats_titles);
+            pager.setAdapter(adapter);
+            setupDrawer();
     }
 
-//    private Object getBundleValue(Intent intent, String key, Object defaultValue) {
-//        if (intent == null) return defaultValue;
-//        if (intent.getExtras() == null) return defaultValue;
-//        if (intent.getExtras().get(key) == null) return defaultValue;
-//        return intent.getExtras().get(key);
-//    }
+    private Object getBundleValue(Intent intent, String key, Object defaultValue) {
+        if (intent == null) return defaultValue;
+        if (intent.getExtras() == null) return defaultValue;
+        if (intent.getExtras().get(key) == null) return defaultValue;
+        return intent.getExtras().get(key);
+    }
 
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.action_refresh) {
+            int position = pager.getCurrentItem();
+            Fragment currentFragment = getFragment(position);
+            if (currentFragment != null)
+                ((Taskable) currentFragment).executeUpdateTask();
+        }
+        return true;
+    }
+
+    private Fragment getFragment(int position) {
+        return getSupportFragmentManager().findFragmentByTag(getFragmentTag(position));
+    }
+
+    private String getFragmentTag(int position) {
+        return "android:switcher:" + R.id.pager + ":" + position;
+    }
 }

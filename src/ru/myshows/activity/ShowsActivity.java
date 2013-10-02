@@ -1,27 +1,14 @@
 package ru.myshows.activity;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Shader;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import ru.myshows.adapters.EpisodesAdapter;
-import ru.myshows.fragments.LoginFragment;
 import ru.myshows.fragments.ShowsFragment;
 import ru.myshows.tasks.GetShowsTask;
 import ru.myshows.tasks.Taskable;
-import ru.myshows.util.Settings;
 
 /**
  * @Author: Georgy Gobozov
@@ -51,7 +38,7 @@ public class ShowsActivity extends MenuActivity {
 
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().add(R.id.main, showsFragment).commitAllowingStateLoss();
+        fragmentManager.beginTransaction().add(R.id.main, showsFragment, "shows").commitAllowingStateLoss();
 
         setupDrawer();
     }
@@ -71,23 +58,16 @@ public class ShowsActivity extends MenuActivity {
 //        return super.onPrepareOptionsMenu(menu);
 //    }
 //
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        super.onOptionsItemSelected(item);
-//        switch (item.getItemId()) {
-//            case 1:
-//                int position = pager.getCurrentItem();
-//                if (!MyShows.isLoggedIn)
-//                    break;
-//                Fragment currentFragment = getFragment(position);
-//                if (currentFragment != null)
-//                    ((Taskable) currentFragment).executeUpdateTask();
-//
-//                break;
-//
-//        }
-//        return true;
-//    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.action_refresh) {
+            Fragment currentFragment = getSupportFragmentManager().findFragmentByTag("shows");
+                if (currentFragment != null)
+                    ((Taskable) currentFragment).executeUpdateTask();
+        }
+        return true;
+    }
 
 //    private TextWatcher filterTextWatcher = new TextWatcher() {
 //        public void afterTextChanged(Editable s) {
@@ -105,14 +85,14 @@ public class ShowsActivity extends MenuActivity {
 //
 //    };
 //
-
-    private Fragment getFragment(int position) {
-        return  getSupportFragmentManager().findFragmentByTag(getFragmentTag(position));
-    }
 //
-    private String getFragmentTag(int position) {
-        return "android:switcher:" + R.id.pager + ":" + position;
-    }
+//    private Fragment getFragment(int position) {
+//        return  getSupportFragmentManager().findFragmentByTag(getFragmentTag(position));
+//    }
+////
+//    private String getFragmentTag(int position) {
+//        return "android:switcher:" + R.id.pager + ":" + position;
+//    }
 
 
 

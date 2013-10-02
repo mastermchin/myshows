@@ -14,6 +14,7 @@ import ru.myshows.tasks.GetNewEpisodesTask;
 import ru.myshows.util.EpisodeComparator;
 import ru.myshows.util.Settings;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -71,7 +72,11 @@ public class EpisodesFragment extends Fragment {
             show = (Show) savedInstanceState.getSerializable("show");
             refresh(show);
         } else {
-            refresh(show);
+            Serializable s =  getArguments().getSerializable("show");
+            if (s instanceof Show){
+                show = (Show) s;
+                refresh(show);
+            }
         }
     }
 

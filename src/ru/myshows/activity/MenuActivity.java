@@ -9,33 +9,19 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.PagerTabStrip;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.*;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
-import ru.myshows.adapters.EpisodesAdapter;
-import ru.myshows.fragments.LoginFragment;
-import ru.myshows.fragments.ProfileFragment;
 import ru.myshows.fragments.ShowsFragment;
-import ru.myshows.tasks.GetShowsTask;
-import ru.myshows.tasks.Taskable;
 import ru.myshows.util.Settings;
-
 
 import java.util.List;
 
@@ -139,12 +125,12 @@ public abstract class MenuActivity extends ActionBarActivity {
             return true;
 
         switch (item.getItemId()) {
-            case R.id.action_refresh:
-//                int position = pager.getCurrentItem();
-//                Fragment currentFragment = getFragment(position);
-//                if (currentFragment != null)
-//                    ((Taskable) currentFragment).executeUpdateTask();
-                break;
+//            case R.id.action_refresh:
+////                int position = pager.getCurrentItem();
+////                Fragment currentFragment = getFragment(position);
+////                if (currentFragment != null)
+////                    ((Taskable) currentFragment).executeUpdateTask();
+//                break;
             case R.id.action_search:
                 search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                     @Override

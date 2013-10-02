@@ -16,6 +16,7 @@ import ru.myshows.domain.Show;
 import ru.myshows.domain.UserShow;
 import ru.myshows.tasks.BaseTask;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -69,18 +70,26 @@ public class ShowFragment extends Fragment {
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null && show == null) {
-            show = (Show) savedInstanceState.getSerializable("show");
-            UserShow userShow = MyShows.getUserShow(show.getShowId());
-            show.setWatchStatus(userShow == null ? MyShowsApi.STATUS.remove : userShow.getWatchStatus());
-            watchStatus = show.getWatchStatus();
-            yoursRating = savedInstanceState.getDouble("yoursRating");
-            populateUI(show);
-        } else {
-            populateUI(show);
+//        if (savedInstanceState != null && show == null) {
+//            show = (Show) savedInstanceState.getSerializable("show");
+//            UserShow userShow = MyShows.getUserShow(show.getShowId());
+//            show.setWatchStatus(userShow == null ? MyShowsApi.STATUS.remove : userShow.getWatchStatus());
+//            watchStatus = show.getWatchStatus();
+//            yoursRating = savedInstanceState.getDouble("yoursRating");
+//            populateUI(show);
+//        } else {
+
+            Serializable s =  getArguments().getSerializable("show");
+            if (s instanceof Show){
+                show = (Show) s;
+                watchStatus = show.getWatchStatus();
+                yoursRating = getArguments().getDouble("rating");
+                populateUI(show);
+            //}
         }
 
     }
+
 
     private void populateUI(Show show) {
         showLogo = (ImageView) view.findViewById(R.id.show_logo);
@@ -138,9 +147,45 @@ public class ShowFragment extends Fragment {
 
             statusButtonsLayoyt.setVisibility(View.VISIBLE);
             updateStatusButtons();
+
+
+
+            watchingButton.setOnClickListener(statusButtonsListener);
+            willWatchButton.setOnClickListener(statusButtonsListener);
+            cancelledButton.setOnClickListener(statusButtonsListener);
+            removeButton.setOnClickListener(statusButtonsListener);
         }
 
+
+
+
+
     }
+
+    View.OnClickListener statusButtonsListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.button_watching:
+                    watchStatus = MyShowsApi.STATUS.watching;
+                    break;
+                case R.id.button_will_watch:
+                    watchStatus = MyShowsApi.STATUS.later;
+                    break;
+                case R.id.button_cancelled:
+                    watchStatus = MyShowsApi.STATUS.cancelled;
+                    break;
+                case R.id.button_remove:
+                    watchStatus = MyShowsApi.STATUS.remove;
+                    break;
+            }
+            if (!show.getWatchStatus().equals(watchStatus)) {
+                ChangeShowStatusTask task = new ChangeShowStatusTask(getActivity());
+                task.execute(show.getShowId(), watchStatus);
+            }
+        }
+    };
+
 
 
     @Override
@@ -201,6 +246,10 @@ public class ShowFragment extends Fragment {
             removeButton.setBackgroundDrawable(isRemove ? getResources().getDrawable(R.drawable.red_label) : null);
         }
     }
+
+
+
+
 
     public void changeShowStatus(View v) {
 

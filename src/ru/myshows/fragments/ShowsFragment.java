@@ -118,7 +118,7 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
 
     @Override
     public void executeUpdateTask() {
-        GetShowsTask task = new GetShowsTask(getActivity(), true, GetShowsTask.SHOWS_USER);
+        GetShowsTask task = new GetShowsTask(getActivity(), true, action);
         task.setTaskListener(this);
         list.setVisibility(View.GONE);
         progress.setVisibility(View.VISIBLE);

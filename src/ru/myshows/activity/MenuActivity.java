@@ -2,6 +2,7 @@ package ru.myshows.activity;
 
 import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,16 +10,30 @@ import android.content.res.Configuration;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.PagerTabStrip;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.*;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
+import ru.myshows.adapters.EpisodesAdapter;
+import ru.myshows.fragments.LoginFragment;
+import ru.myshows.fragments.ProfileFragment;
 import ru.myshows.fragments.ShowsFragment;
+import ru.myshows.tasks.GetShowsTask;
+import ru.myshows.tasks.Taskable;
 import ru.myshows.util.Settings;
 
 
@@ -35,27 +50,23 @@ public abstract class MenuActivity extends ActionBarActivity {
     protected ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
 
-    private CharSequence mDrawerTitle;
-    private CharSequence mTitle;
     private String[] menu;
     private MenuAdapter adapter;
+    private SearchView search;
 
-    protected abstract int getContentViewId();
+   protected abstract int getContentViewId();
 
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getContentViewId());
+        setContentView(getContentViewId());
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
-        mTitle = mDrawerTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-
         getSupportActionBar().setIcon(R.drawable.ic_list_logo);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setHomeButtonEnabled(true);
 
         BitmapDrawable bg = (BitmapDrawable) getResources().getDrawable(R.drawable.stripe_red);
         bg.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
@@ -64,32 +75,22 @@ public abstract class MenuActivity extends ActionBarActivity {
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
 
             public void onDrawerClosed(View view) {
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
             }
 
             public void onDrawerOpened(View drawerView) {
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
                 if (adapter != null)
                     adapter.notifyDataSetChanged();
             }
         };
 
-
-//        mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-        //if (MyShows.isLoggedIn)
-        //    setupDrawer();
     }
 
     protected void setupDrawer() {
 
         if (MyShows.isLoggedIn) {
             menu = getResources().getStringArray(R.array.left_menu);
-
-//        mTitle = mDrawerTitle = getTitle();
-//        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
             // set a custom shadow that overlays the main content when the drawer opens
             mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
             adapter = new MenuAdapter(this, R.layout.drawer_list_item, menu);
@@ -100,33 +101,70 @@ public abstract class MenuActivity extends ActionBarActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
 
-//        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
-//
-//            public void onDrawerClosed(View view) {
-//                invalidateOptionsMenu();
-//            }
-//
-//            public void onDrawerOpened(View drawerView) {
-//                invalidateOptionsMenu();
-//                if (adapter != null)
-//                    adapter.notifyDataSetChanged();
-//            }
-//        };
+
             mDrawerLayout.setDrawerListener(mDrawerToggle);
-            //mDrawerLayout.setVisibility(View.VISIBLE);
-        } else {
-            mDrawerList.setVisibility(View.GONE);
-            //mDrawerLayout.setVisibility(View.GONE);
-          //  mDrawerLayout.setEnabled(false);
         }
 
     }
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_search).setVisible(MyShows.isLoggedIn);
+        menu.findItem(R.id.action_refresh).setVisible(MyShows.isLoggedIn);
+
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        search = (android.support.v7.widget.SearchView) MenuItemCompat.getActionView(searchItem);
+        search.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean queryTextFocused) {
+                if (!queryTextFocused) {
+                    MenuItemCompat.collapseActionView(searchItem);
+                    search.setQuery("", false);
+                }
+            }
+        });
+
+        return super.onPrepareOptionsMenu(menu);
+    }
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (mDrawerToggle.onOptionsItemSelected(item))
             return true;
+
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+//                int position = pager.getCurrentItem();
+//                Fragment currentFragment = getFragment(position);
+//                if (currentFragment != null)
+//                    ((Taskable) currentFragment).executeUpdateTask();
+                break;
+            case R.id.action_search:
+                search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String s) {
+                        // search here
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String s) {
+                        return false;
+                    }
+                });
+                SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+                search.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+                break;
+
+        }
+        //return true;
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -142,7 +180,7 @@ public abstract class MenuActivity extends ActionBarActivity {
                     Context context = MenuActivity.this;
                     Intent intent;
                         switch (position) {
-                            // main page
+                            // Episodes
                             case 0:
                                 if (!(MenuActivity.this instanceof MainActivity)) {
                                     if (getActivityDepth() == 2) {
@@ -156,35 +194,28 @@ public abstract class MenuActivity extends ActionBarActivity {
                                 break;
                             //profile
                             case 1:
-                                intent = new Intent(context, ShowsActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivity(intent);
-                                break;
-                            //Tracker
-                            case 2:
                                 intent = new Intent(context, ProfileActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
-                                break;
-                            //Messages
-                            case 3:
 
                                 break;
-                            //Favourites
-                            case 4:
+                            //News
+                            case 2:
+                                intent = new Intent(context, NewsActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+
+                                break;
+                            //Shows Rating
+                            case 3:
                                 intent = new Intent(context, ShowsActivity.class);
                                 intent.putExtra("action", ShowsFragment.SHOWS_TOP);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
                                 break;
-                            //PDD
-                            case 5:
-                                intent = new Intent(context, SettingsAcrivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivity(intent);
-                                break;
-                            //sings
-                            case 6:
+                            //Favourites
+
+                            case 4:
                                 final AlertDialog alert;
                                 AlertDialog.Builder builder = new AlertDialog.Builder(MenuActivity.this)
                                         .setTitle(R.string.request_exit)
@@ -218,7 +249,7 @@ public abstract class MenuActivity extends ActionBarActivity {
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(10);
         for (ActivityManager.RunningTaskInfo task : tasks) {
-            if (task.baseActivity.getClassName().equals("ru.autokadabra.ui.activities.MainActivity")) {
+            if (task.baseActivity.getClassName().equals("ru.myshows.activity.MainActivity")) {
 //                try {
 //                    Intent launchTopIntent = new Intent(context, Class.forName(task.topActivity.getClassName()));
 //                    context.startActivity(launchTopIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
@@ -283,56 +314,28 @@ public abstract class MenuActivity extends ActionBarActivity {
             }
 
 
-//            if (MyShows.isLoggedIn) {
-//
-//                switch (position) {
-//                    case 0:
-//                        holder.image.setImageResource(R.drawable.ic_action_ic_menu_home);
-//                        break;
-//                    case 1:
-//                        holder.image.setImageResource(R.drawable.ic_action_social_person);
-//                        break;
-//                    case 2:
-//                        holder.image.setImageResource(R.drawable.ic_action_collections_cloud);
-//                        break;
-//                    case 3:
-//                        holder.image.setImageResource(R.drawable.content_email);
-//                        break;
-//                    case 4:
-//                        holder.image.setImageResource(R.drawable.ic_action_rating_important);
-//                        break;
-//                    case 5:
-//                        holder.image.setImageResource(R.drawable.ic_action_collections_view_as_list);
-//                        break;
-//                    case 6:
-//                        holder.image.setImageResource(R.drawable.ic_action_alerts_and_states_warning);
-//                        break;
-//                    case 7:
-//                        holder.image.setImageResource(R.drawable.ic_action_device_access_storage_1);
-//                        break;
-//                    case 8:
-//                        holder.image.setImageResource(R.drawable.ic_action_social_reply);
-//                        break;
-//                }
-//            } else {
-//                switch (position) {
-//                    case 0:
-//                        holder.image.setImageResource(R.drawable.ic_action_ic_menu_home);
-//                        break;
-//                    case 1:
-//                        holder.image.setImageResource(R.drawable.ic_action_social_forward);
-//                        break;
-//                    case 2:
-//                        holder.image.setImageResource(R.drawable.ic_action_collections_view_as_list);
-//                        break;
-//                    case 3:
-//                        holder.image.setImageResource(R.drawable.ic_action_alerts_and_states_warning);
-//                        break;
-//                    case 4:
-//                        holder.image.setImageResource(R.drawable.ic_action_device_access_storage_1);
-//                        break;
-//                }
-//            }
+
+                switch (position) {
+                    case 0:
+                        holder.image.setImageResource(R.drawable.ic_action_film2);
+                        break;
+                    // profile
+                    case 1:
+                        holder.image.setImageResource(R.drawable.ic_action_social_person);
+                        break;
+                    // news
+                    case 2:
+                        holder.image.setImageResource(R.drawable.ic_action_device_access_storage_1);
+                        break;
+                    // rating
+                    case 3:
+                        holder.image.setImageResource(R.drawable.ic_rating_important);
+                        break;
+                    //logout
+                    case 4:
+                        holder.image.setImageResource(R.drawable.ic_action_gnome_session_logout);
+                        break;
+                }
 
             holder.title.setText(getItem(position));
 
@@ -347,213 +350,6 @@ public abstract class MenuActivity extends ActionBarActivity {
         }
     }
 
-//    private android.view.MenuItem getMenuItem(final MenuItem item) {
-//        return new android.view.MenuItem() {
-//            @Override
-//            public int getItemId() {
-//                return item.getItemId();
-//            }
-//
-//            public boolean isEnabled() {
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean collapseActionView() {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean expandActionView() {
-//                return false;
-//            }
-//
-//            @Override
-//            public ActionProvider getActionProvider() {
-//                return null;
-//            }
-//
-//            @Override
-//            public View getActionView() {
-//                return null;
-//            }
-//
-//            @Override
-//            public char getAlphabeticShortcut() {
-//                return 0;
-//            }
-//
-//            @Override
-//            public int getGroupId() {
-//                return 0;
-//            }
-//
-//            @Override
-//            public Drawable getIcon() {
-//                return null;
-//            }
-//
-//            @Override
-//            public Intent getIntent() {
-//                return null;
-//            }
-//
-//            @Override
-//            public ContextMenu.ContextMenuInfo getMenuInfo() {
-//                return null;
-//            }
-//
-//            @Override
-//            public char getNumericShortcut() {
-//                return 0;
-//            }
-//
-//            @Override
-//            public int getOrder() {
-//                return 0;
-//            }
-//
-//            @Override
-//            public SubMenu getSubMenu() {
-//                return null;
-//            }
-//
-//            @Override
-//            public CharSequence getTitle() {
-//                return null;
-//            }
-//
-//            @Override
-//            public CharSequence getTitleCondensed() {
-//                return null;
-//            }
-//
-//            @Override
-//            public boolean hasSubMenu() {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean isActionViewExpanded() {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean isCheckable() {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean isChecked() {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean isVisible() {
-//                return false;
-//            }
-//
-//            @Override
-//            public android.view.MenuItem setActionProvider(ActionProvider actionProvider) {
-//                return null;
-//            }
-//
-//            @Override
-//            public android.view.MenuItem setActionView(View view) {
-//                return null;
-//            }
-//
-//            @Override
-//            public android.view.MenuItem setActionView(int resId) {
-//                return null;
-//            }
-//
-//            @Override
-//            public android.view.MenuItem setAlphabeticShortcut(char alphaChar) {
-//                return null;
-//            }
-//
-//            @Override
-//            public android.view.MenuItem setCheckable(boolean checkable) {
-//                return null;
-//            }
-//
-//            @Override
-//            public android.view.MenuItem setChecked(boolean checked) {
-//                return null;
-//            }
-//
-//            @Override
-//            public android.view.MenuItem setEnabled(boolean enabled) {
-//                return null;
-//            }
-//
-//            @Override
-//            public android.view.MenuItem setIcon(Drawable icon) {
-//                return null;
-//            }
-//
-//            @Override
-//            public android.view.MenuItem setIcon(int iconRes) {
-//                return null;
-//            }
-//
-//            @Override
-//            public android.view.MenuItem setIntent(Intent intent) {
-//                return null;
-//            }
-//
-//            @Override
-//            public android.view.MenuItem setNumericShortcut(char numericChar) {
-//                return null;
-//            }
-//
-//            @Override
-//            public android.view.MenuItem setOnActionExpandListener(OnActionExpandListener listener) {
-//                return null;
-//            }
-//
-//            @Override
-//            public android.view.MenuItem setOnMenuItemClickListener(OnMenuItemClickListener menuItemClickListener) {
-//                return null;
-//            }
-//
-//            @Override
-//            public android.view.MenuItem setShortcut(char numericChar, char alphaChar) {
-//                return null;
-//            }
-//
-//            @Override
-//            public void setShowAsAction(int actionEnum) {
-//
-//            }
-//
-//            @Override
-//            public android.view.MenuItem setShowAsActionFlags(int actionEnum) {
-//                return null;
-//            }
-//
-//            @Override
-//            public android.view.MenuItem setTitle(CharSequence title) {
-//                return null;
-//            }
-//
-//            @Override
-//            public android.view.MenuItem setTitle(int title) {
-//                return null;
-//            }
-//
-//            @Override
-//            public android.view.MenuItem setTitleCondensed(CharSequence title) {
-//                return null;
-//            }
-//
-//            @Override
-//            public android.view.MenuItem setVisible(boolean visible) {
-//                return null;
-//            }
-//        };
-//    }
 
 
 }

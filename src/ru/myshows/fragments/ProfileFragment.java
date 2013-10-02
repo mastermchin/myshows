@@ -99,11 +99,10 @@ public class ProfileFragment extends Fragment implements TaskListener<Profile>, 
 
     @Override
     public void executeTask() {
-        if (isTaskExecuted)
-            return;
+        String login =  getArguments().getString("login");
         GetProfileTask profileTask = new GetProfileTask(getActivity());
         profileTask.setTaskListener(this);
-        profileTask.execute(Settings.getString(Settings.KEY_LOGIN));
+        profileTask.execute(login);
     }
 
     @Override

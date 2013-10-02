@@ -1,33 +1,19 @@
 package ru.myshows.activity;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Shader;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import ru.myshows.adapters.EpisodesAdapter;
-import ru.myshows.fragments.LoginFragment;
+import ru.myshows.fragments.NewsFragment;
 import ru.myshows.fragments.ShowsFragment;
 import ru.myshows.tasks.GetShowsTask;
-import ru.myshows.tasks.Taskable;
-import ru.myshows.util.Settings;
 
 /**
  * @Author: Georgy Gobozov
  * @Date: 12.05.2011
  */
-public class ShowsActivity extends MenuActivity {
+public class NewsActivity extends MenuActivity {
 
     private ViewPager pager;
 
@@ -41,18 +27,8 @@ public class ShowsActivity extends MenuActivity {
         super.onCreate(savedInstanceState);
         pager = (ViewPager) findViewById(R.id.pager);
         pager.setVisibility(View.GONE);
-
-
-
-        Bundle args = new Bundle();
-        args.putInt("action", getIntent().getIntExtra("action", GetShowsTask.SHOWS_USER));
-        Fragment showsFragment = new ShowsFragment();
-        showsFragment.setArguments(args);
-
-
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().add(R.id.main, showsFragment).commitAllowingStateLoss();
-
+        fragmentManager.beginTransaction().add(R.id.main, new NewsFragment()).commitAllowingStateLoss();
         setupDrawer();
     }
 

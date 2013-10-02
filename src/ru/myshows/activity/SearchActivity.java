@@ -108,7 +108,7 @@ public class SearchActivity extends ActionBarActivity {
                 }
                 break;
             case 2:
-                startActivity(new Intent(this, SettingsAcrivity.class));
+               // startActivity(new Intent(this, SettingsAcrivity.class));
                 break;
             case 3:
                 searchField = (EditText) item.getActionView();

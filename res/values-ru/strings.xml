@@ -159,6 +159,11 @@
         <item>Статистика</item>
     </string-array>
 
+    <string-array name="show_titles">
+        <item>Сериал</item>
+        <item>Эпизоды</item>
+    </string-array>
+
     <string-array name="login">
         <item>Вход</item>
     </string-array>

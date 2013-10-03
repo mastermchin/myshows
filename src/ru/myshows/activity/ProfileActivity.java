@@ -42,42 +42,21 @@ public class ProfileActivity extends MenuActivity {
         String login = (String) getBundleValue(getIntent(), "login", Settings.getString(Settings.KEY_LOGIN));
 
 
-//
-//        if (login != null) {
-//
-//            getSupportActionBar().setTitle(login);
-//
-//            Bundle args = new Bundle();
-//            args.putString("login", login);
-//
-//            ProfileFragment profileFragment = new ProfileFragment();
-//            profileFragment.setArguments(args);
-//            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//            ft.add(R.id.main, profileFragment).commit();
-////            GetProfileTask getProfileTask = new GetProfileTask(this);
-////            getProfileTask.setTaskListener(profileFragment);
-////            getProfileTask.execute(login);
-//            setupDrawer();
-//        }
+        boolean isOwner = login.equalsIgnoreCase(Settings.getString(Settings.KEY_LOGIN));
 
+        List<Fragment> fragments = new LinkedList<Fragment>();
+        if (isOwner)
+            fragments.add(new ShowsFragment());
+        fragments.add(new ProfileFragment());
 
-        //adapter = new ProfileAdapter(ProfileActivity.this, getSupportFragmentManager());
+        Bundle args = new Bundle();
+        if (isOwner)
+            args.putInt("action", ShowsFragment.SHOWS_USER);
+        args.putString("login", login);
 
-         boolean isOwner = login.equalsIgnoreCase(Settings.getString(Settings.KEY_LOGIN));
-
-            List<Fragment> fragments = new LinkedList<Fragment>();
-            if (isOwner)
-                fragments.add(new ShowsFragment());
-            fragments.add(new ProfileFragment());
-
-            Bundle args = new Bundle();
-            if (isOwner)
-                args.putInt("action", ShowsFragment.SHOWS_USER);
-            args.putString("login", login);
-
-            adapter = new FragmentAdapter(ProfileActivity.this, getSupportFragmentManager(), fragments, args, isOwner ? R.array.profile_titles : R.array.stats_titles);
-            pager.setAdapter(adapter);
-            setupDrawer();
+        adapter = new FragmentAdapter(ProfileActivity.this, getSupportFragmentManager(), fragments, args, isOwner ? R.array.profile_titles : R.array.stats_titles);
+        pager.setAdapter(adapter);
+        setupDrawer();
     }
 
     private Object getBundleValue(Intent intent, String key, Object defaultValue) {

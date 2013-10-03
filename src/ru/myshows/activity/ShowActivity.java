@@ -4,29 +4,22 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Shader;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.view.*;
 import android.widget.*;
 import ru.myshows.adapters.FragmentAdapter;
-import ru.myshows.adapters.TabsAdapter;
 import ru.myshows.api.MyShowsApi;
 import ru.myshows.domain.Show;
 import ru.myshows.domain.UserShow;
 import ru.myshows.fragments.EpisodesFragment;
-import ru.myshows.fragments.ProfileFragment;
 import ru.myshows.fragments.ShowFragment;
-import ru.myshows.fragments.ShowsFragment;
 import ru.myshows.tasks.GetShowTask;
 import ru.myshows.tasks.TaskListener;
-import ru.myshows.util.Settings;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -66,13 +59,9 @@ public class ShowActivity extends MenuActivity implements TaskListener<Show> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.show_info);
         this.savedInstanceState = savedInstanceState;
 
-        //tabsAdapter = new TabsAdapter(getSupportFragmentManager(), true);
         pager = (ViewPager) findViewById(R.id.pager);
-        //pager.setAdapter(tabsAdapter);
-
         pagerTabStrip = (PagerTabStrip) findViewById(R.id.pagerTabStrip);
         pagerTabStrip.setTabIndicatorColorResource(R.color.light_red);
 
@@ -80,12 +69,8 @@ public class ShowActivity extends MenuActivity implements TaskListener<Show> {
         indicatorLayout = (LinearLayout) findViewById(R.id.indicator_layout);
 
         title = (String) getBundleValue(getIntent(), "title", null);
-
-
         if (title != null)
             getSupportActionBar().setTitle(title);
-
-
 
         showId = (Integer) getBundleValue(getIntent(), "showId", null);
         if (savedInstanceState != null) {
@@ -117,21 +102,7 @@ public class ShowActivity extends MenuActivity implements TaskListener<Show> {
         progress.setVisibility(View.GONE);
         indicatorLayout.setVisibility(View.VISIBLE);
 
-//        if (savedInstanceState == null) {
-//            tabsAdapter.addFragment(new ShowFragment(result, yoursRating), getResources().getString(R.string.tab_show));
-//            tabsAdapter.addFragment(new EpisodesFragment(result), getResources().getString(R.string.tab_episodes));
-//        } else {
-//            Integer count = savedInstanceState.getInt("tabsCount");
-//            String[] titles = savedInstanceState.getStringArray("titles");
-//            for (int i = 0; i < count; i++) {
-//                tabsAdapter.addFragment(getFragment(i), titles[i]);
-//            }
-//            pager.setCurrentItem(savedInstanceState.getInt("currentTab"));
-//        }
-//
         populateExternalLinkActions(result);
-//        //indicator.notifyDataSetChanged();
-//        tabsAdapter.notifyDataSetChanged();
 
         List<Fragment> fragments = new LinkedList<Fragment>();
         fragments.add(new ShowFragment());
@@ -169,15 +140,17 @@ public class ShowActivity extends MenuActivity implements TaskListener<Show> {
     }
 
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case android.R.id.home:
-//                finish();
-//                break;
-//        }
-//        return true;
-//    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.action_refresh) {
+            GetShowTask getShowTask = new GetShowTask(ShowActivity.this);
+            getShowTask.setTaskListener(ShowActivity.this);
+            getShowTask.execute(showId);
+        }
+        return true;
+    }
+
 
     private Object getBundleValue(Intent intent, String key, Object defaultValue) {
         if (intent == null) return defaultValue;
@@ -202,56 +175,27 @@ public class ShowActivity extends MenuActivity implements TaskListener<Show> {
         LinksAdapter linkAdapter = new LinksAdapter(this, R.layout.external_link, links);
 
 
-        View customNav = LayoutInflater.from(this).inflate(R.layout.custom_show_action_bar, null);
+
+
+        //View customNav = LayoutInflater.from(this).inflate(R.layout.custom_show_action_bar, null);
+
         //getSupportActionBar().setListNavigationCallbacks(linkAdapter, );
-        Spinner spinner = (Spinner) customNav.findViewById(R.id.spinner);
-        spinner.setAdapter(linkAdapter);
+
+        //Spinner spinner = (Spinner) customNav.findViewById(R.id.spinner);
+        //spinner.setAdapter(linkAdapter);
+
+        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        getSupportActionBar().setListNavigationCallbacks(linkAdapter, new ActionBar.OnNavigationListener() {
+            @Override
+            public boolean onNavigationItemSelected(int i, long l) {
+
+                    return true;
+            }
+        });
 
 
-
-//        ImageView refresh = (ImageView) customNav.findViewById(R.id.refresh);
-//        refresh.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                GetShowTask getShowTask = new GetShowTask(ShowActivity.this, true);
-//                getShowTask.setTaskListener(new TaskListener<Show>() {
-//                    @Override
-//                    public void onTaskComplete(Show result) {
-//                        UserShow us = MyShows.getUserShow(showId);
-//                        if (us != null)
-//                            watchStatus = us.getWatchStatus();
-//                        result.setWatchStatus(watchStatus);
-//                        progress.setVisibility(View.GONE);
-//                        indicatorLayout.setVisibility(View.VISIBLE);
-//                        ShowFragment showFragment = (ShowFragment) getFragment(0);
-//                        showFragment.refresh(result);
-//                        EpisodesFragment episodesFragment = (EpisodesFragment) getFragment(1);
-//                        episodesFragment.refresh(result);
-//                        adapter.notifyDataSetChanged();
-//                    }
-//
-//                    @Override
-//                    public void onTaskFailed(Exception e) {
-//
-//                    }
-//                });
-//                progress.setVisibility(View.VISIBLE);
-//                indicatorLayout.setVisibility(View.GONE);
-//                //tabsAdapter = new TabsAdapter(getSupportFragmentManager(), true);
-//                getShowTask.execute(showId);
-//            }
-//        });
-//
-//        ImageView settings = (ImageView) customNav.findViewById(R.id.settings);
-//        settings.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //startActivity(new Intent(ShowActivity.this, SettingsAcrivity.class));
-//            }
-//        });
-
-        getSupportActionBar().setCustomView(customNav, new ActionBar.LayoutParams(Gravity.RIGHT));
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        //getSupportActionBar().setCustomView(customNav, new ActionBar.LayoutParams(Gravity.RIGHT));
+        //getSupportActionBar().setDisplayShowCustomEnabled(true);
 
     }
 
@@ -307,7 +251,7 @@ public class ShowActivity extends MenuActivity implements TaskListener<Show> {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             // at 0 position show only icon
 
-            TextView site = (TextView) inflater.inflate(R.layout.external_link, null);
+            TextView site = (TextView) inflater.inflate(R.layout.external_link, parent, false);
             site.setText(siteLink.getName());
 
             site.setOnClickListener(new View.OnClickListener() {
@@ -331,26 +275,26 @@ public class ShowActivity extends MenuActivity implements TaskListener<Show> {
         }
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt("showId", showId);
-        if (adapter != null) {
-            outState.putInt("tabsCount", adapter.getCount());
-            //List<String> titles = adapter.getTitles();
-            //outState.putStringArray("titles", titles.toArray(new String[titles.size()]));
-        }
-        if (pager != null)
-            outState.putInt("currentTab", pager.getCurrentItem());
-
-    }
-
-    private Fragment getFragment(int position) {
-        return savedInstanceState == null ? adapter.getItem(position) : getSupportFragmentManager().findFragmentByTag(getFragmentTag(position));
-    }
-
-    private String getFragmentTag(int position) {
-        return "android:switcher:" + R.id.pager + ":" + position;
-    }
+//    @Override
+//    protected void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        outState.putInt("showId", showId);
+//        if (adapter != null) {
+//            outState.putInt("tabsCount", adapter.getCount());
+//            //List<String> titles = adapter.getTitles();
+//            //outState.putStringArray("titles", titles.toArray(new String[titles.size()]));
+//        }
+//        if (pager != null)
+//            outState.putInt("currentTab", pager.getCurrentItem());
+//
+//    }
+//
+//    private Fragment getFragment(int position) {
+//        return savedInstanceState == null ? adapter.getItem(position) : getSupportFragmentManager().findFragmentByTag(getFragmentTag(position));
+//    }
+//
+//    private String getFragmentTag(int position) {
+//        return "android:switcher:" + R.id.pager + ":" + position;
+//    }
 
 }

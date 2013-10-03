@@ -125,12 +125,6 @@ public abstract class MenuActivity extends ActionBarActivity {
             return true;
 
         switch (item.getItemId()) {
-//            case R.id.action_refresh:
-////                int position = pager.getCurrentItem();
-////                Fragment currentFragment = getFragment(position);
-////                if (currentFragment != null)
-////                    ((Taskable) currentFragment).executeUpdateTask();
-//                break;
             case R.id.action_search:
                 search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                     @Override

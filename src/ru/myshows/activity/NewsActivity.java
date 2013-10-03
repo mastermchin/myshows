@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.view.MenuItem;
 import android.view.View;
 import ru.myshows.fragments.NewsFragment;
 import ru.myshows.fragments.ShowsFragment;
 import ru.myshows.tasks.GetShowsTask;
+import ru.myshows.tasks.Taskable;
 
 /**
  * @Author: Georgy Gobozov
@@ -28,67 +30,23 @@ public class NewsActivity extends MenuActivity {
         pager = (ViewPager) findViewById(R.id.pager);
         pager.setVisibility(View.GONE);
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().add(R.id.main, new NewsFragment()).commitAllowingStateLoss();
+        fragmentManager.beginTransaction().add(R.id.main, new NewsFragment(), "news").commitAllowingStateLoss();
         setupDrawer();
     }
 
 
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.main, menu);
-//        return super.onCreateOptionsMenu(menu);
-//    }
-//
-//
-//    @Override
-//    public boolean onPrepareOptionsMenu(Menu menu) {
-//        menu.findItem(R.id.action_search).setVisible(MyShows.isLoggedIn);
-//        menu.findItem(R.id.action_refresh).setVisible(MyShows.isLoggedIn);
-//        return super.onPrepareOptionsMenu(menu);
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        super.onOptionsItemSelected(item);
-//        switch (item.getItemId()) {
-//            case 1:
-//                int position = pager.getCurrentItem();
-//                if (!MyShows.isLoggedIn)
-//                    break;
-//                Fragment currentFragment = getFragment(position);
-//                if (currentFragment != null)
-//                    ((Taskable) currentFragment).executeUpdateTask();
-//
-//                break;
-//
-//        }
-//        return true;
-//    }
-
-//    private TextWatcher filterTextWatcher = new TextWatcher() {
-//        public void afterTextChanged(Editable s) {
-//        }
-//
-//        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//        }
-//
-//        public void onTextChanged(CharSequence s, int start, int before, int count) {
-//            Fragment fragment = getFragment(pager.getCurrentItem());
-//            if (fragment instanceof Searchable) {
-//                ((Searchable) fragment).getAdapter().getFilter().filter(s);
-//            }
-//        }
-//
-//    };
-//
-
-    private Fragment getFragment(int position) {
-        return  getSupportFragmentManager().findFragmentByTag(getFragmentTag(position));
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.action_refresh) {
+            Fragment currentFragment = getSupportFragmentManager().findFragmentByTag("news");
+            if (currentFragment != null)
+                ((Taskable) currentFragment).executeUpdateTask();
+        }
+        return true;
     }
-//
-    private String getFragmentTag(int position) {
-        return "android:switcher:" + R.id.pager + ":" + position;
-    }
+
+
 
 
 

@@ -51,7 +51,6 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
     private int action;
     private ListView list;
     private ProgressBar progress;
-    private boolean isTaskExecuted = false;
     private SectionedAdapter adapter;
 
 
@@ -83,7 +82,6 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
         progress.setVisibility(View.GONE);
         progress.setIndeterminate(false);
         list.setVisibility(View.VISIBLE);
-        isTaskExecuted = true;
         MyShows.isUserShowsChanged = false;
     }
 

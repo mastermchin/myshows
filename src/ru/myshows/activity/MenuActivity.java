@@ -38,7 +38,7 @@ public abstract class MenuActivity extends ActionBarActivity {
 
     private String[] menu;
     private MenuAdapter adapter;
-    private SearchView search;
+    protected SearchView search;
 
    protected abstract int getContentViewId();
 

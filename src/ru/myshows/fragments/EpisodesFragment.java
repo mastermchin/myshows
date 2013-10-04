@@ -35,12 +35,7 @@ public class EpisodesFragment extends Fragment {
     private DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
     private ActionMode mMode;
 
-    public EpisodesFragment(Show show) {
-        this.show = show;
-    }
 
-    public EpisodesFragment() {
-    }
 
     public void refresh(Show show) {
         Collection<Episode> episodes = show.getEpisodes();

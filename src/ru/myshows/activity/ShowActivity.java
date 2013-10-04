@@ -143,9 +143,9 @@ public class ShowActivity extends MenuActivity implements TaskListener<Show> {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
-        indicatorLayout.setVisibility(View.GONE);
-        progress.setVisibility(View.VISIBLE);
         if (item.getItemId() == R.id.action_refresh) {
+            indicatorLayout.setVisibility(View.GONE);
+            progress.setVisibility(View.VISIBLE);
             GetShowTask getShowTask = new GetShowTask(ShowActivity.this);
             getShowTask.setTaskListener(ShowActivity.this);
             getShowTask.execute(showId);

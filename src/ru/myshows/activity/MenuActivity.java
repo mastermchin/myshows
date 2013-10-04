@@ -130,6 +130,10 @@ public abstract class MenuActivity extends ActionBarActivity {
                     @Override
                     public boolean onQueryTextSubmit(String s) {
                         // search here
+                        Intent intent = new Intent(MenuActivity.this, ShowsActivity.class);
+                        intent.putExtra("action", ShowsFragment.SHOWS_SEARCH);
+                        intent.putExtra("search", s);
+                        startActivity(intent);
                         return false;
                     }
 

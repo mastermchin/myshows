@@ -37,6 +37,8 @@ public class ShowsActivity extends MenuActivity {
 
         Bundle args = new Bundle();
         args.putInt("action", getIntent().getIntExtra("action", GetShowsTask.SHOWS_USER));
+        args.putString("search", getIntent().getStringExtra("search"));
+
         Fragment showsFragment = new ShowsFragment();
         showsFragment.setArguments(args);
 

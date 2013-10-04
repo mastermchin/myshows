@@ -109,9 +109,13 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
     @Override
     public void executeTask() {
         action = getArguments().getInt("action");
+        String search = getArguments().getString("search");
         GetShowsTask task = new GetShowsTask(getActivity(), action );
         task.setTaskListener(this);
-        task.execute();
+        if (search != null)
+            task.execute(search);
+        else
+            task.execute();
     }
 
     @Override

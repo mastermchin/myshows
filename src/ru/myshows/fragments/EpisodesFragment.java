@@ -216,26 +216,18 @@ public class EpisodesFragment extends Fragment {
         }
 
 
-        public void checkAll() {
+        public void checkUncheckAll(boolean state) {
             for (Season s : groups) {
-                s.setChecked(true);
+                s.setChecked(state);
             }
             for (Episode e : (List<Episode>) getAllChildrenAsList()) {
                 if (e.getAirDate() != null && e.getAirDate().before(new Date()))
-                    e.setChecked(true);
+                    e.setChecked(state);
             }
             adapter.notifyDataSetChanged();
         }
 
-        public void uncheckAll() {
-            for (Season s : groups) {
-                s.setChecked(false);
-            }
-            for (Episode e : (List<Episode>) getAllChildrenAsList()) {
-                e.setChecked(false);
-            }
-            adapter.notifyDataSetChanged();
-        }
+
 
         public boolean isAllChecked() {
             for (int i = 0; i < getGroupCount(); i++) {
@@ -416,9 +408,7 @@ public class EpisodesFragment extends Fragment {
     private final class SaveEpisodesActionMode implements ActionMode.Callback {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            //Used to put dark icons on light action bar
-            menu.add(0, 1, 1, R.string.save).setIcon(R.drawable.ic_save).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-            menu.add(0, 2, 2, R.string.menu_check_all).setIcon(R.drawable.ic_check_all).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            mode.getMenuInflater().inflate(R.menu.new_episodes, menu);
             return true;
         }
 
@@ -430,15 +420,26 @@ public class EpisodesFragment extends Fragment {
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
-                case 1:
+                case R.id.action_save:
                     new CheckEpisodesTask().execute();
                     mode.finish();
                     break;
-                case 2:
-                    if (adapter.isAllChecked())
-                        adapter.uncheckAll();
-                    else
-                        adapter.checkAll();
+
+                case R.id.action_rate:
+
+//                    Handler handler = new Handler() {
+//                        @Override
+//                        public void handleMessage(Message msg) {
+//                            int rating = msg.arg1;
+//                            new NewEpisodesFragment.ChangeEpisodesRateTask().execute(rating);
+//                        }
+//                    };
+//                    RatingDialog rate = new RatingDialog(getActivity(), handler);
+//                    rate.setTitle(R.string.episode_rating);
+//                    rate.show();
+                    break;
+                case R.id.action_check_all:
+                    adapter.checkUncheckAll(!adapter.isAllChecked());
                     break;
             }
             return true;

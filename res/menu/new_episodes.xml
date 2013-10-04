@@ -1,0 +1,23 @@
+
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:yourapp="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/action_save"
+          android:icon="@drawable/ic_save"
+          android:title="@string/save"
+          yourapp:showAsAction="ifRoom|collapseActionView"
+            />
+
+    <item android:id="@+id/action_rate"
+          android:icon="@drawable/ic_rating_important"
+          android:title="@string/episode_rating"
+          yourapp:showAsAction="ifRoom|collapseActionView"
+            />
+
+    <item android:id="@+id/action_check_all"
+          android:icon="@drawable/ic_check_all"
+          android:title="@string/menu_check_all"
+          yourapp:showAsAction="ifRoom|collapseActionView"
+            />
+</menu>

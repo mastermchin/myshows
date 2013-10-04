@@ -110,7 +110,8 @@ public class ShowActivity extends MenuActivity implements TaskListener<Show> {
 
         Bundle args = new Bundle();
         args.putSerializable("show", result);
-        args.putDouble("rating", yoursRating);
+        if (yoursRating != null)
+            args.putDouble("rating", yoursRating);
 
         adapter = new FragmentAdapter(this, getSupportFragmentManager(), fragments, args, R.array.show_titles );
         pager.setAdapter(adapter);

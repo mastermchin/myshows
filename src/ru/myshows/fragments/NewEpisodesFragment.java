@@ -37,12 +37,7 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
     private ProgressBar progress;
     DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
     private LayoutInflater inflater;
-    private boolean isTaskExecuted = false;
     private ActionMode mMode;
-
-
-    public NewEpisodesFragment() {
-    }
 
 
     @Override
@@ -78,16 +73,9 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
 
     @Override
     public void executeTask() {
-        if (isTaskExecuted)
-            return;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                GetNewEpisodesTask episodesTask = new GetNewEpisodesTask(getActivity());
-                episodesTask.setTaskListener(NewEpisodesFragment.this);
-                episodesTask.execute();
-            }
-        }, 1000);
+        GetNewEpisodesTask episodesTask = new GetNewEpisodesTask(getActivity());
+        episodesTask.setTaskListener(NewEpisodesFragment.this);
+        episodesTask.execute();
     }
 
     @Override
@@ -107,7 +95,6 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
         progress.setVisibility(View.GONE);
         progress.setIndeterminate(false);
         list.setVisibility(View.VISIBLE);
-        isTaskExecuted = true;
     }
 
     @Override
@@ -133,8 +120,8 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
 
     public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 
-        private ArrayList<UserShow> shows = new ArrayList<UserShow>();
-        private ArrayList<List<Episode>> children = new ArrayList<List<Episode>>();
+        private LinkedList<UserShow> shows = new LinkedList<UserShow>();
+        private LinkedList<List<Episode>> children = new LinkedList<List<Episode>>();
 
 
         public MyExpandableListAdapter(Collection<Episode> eps) {
@@ -162,12 +149,12 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
             for (Map.Entry<Integer, List<Episode>> entry : episodesByShows.entrySet()) {
                 Integer showId = entry.getKey();
                 UserShow show = MyShows.getUserShow(showId);
+                if (show == null)
+                    continue;
                 List<Episode> episodes = entry.getValue();
                 Collections.sort(episodes, new EpisodeComparator("shortName"));
-                //TODO FIXME
-                shows.add(show != null ? show : null);
+                shows.add(show);
                 children.add(episodes);
-                //adapter.addSection(title + "*", new EpisodesAdapter(getActivity(), R.layout.episode, episodes, title));
             }
 
         }
@@ -190,6 +177,26 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
             return childPosition;
         }
 
+
+        public void removeChild(Episode child) {
+            for (List<Episode> episodes : children) {
+
+                Iterator<Episode> episodeIterator = episodes.iterator();
+                while (episodeIterator.hasNext()) {
+                    if (episodeIterator.next().equals(child))
+                        episodeIterator.remove();
+                }
+
+            }
+
+            // remove empty groups
+            for (int i = 0; i < adapter.getGroupCount(); i++) {
+                if (getChildrenCount(i) == 0)
+                    shows.remove(i);
+            }
+
+        }
+
         public int getChildrenCount(int groupPosition) {
             return children.get(groupPosition).size();
         }
@@ -199,14 +206,31 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
         }
 
 
-        public void checkAll() {
+        public void checkUncheckAll(boolean state) {
             for (UserShow s : shows) {
-                s.setChecked(true);
+                s.setChecked(state);
             }
             for (Episode e : (List<Episode>) getAllChildrenAsList()) {
-                e.setChecked(true);
+                e.setChecked(state);
             }
             adapter.notifyDataSetChanged();
+        }
+
+
+        public boolean isAllChecked() {
+            for (int i = 0; i < getGroupCount(); i++) {
+                UserShow s = (UserShow) getGroup(i);
+                if (!s.isChecked())
+                    return false;
+                for (int j = 0; j < getChildrenCount(i); j++) {
+                    Episode e = (Episode) getChild(i, j);
+                    if (e.getAirDate() != null && e.getAirDate().before(new Date()) && !e.isChecked())
+                        return false;
+//                    if (!e.isChecked())
+//                        return false;
+                }
+            }
+            return true;
         }
 
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
@@ -283,27 +307,33 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
             holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    // TODO NPE HERE???
-                    UserShow userShow = (UserShow) getGroup(gp);
-                    episode.setChecked(isChecked);
-                    if (!isChecked && userShow.isChecked()) {
-                        userShow.setChecked(isChecked);
-                        adapter.notifyDataSetChanged();
-                    }
+                    try {
+                        // TODO NPE HERE???
+                        UserShow userShow = (UserShow) getGroup(gp);
+                        episode.setChecked(isChecked);
 
-                    boolean isAllEpisodesChecked = true;
-                    for (Episode e : (List<Episode>) getGroupChildren(gp)) {
-                        if (!e.isChecked()) {
-                            isAllEpisodesChecked = false;
-                            break;
+                        // uncheck group if group was checked and child became unchecked
+                        if (!isChecked && userShow.isChecked()) {
+                            userShow.setChecked(isChecked);
+                            adapter.notifyDataSetChanged();
                         }
-                    }
-                    if (isAllEpisodesChecked) {
-                        userShow.setChecked(true);
-                        notifyDataSetChanged();
-                    }
 
 
+                        boolean isAllEpisodesChecked = true;
+                        for (Episode e : (List<Episode>) getGroupChildren(gp)) {
+                            if (!e.isChecked()) {
+                                isAllEpisodesChecked = false;
+                                break;
+                            }
+                        }
+                        if (isAllEpisodesChecked) {
+                            userShow.setChecked(true);
+                            notifyDataSetChanged();
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
 
@@ -323,7 +353,7 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
                 @Override
                 public void onClick(View v) {
                     holder.checkBox.setChecked(!holder.checkBox.isChecked());
-                    if (mMode == null){
+                    if (mMode == null) {
                         ActionBarActivity activity = (ActionBarActivity) getActivity();
                         mMode = activity.startSupportActionMode(new CheckNewEpisodesActionMode());
                     }
@@ -361,13 +391,14 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
 
 
     private class CheckNewEpisodesTask extends BaseTask<Boolean> {
-
+        // int j = 0;
         @Override
         public Boolean doWork(Object... objects) throws Exception {
             Map<Integer, String> paramsMap = new HashMap<Integer, String>();
+            //Map<Integer, Episode> toRemove = new HashMap<Integer, Episode>();
+            List<Episode> toRemove = new ArrayList<Episode>();
 
             for (int i = 0; i < adapter.getGroupCount(); i++) {
-
                 List<Episode> episodes = adapter.getGroupChildren(i);
                 for (Episode e : episodes) {
                     if (e.isChecked()) {
@@ -376,25 +407,37 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
                             paramsMap.put(e.getShowId(), e.getEpisodeId().toString());
                         else
                             paramsMap.put(e.getShowId(), value += "," + e.getEpisodeId().toString());
-                        MyShows.newEpisodes.remove(e);
-
+                        toRemove.add(e);
+                        //toRemove.put(i, e);
                     }
                 }
             }
 
+            //final boolean[] results = new boolean[paramsMap.size()];
+
             for (Map.Entry<Integer, String> entry : paramsMap.entrySet()) {
                 final Integer showId = entry.getKey();
                 final String episodesIds = entry.getValue();
-                new Thread() {
+                Thread t = new Thread() {
                     public void run() {
                         UserShow userShow = MyShows.getUserShow(showId);
                         if (userShow != null)
                             userShow.setWatchedEpisodes(userShow.getWatchedEpisodes() + episodesIds.split(",").length);
                         //app.setUserShowsChanged(true);
+                        //results[j] = MyShows.client.syncAllShowEpisodes(showId, episodesIds, null);
+                        //Log.d("MyShows", "Result " + j + " = " + results[j]);
                         MyShows.client.syncAllShowEpisodes(showId, episodesIds, null);
+
                     }
-                }.start();
+                };
+                t.start();
+                //t.join();
+                //j++;
             }
+
+            for (Episode episode : toRemove)
+                adapter.removeChild(episode);
+
             return true;
         }
 
@@ -403,12 +446,7 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
             if (isAdded()) {
                 Toast.makeText(getActivity(), exception == null ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
                 if (result) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            executeUpdateTask();
-                        }
-                    }, 1000);
+                    adapter.notifyDataSetChanged();
                 }
             }
         }
@@ -423,9 +461,7 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
     private final class CheckNewEpisodesActionMode implements ActionMode.Callback {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            //Used to put dark icons on light action bar
-            menu.add(0, 1, 1, R.string.save).setIcon(R.drawable.ic_save).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-            menu.add(0, 2, 2, R.string.episode_rating).setIcon(R.drawable.ic_rating_important).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            mode.getMenuInflater().inflate(R.menu.new_episodes, menu);
             return true;
         }
 
@@ -437,10 +473,10 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
-                case 1:
+                case R.id.action_save:
                     new CheckNewEpisodesTask().execute();
                     break;
-                case 2:
+                case R.id.action_rate:
 
                     Handler handler = new Handler() {
                         @Override
@@ -452,9 +488,11 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
                     RatingDialog rate = new RatingDialog(getActivity(), handler);
                     rate.setTitle(R.string.episode_rating);
                     rate.show();
-
+                    break;
+                case R.id.action_check_all:
+                    adapter.checkUncheckAll(!adapter.isAllChecked());
+                    break;
             }
-            mode.finish();
             return true;
         }
 

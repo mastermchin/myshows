@@ -83,7 +83,8 @@ public class LoginFragment extends Fragment {
             Settings.setString(Settings.KEY_LOGIN, login);
             Settings.setString(Settings.KEY_PASSWORD, password);
             Settings.setBoolean(Settings.KEY_LOGGED_IN, true);
-            getActivity().finish();
+            if (isAdded())
+                getActivity().finish();
             startActivity(new Intent(getActivity(), MainActivity.class));
         } else {
             showError();

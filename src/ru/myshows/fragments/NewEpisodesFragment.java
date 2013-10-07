@@ -53,6 +53,7 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        // obtaining user shows before
         GetShowsTask task = new GetShowsTask(getActivity(), GetShowsTask.SHOWS_USER);
         task.setTaskListener(new TaskListener() {
             @Override
@@ -66,8 +67,6 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
             }
         });
         task.execute();
-
-
     }
 
 
@@ -206,32 +205,6 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
         }
 
 
-        public void checkUncheckAll(boolean state) {
-            for (UserShow s : shows) {
-                s.setChecked(state);
-            }
-            for (Episode e : (List<Episode>) getAllChildrenAsList()) {
-                e.setChecked(state);
-            }
-            adapter.notifyDataSetChanged();
-        }
-
-
-        public boolean isAllChecked() {
-            for (int i = 0; i < getGroupCount(); i++) {
-                UserShow s = (UserShow) getGroup(i);
-                if (!s.isChecked())
-                    return false;
-                for (int j = 0; j < getChildrenCount(i); j++) {
-                    Episode e = (Episode) getChild(i, j);
-                    if (e.getAirDate() != null && e.getAirDate().before(new Date()) && !e.isChecked())
-                        return false;
-//                    if (!e.isChecked())
-//                        return false;
-                }
-            }
-            return true;
-        }
 
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
             final int gp = groupPosition;
@@ -445,10 +418,10 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
         public void onResult(Boolean result) {
             if (isAdded()) {
                 Toast.makeText(getActivity(), exception == null ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
-                if (result) {
-                    adapter.notifyDataSetChanged();
-                }
+                adapter.notifyDataSetChanged();
             }
+            if (mMode != null)
+                mMode.finish();
         }
 
         @Override
@@ -489,9 +462,6 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
                     rate.setTitle(R.string.episode_rating);
                     rate.show();
                     break;
-                case R.id.action_check_all:
-                    adapter.checkUncheckAll(!adapter.isAllChecked());
-                    break;
             }
             return true;
         }
@@ -525,6 +495,8 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
         public void onResult(Boolean result) {
             if (isAdded())
                 Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
+            if (mMode != null)
+                  mMode.finish();
         }
 
         @Override

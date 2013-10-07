@@ -11,7 +11,7 @@ import java.util.Comparator;
  * Time: 18:58:47
  * To change this template use File | Settings | File Templates.
  */
-public class EpisodeComparator implements Comparator {
+public class EpisodeComparator implements Comparator<Episode> {
 
     private String sortBy = "season";
 
@@ -23,9 +23,8 @@ public class EpisodeComparator implements Comparator {
     }
 
     @Override
-    public int compare(Object o1, Object o2) {
-        Episode e1 = (Episode) o1;
-        Episode e2 = (Episode) o2;
+    public int compare(Episode e1, Episode e2) {
+
 
         if (sortBy.equals("season")) {
             if (e1.getSeasonNumber() > e2.getSeasonNumber())

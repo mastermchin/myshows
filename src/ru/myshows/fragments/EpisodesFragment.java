@@ -48,6 +48,7 @@ public class EpisodesFragment extends Fragment {
         Episode o = (Episode) Collections.max(episodes, new EpisodeComparator());
         adapter = new MyExpandableListAdapter(episodes, o.getSeasonNumber());
         episodesList.setAdapter(adapter);
+
     }
 
 
@@ -438,9 +439,9 @@ public class EpisodesFragment extends Fragment {
 //                    rate.setTitle(R.string.episode_rating);
 //                    rate.show();
                     break;
-                case R.id.action_check_all:
-                    adapter.checkUncheckAll(!adapter.isAllChecked());
-                    break;
+//                case R.id.action_check_all:
+//                    adapter.checkUncheckAll(!adapter.isAllChecked());
+//                    break;
             }
             return true;
         }

@@ -15,9 +15,9 @@
           yourapp:showAsAction="ifRoom|collapseActionView"
             />
 
-    <item android:id="@+id/action_check_all"
-          android:icon="@drawable/ic_check_all"
-          android:title="@string/menu_check_all"
-          yourapp:showAsAction="ifRoom|collapseActionView"
-            />
+    <!--<item android:id="@+id/action_check_all"-->
+          <!--android:icon="@drawable/ic_check_all"-->
+          <!--android:title="@string/menu_check_all"-->
+          <!--yourapp:showAsAction="ifRoom|collapseActionView"-->
+            <!--/>-->
 </menu>

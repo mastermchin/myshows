@@ -97,7 +97,7 @@
     <string name="pref_sort_alph">По алфавиту</string>
 
 
-    <string name="request_exit">Хотите выйти?</string>
+    <string name="request_exit">Вы уверены?</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="asc">По возрастанию</string>

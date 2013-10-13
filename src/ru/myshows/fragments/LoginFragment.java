@@ -14,6 +14,8 @@ import ru.myshows.activity.MainActivity;
 import ru.myshows.activity.R;
 import ru.myshows.api.MyShowsClient;
 import ru.myshows.util.Settings;
+import ru.myshows.util.TwitterUtil;
+import twitter4j.auth.RequestToken;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,22 +30,22 @@ public class LoginFragment extends Fragment {
     private Button registesButton;
     private EditText loginField;
     private EditText passwordField;
+    private Button loginFacebook;
+    private Button loginTwitter;
+    private Button loginVk;
     private MyShowsClient client = MyShowsClient.getInstance();
-    private LayoutInflater inflater;
-
-    public LoginFragment() {
-    }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.inflater = inflater;
-       // return inflater.inflate(R.layout.login, container, false);
-        ScrollView layout = (ScrollView)inflater.inflate(R.layout.login, container, false);
+        ScrollView layout = (ScrollView) inflater.inflate(R.layout.login, container, false);
         loginButton = (Button) layout.findViewById(R.id.login_button);
         registesButton = (Button) layout.findViewById(R.id.register_button);
         loginField = (EditText) layout.findViewById(R.id.login_field);
         passwordField = (EditText) layout.findViewById(R.id.password_field);
+        loginFacebook = (Button) layout.findViewById(R.id.login_facebook);
+        loginTwitter = (Button) layout.findViewById(R.id.login_twitter);
+        loginVk = (Button) layout.findViewById(R.id.login_vk);
 
 
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -73,10 +75,36 @@ public class LoginFragment extends Fragment {
             }
         });
 
+        loginTwitter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                if (!Settings.getBoolean(Settings.PREFERENCE_TWITTER_IS_LOGGED_IN)) {
+//                    new TwitterAuthenticateTask().execute();
+//                } else {
+//                    Intent intent = new Intent(getActivity(), MainActivity.class);
+//                    startActivity(intent);
+//                }
+                new TwitterAuthenticateTask().execute();
+            }
+        });
+
         return layout;
 
     }
 
+    class TwitterAuthenticateTask extends AsyncTask<String, String, RequestToken> {
+
+        @Override
+        protected void onPostExecute(RequestToken requestToken) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(requestToken.getAuthenticationURL()));
+            startActivity(intent);
+        }
+
+        @Override
+        protected RequestToken doInBackground(String... params) {
+            return TwitterUtil.getInstance().getRequestToken();
+        }
+    }
 
     private void loginResult(Boolean result, String login, String password) {
         if (result) {

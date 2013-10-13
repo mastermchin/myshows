@@ -252,7 +252,7 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
             case SHOWS_USER:
                 ShowsComparator sc = new ShowsComparator("title");
 
-                if (Settings.getString(Settings.PREF_SHOW_SORT).equals("status")) {
+
 
                     String watching = res.getString(R.string.status_watching);
                     List<IShow> watchingShows = getByWatchStatus(shows, MyShowsApi.STATUS.watching);
@@ -280,10 +280,7 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
                     if (finishedShows.size() > 0)
                         sectionList.add(new SectionedAdapter.Section(remove + " (" + finishedShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, finishedShows)));
                     break;
-                } else {
-                    Collections.sort(shows, sc);
-                    sectionList.add(new SectionedAdapter.Section(res.getString(R.string.tab_shows_title) + " (" + shows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, shows)));
-                }
+
 
 
         }

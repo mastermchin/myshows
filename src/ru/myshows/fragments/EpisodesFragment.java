@@ -36,7 +36,6 @@ public class EpisodesFragment extends Fragment {
     private ActionMode mMode;
 
 
-
     public void refresh(Show show) {
         Collection<Episode> episodes = show.getEpisodes();
         //exclude specials
@@ -68,8 +67,8 @@ public class EpisodesFragment extends Fragment {
             show = (Show) savedInstanceState.getSerializable("show");
             refresh(show);
         } else {
-            Serializable s =  getArguments().getSerializable("show");
-            if (s instanceof Show){
+            Serializable s = getArguments().getSerializable("show");
+            if (s instanceof Show) {
                 show = (Show) s;
                 refresh(show);
             }
@@ -159,18 +158,9 @@ public class EpisodesFragment extends Fragment {
             if (eps == null || eps.isEmpty())
                 return;
 
-            String sort = Settings.getString(Settings.PREF_SEASONS_SORT);
-            if (sort == null) sort = "asc";
+            for (int i = 1; i <= totalSeasons; i++)
+                populateAdapter(eps, i, "asc");
 
-            if (sort.equals("asc")) {
-                for (int i = 1; i <= totalSeasons; i++) {
-                    populateAdapter(eps, i, sort);
-                }
-            } else {
-                for (int i = totalSeasons; i >= 1; i--) {
-                    populateAdapter(eps, i, sort);
-                }
-            }
 
         }
 
@@ -227,7 +217,6 @@ public class EpisodesFragment extends Fragment {
             }
             adapter.notifyDataSetChanged();
         }
-
 
 
         public boolean isAllChecked() {

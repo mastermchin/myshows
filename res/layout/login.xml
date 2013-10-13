@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/my_shows_logo_dark"
             android:layout_centerHorizontal="true"
-            android:paddingTop="20dip"
+            android:paddingTop="20dp"
 
             />
 
@@ -52,9 +52,9 @@
     </LinearLayout>
 
     <LinearLayout android:orientation="horizontal"
-                  android:layout_width="fill_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_weight="1"
+                                  android:layout_width="fill_parent"
+                                  android:layout_height="wrap_content"
+                                  android:layout_weight="1"
             >
 
         <Button
@@ -81,6 +81,51 @@
 
                 />
     </LinearLayout>
+
+    <LinearLayout android:orientation="horizontal"
+                      android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:paddingTop="40dp"
+                >
+
+            <Button
+                    android:id="@+id/login_facebook"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Login with facebook"
+                    android:background="@drawable/red_button"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:layout_weight="0.33"
+
+                    />
+
+            <Button
+                    android:id="@+id/login_twitter"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Login with twitter"
+                    android:background="@drawable/red_button"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="0.33"
+
+                    />
+
+            <Button
+                    android:id="@+id/login_vk"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Login with vk.com"
+                    android:textSize="12sp"
+                    android:background="@drawable/red_button"
+                    android:textColor="@color/white"
+                    android:layout_weight="0.33"
+                    android:layout_marginLeft="5dp"
+
+                    />
+        </LinearLayout>
 
 </LinearLayout>
 

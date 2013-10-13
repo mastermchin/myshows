@@ -1,5 +1,7 @@
 package ru.myshows.activity;
 
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import ru.myshows.adapters.FragmentAdapter;
@@ -15,6 +18,11 @@ import ru.myshows.fragments.NewEpisodesFragment;
 import ru.myshows.fragments.NextEpisodesFragment;
 import ru.myshows.tasks.Taskable;
 import ru.myshows.util.Settings;
+import ru.myshows.util.TwitterUtil;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.auth.AccessToken;
+import twitter4j.auth.RequestToken;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -43,7 +51,23 @@ public class MainActivity extends MenuActivity {
         pager.setOffscreenPageLimit(2);
         pagerTabStrip = (PagerTabStrip) findViewById(R.id.pagerTabStrip);
         pagerTabStrip.setTabIndicatorColorResource(R.color.light_red);
-        new LoginTask().execute();
+
+        Uri uri = getIntent().getData();
+
+        boolean twitterIsLoggedIn = Settings.getBoolean(Settings.PREFERENCE_TWITTER_IS_LOGGED_IN);
+
+        if (uri != null && uri.toString().startsWith(Settings.TWITTER_CALLBACK_URL) || twitterIsLoggedIn ) {
+            String arg = twitterIsLoggedIn ? null :  uri.getQueryParameter(Settings.URL_PARAMETER_TWITTER_OAUTH_VERIFIER);
+            new TwitterGetAccessTokenTask().execute(arg);
+        }else {
+            new LoginTask().execute();
+        }
+//            String verifier = uri.getQueryParameter(Settings.URL_PARAMETER_TWITTER_OAUTH_VERIFIER);
+//            new TwitterGetAccessTokenTask().execute(verifier);
+//        } else
+//            new TwitterGetAccessTokenTask().execute();
+
+       // new LoginTask().execute();
 
     }
 
@@ -104,6 +128,44 @@ public class MainActivity extends MenuActivity {
             }
         }
 
+    }
+
+    class TwitterGetAccessTokenTask extends AsyncTask<String, String, AccessToken> {
+
+        @Override
+        protected void onPostExecute(AccessToken accessToken) {
+            Log.d("MyShows", "access token = " + accessToken.getToken());
+            Log.d("MyShows", "access secret = " + accessToken.getTokenSecret());
+        }
+
+        @Override
+        protected AccessToken doInBackground(String... params) {
+
+            Twitter twitter = TwitterUtil.getInstance().getTwitter();
+            RequestToken requestToken = TwitterUtil.getInstance().getRequestToken();
+            SharedPreferences sharedPreferences = Settings.getPreferences();
+
+            if (params[0] != null) {
+                try {
+                    AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, params[0]);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString(Settings.PREFERENCE_TWITTER_OAUTH_TOKEN, accessToken.getToken());
+                    editor.putString(Settings.PREFERENCE_TWITTER_OAUTH_TOKEN_SECRET, accessToken.getTokenSecret());
+                    editor.putBoolean(Settings.PREFERENCE_TWITTER_IS_LOGGED_IN, true);
+                    editor.commit();
+                    return accessToken;
+                } catch (TwitterException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                String accessTokenString = sharedPreferences.getString(Settings.PREFERENCE_TWITTER_OAUTH_TOKEN, "");
+                String accessTokenSecret = sharedPreferences.getString(Settings.PREFERENCE_TWITTER_OAUTH_TOKEN_SECRET, "");
+                AccessToken accessToken = new AccessToken(accessTokenString, accessTokenSecret);
+                return accessToken;
+            }
+
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
     }
 
 }

@@ -85,7 +85,9 @@ public class LoginFragment extends Fragment {
         loginTwitter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TwitterAuthenticateTask().execute();
+                Intent intent = new Intent(getActivity(), OAuthActivity.class);
+                intent.putExtra("type", OAuthActivity.OAUTH_TWITTER);
+                startActivity(intent);
             }
         });
 
@@ -143,19 +145,6 @@ public class LoginFragment extends Fragment {
 
 
 
-    class TwitterAuthenticateTask extends AsyncTask<String, String, RequestToken> {
-
-        @Override
-        protected void onPostExecute(RequestToken requestToken) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(requestToken.getAuthenticationURL()));
-            startActivity(intent);
-        }
-
-        @Override
-        protected RequestToken doInBackground(String... params) {
-            return TwitterUtil.getInstance().getRequestToken();
-        }
-    }
 
     private void loginResult(Boolean result, String login, String password) {
         if (result) {

@@ -2,11 +2,20 @@ package ru.myshows.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import ru.myshows.util.Settings;
+import ru.myshows.util.TwitterUtil;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.auth.AccessToken;
+import twitter4j.auth.RequestToken;
 
 import java.net.URLEncoder;
 import java.util.regex.Matcher;
@@ -32,8 +41,15 @@ public class OAuthActivity extends Activity {
         setContentView(R.layout.oauth);
 
         int type = getIntent().getIntExtra("type", -1);
-        if (type == -1) finish();
 
+
+        Uri uri = getIntent().getData();
+        if (uri != null && uri.toString().startsWith(Settings.TWITTER_CALLBACK_URL)){
+
+            String arg = uri.getQueryParameter(Settings.TWITTER_OAUTH_VERIFIER);
+            new TwitterGetAccessTokenTask().execute(arg);
+
+        }
 
         webView = (WebView) findViewById(R.id.webview);
         webView.getSettings().setJavaScriptEnabled(true);
@@ -76,10 +92,17 @@ public class OAuthActivity extends Activity {
                 });
 
                 webView.loadUrl(facebookUrl);
+
+                // to get user_id
+                // http://stackoverflow.com/questions/3546677/how-to-get-the-facebook-user-id-using-the-access-token
                 break;
+
+
+
 
             case OAUTH_TWITTER:
 
+                new TwitterAuthenticateTask().execute();
 
         }
 
@@ -128,6 +151,63 @@ public class OAuthActivity extends Activity {
             return null;
         return m.toMatchResult().group(1);
     }
+
+    class TwitterAuthenticateTask extends AsyncTask<String, String, RequestToken> {
+
+        @Override
+        protected void onPostExecute(RequestToken requestToken) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(requestToken.getAuthenticationURL()));
+            startActivity(intent);
+        }
+
+        @Override
+        protected RequestToken doInBackground(String... params) {
+            return TwitterUtil.getInstance().getRequestToken();
+        }
+    }
+
+    class TwitterGetAccessTokenTask extends AsyncTask<String, String, AccessToken> {
+
+        @Override
+        protected void onPostExecute(AccessToken accessToken) {
+            Log.d("MyShows", "access twitter token = " + accessToken.getToken());
+            Log.d("MyShows", "access twitter secret = " + accessToken.getTokenSecret());
+            Log.d("MyShows", "access twitter login = " + accessToken.getScreenName());
+
+
+        }
+
+        @Override
+        protected AccessToken doInBackground(String... params) {
+
+            Twitter twitter = TwitterUtil.getInstance().getTwitter();
+            RequestToken requestToken = TwitterUtil.getInstance().getRequestToken();
+           // SharedPreferences sharedPreferences = Settings.getPreferences();
+
+            if (params[0] != null) {
+                try {
+                    AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, params[0]);
+//                    SharedPreferences.Editor editor = sharedPreferences.edit();
+//                    editor.putString(Settings.TWITTER_OAUTH_TOKEN, accessToken.getToken());
+//                    editor.putString(Settings.TWITTER_OAUTH_TOKEN_SECRET, accessToken.getTokenSecret());
+//                    editor.putBoolean(Settings.TWITTER_IS_LOGGED_IN, true);
+//                    editor.commit();
+                    return accessToken;
+                } catch (TwitterException e) {
+                    e.printStackTrace();
+                }
+//            } else {
+//                String accessTokenString = sharedPreferences.getString(Settings.TWITTER_OAUTH_TOKEN, "");
+//                String accessTokenSecret = sharedPreferences.getString(Settings.TWITTER_OAUTH_TOKEN_SECRET, "");
+//                AccessToken accessToken = new AccessToken(accessTokenString, accessTokenSecret);
+//                return accessToken;
+            }
+
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+    }
+
+
 
 
 }

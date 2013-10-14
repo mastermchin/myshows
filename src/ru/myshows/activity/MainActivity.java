@@ -55,23 +55,23 @@ public class MainActivity extends MenuActivity {
         boolean twitterIsLoggedIn = Settings.getBoolean(Settings.TWITTER_IS_LOGGED_IN);
         boolean facebookIsLoggedIn = Settings.getBoolean(Settings.FACEBOOK_IS_LOGGED_IN);
 
-       // twitter oauth
-        if (uri != null && uri.toString().startsWith(Settings.TWITTER_CALLBACK_URL) || twitterIsLoggedIn ) {
+//       // twitter oauth
+//        if (uri != null && uri.toString().startsWith(Settings.TWITTER_CALLBACK_URL) || twitterIsLoggedIn ) {
+//
+//            String arg = twitterIsLoggedIn ? null :  uri.getQueryParameter(Settings.TWITTER_OAUTH_VERIFIER);
+//            new TwitterGetAccessTokenTask().execute(arg);
+//
+//         // facebook oauth
+//        }else if (facebookIsLoggedIn){
+//
+//
+//
+//
+//        }else {
+//            new LoginTask().execute();
+//        }
 
-            String arg = twitterIsLoggedIn ? null :  uri.getQueryParameter(Settings.TWITTER_OAUTH_VERIFIER);
-            new TwitterGetAccessTokenTask().execute(arg);
-
-         // facebook oauth
-        }else if (facebookIsLoggedIn){
-
-
-
-
-        }else {
-            new LoginTask().execute();
-        }
-
-
+        new LoginTask().execute();
 
     }
 
@@ -134,45 +134,5 @@ public class MainActivity extends MenuActivity {
 
     }
 
-    class TwitterGetAccessTokenTask extends AsyncTask<String, String, AccessToken> {
-
-        @Override
-        protected void onPostExecute(AccessToken accessToken) {
-            Log.d("MyShows", "access token = " + accessToken.getToken());
-            Log.d("MyShows", "access secret = " + accessToken.getTokenSecret());
-            Log.d("MyShows", "access login = " + accessToken.getScreenName());
-
-
-        }
-
-        @Override
-        protected AccessToken doInBackground(String... params) {
-
-            Twitter twitter = TwitterUtil.getInstance().getTwitter();
-            RequestToken requestToken = TwitterUtil.getInstance().getRequestToken();
-            SharedPreferences sharedPreferences = Settings.getPreferences();
-
-            if (params[0] != null) {
-                try {
-                    AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, params[0]);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString(Settings.TWITTER_OAUTH_TOKEN, accessToken.getToken());
-                    editor.putString(Settings.TWITTER_OAUTH_TOKEN_SECRET, accessToken.getTokenSecret());
-                    editor.putBoolean(Settings.TWITTER_IS_LOGGED_IN, true);
-                    editor.commit();
-                    return accessToken;
-                } catch (TwitterException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                String accessTokenString = sharedPreferences.getString(Settings.TWITTER_OAUTH_TOKEN, "");
-                String accessTokenSecret = sharedPreferences.getString(Settings.TWITTER_OAUTH_TOKEN_SECRET, "");
-                AccessToken accessToken = new AccessToken(accessTokenString, accessTokenSecret);
-                return accessToken;
-            }
-
-            return null;  //To change body of implemented methods use File | Settings | File Templates.
-        }
-    }
 
 }

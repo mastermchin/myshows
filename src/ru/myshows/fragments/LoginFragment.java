@@ -11,12 +11,13 @@ import android.util.Log;
 import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
-import com.facebook.Request;
-import com.facebook.Response;
-import com.facebook.Session;
-import com.facebook.SessionState;
-import com.facebook.model.GraphUser;
+//import com.facebook.Request;
+//import com.facebook.Response;
+//import com.facebook.Session;
+//import com.facebook.SessionState;
+//import com.facebook.model.GraphUser;
 import ru.myshows.activity.MainActivity;
+import ru.myshows.activity.OAuthActivity;
 import ru.myshows.activity.R;
 import ru.myshows.api.MyShowsClient;
 import ru.myshows.util.Settings;
@@ -91,27 +92,31 @@ public class LoginFragment extends Fragment {
         loginFacebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Session.openActiveSession(getActivity(), LoginFragment.this, true, new Session.StatusCallback() {
-                    @Override
-                    public void call(final Session session, SessionState state, Exception exception) {
-                        Log.d("MyShows", "Facebook session is opened =  " +  session.isOpened() + " session is closed = " + session.isClosed());
-                        Log.d("MyShows", "Facebook access token = " +  session.getAccessToken());
-                        Log.d("MyShows", "Facebook access token exp date = " + session.getExpirationDate());
+//                Session.openActiveSession(getActivity(), LoginFragment.this, true, new Session.StatusCallback() {
+//                    @Override
+//                    public void call(final Session session, SessionState state, Exception exception) {
+//                        Log.d("MyShows", "Facebook session is opened =  " +  session.isOpened() + " session is closed = " + session.isClosed());
+//                        Log.d("MyShows", "Facebook access token = " +  session.getAccessToken());
+//                        Log.d("MyShows", "Facebook access token exp date = " + session.getExpirationDate());
+//
+//                        if (session.isOpened()) {
+//                            // Request user data and show the results
+//                            Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
+//                                @Override
+//                                public void onCompleted(GraphUser user, Response response) {
+//                                    if (user != null) {
+//                                        Log.d("MyShows", "Facebook access user id= " + user.getId());
+//
+//                                    }
+//                                }
+//                            });
+//                        }
+//                    }
+//                });
 
-                        if (session.isOpened()) {
-                            // Request user data and show the results
-                            Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
-                                @Override
-                                public void onCompleted(GraphUser user, Response response) {
-                                    if (user != null) {
-                                        Log.d("MyShows", "Facebook access user id= " + user.getId());
-
-                                    }
-                                }
-                            });
-                        }
-                    }
-                });
+                Intent intent = new Intent(getActivity(), OAuthActivity.class);
+                intent.putExtra("type", OAuthActivity.OAUTH_FACEBOOK);
+                startActivity(intent);
             }
         });
 
@@ -119,7 +124,9 @@ public class LoginFragment extends Fragment {
         loginVk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(getActivity(), OAuthActivity.class);
+                intent.putExtra("type", OAuthActivity.OAUTH_VK);
+                startActivity(intent);
             }
         });
 
@@ -128,11 +135,11 @@ public class LoginFragment extends Fragment {
     }
 
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Session.getActiveSession().onActivityResult(getActivity(), requestCode, resultCode, data);
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        Session.getActiveSession().onActivityResult(getActivity(), requestCode, resultCode, data);
+//    }
 
 
 

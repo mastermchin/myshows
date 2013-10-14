@@ -7,9 +7,15 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.model.GraphUser;
 import ru.myshows.activity.MainActivity;
 import ru.myshows.activity.R;
 import ru.myshows.api.MyShowsClient;
@@ -78,19 +84,57 @@ public class LoginFragment extends Fragment {
         loginTwitter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (!Settings.getBoolean(Settings.PREFERENCE_TWITTER_IS_LOGGED_IN)) {
-//                    new TwitterAuthenticateTask().execute();
-//                } else {
-//                    Intent intent = new Intent(getActivity(), MainActivity.class);
-//                    startActivity(intent);
-//                }
                 new TwitterAuthenticateTask().execute();
+            }
+        });
+
+        loginFacebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Session.openActiveSession(getActivity(), LoginFragment.this, true, new Session.StatusCallback() {
+                    @Override
+                    public void call(final Session session, SessionState state, Exception exception) {
+                        Log.d("MyShows", "Facebook session is opened =  " +  session.isOpened() + " session is closed = " + session.isClosed());
+                        Log.d("MyShows", "Facebook access token = " +  session.getAccessToken());
+                        Log.d("MyShows", "Facebook access token exp date = " + session.getExpirationDate());
+
+                        if (session.isOpened()) {
+                            // Request user data and show the results
+                            Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
+                                @Override
+                                public void onCompleted(GraphUser user, Response response) {
+                                    if (user != null) {
+                                        Log.d("MyShows", "Facebook access user id= " + user.getId());
+
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
+
+        loginVk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
 
         return layout;
 
     }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Session.getActiveSession().onActivityResult(getActivity(), requestCode, resultCode, data);
+    }
+
+
 
     class TwitterAuthenticateTask extends AsyncTask<String, String, RequestToken> {
 

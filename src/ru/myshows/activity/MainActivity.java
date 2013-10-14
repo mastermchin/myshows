@@ -12,6 +12,9 @@ import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import com.facebook.LoggingBehavior;
+import com.facebook.Session;
+import com.facebook.SessionState;
 import ru.myshows.adapters.FragmentAdapter;
 import ru.myshows.fragments.LoginFragment;
 import ru.myshows.fragments.NewEpisodesFragment;
@@ -36,7 +39,6 @@ public class MainActivity extends MenuActivity {
     private ViewPager pager;
     private PagerTabStrip pagerTabStrip;
     private FragmentAdapter adapter;
-    private SearchView search;
 
     @Override
     protected int getContentViewId() {
@@ -54,20 +56,26 @@ public class MainActivity extends MenuActivity {
 
         Uri uri = getIntent().getData();
 
-        boolean twitterIsLoggedIn = Settings.getBoolean(Settings.PREFERENCE_TWITTER_IS_LOGGED_IN);
+        boolean twitterIsLoggedIn = Settings.getBoolean(Settings.TWITTER_IS_LOGGED_IN);
+        boolean facebookIsLoggedIn = Settings.getBoolean(Settings.FACEBOOK_IS_LOGGED_IN);
 
+       // twitter oauth
         if (uri != null && uri.toString().startsWith(Settings.TWITTER_CALLBACK_URL) || twitterIsLoggedIn ) {
-            String arg = twitterIsLoggedIn ? null :  uri.getQueryParameter(Settings.URL_PARAMETER_TWITTER_OAUTH_VERIFIER);
+
+            String arg = twitterIsLoggedIn ? null :  uri.getQueryParameter(Settings.TWITTER_OAUTH_VERIFIER);
             new TwitterGetAccessTokenTask().execute(arg);
+
+         // facebook oauth
+        }else if (facebookIsLoggedIn){
+
+
+
+
         }else {
             new LoginTask().execute();
         }
-//            String verifier = uri.getQueryParameter(Settings.URL_PARAMETER_TWITTER_OAUTH_VERIFIER);
-//            new TwitterGetAccessTokenTask().execute(verifier);
-//        } else
-//            new TwitterGetAccessTokenTask().execute();
 
-       // new LoginTask().execute();
+
 
     }
 
@@ -136,6 +144,9 @@ public class MainActivity extends MenuActivity {
         protected void onPostExecute(AccessToken accessToken) {
             Log.d("MyShows", "access token = " + accessToken.getToken());
             Log.d("MyShows", "access secret = " + accessToken.getTokenSecret());
+            Log.d("MyShows", "access login = " + accessToken.getScreenName());
+
+
         }
 
         @Override
@@ -149,17 +160,17 @@ public class MainActivity extends MenuActivity {
                 try {
                     AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, params[0]);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString(Settings.PREFERENCE_TWITTER_OAUTH_TOKEN, accessToken.getToken());
-                    editor.putString(Settings.PREFERENCE_TWITTER_OAUTH_TOKEN_SECRET, accessToken.getTokenSecret());
-                    editor.putBoolean(Settings.PREFERENCE_TWITTER_IS_LOGGED_IN, true);
+                    editor.putString(Settings.TWITTER_OAUTH_TOKEN, accessToken.getToken());
+                    editor.putString(Settings.TWITTER_OAUTH_TOKEN_SECRET, accessToken.getTokenSecret());
+                    editor.putBoolean(Settings.TWITTER_IS_LOGGED_IN, true);
                     editor.commit();
                     return accessToken;
                 } catch (TwitterException e) {
                     e.printStackTrace();
                 }
             } else {
-                String accessTokenString = sharedPreferences.getString(Settings.PREFERENCE_TWITTER_OAUTH_TOKEN, "");
-                String accessTokenSecret = sharedPreferences.getString(Settings.PREFERENCE_TWITTER_OAUTH_TOKEN_SECRET, "");
+                String accessTokenString = sharedPreferences.getString(Settings.TWITTER_OAUTH_TOKEN, "");
+                String accessTokenSecret = sharedPreferences.getString(Settings.TWITTER_OAUTH_TOKEN_SECRET, "");
                 AccessToken accessToken = new AccessToken(accessTokenString, accessTokenSecret);
                 return accessToken;
             }

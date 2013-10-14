@@ -7,14 +7,22 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
+//import com.facebook.Request;
+//import com.facebook.Response;
+//import com.facebook.Session;
+//import com.facebook.SessionState;
+//import com.facebook.model.GraphUser;
 import ru.myshows.activity.MainActivity;
-import ru.myshows.activity.MyShows;
+import ru.myshows.activity.OAuthActivity;
 import ru.myshows.activity.R;
 import ru.myshows.api.MyShowsClient;
 import ru.myshows.util.Settings;
+import ru.myshows.util.TwitterUtil;
+import twitter4j.auth.RequestToken;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,22 +37,22 @@ public class LoginFragment extends Fragment {
     private Button registesButton;
     private EditText loginField;
     private EditText passwordField;
+    private Button loginFacebook;
+    private Button loginTwitter;
+    private Button loginVk;
     private MyShowsClient client = MyShowsClient.getInstance();
-    private LayoutInflater inflater;
-
-    public LoginFragment() {
-    }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.inflater = inflater;
-       // return inflater.inflate(R.layout.login, container, false);
-        ScrollView layout = (ScrollView)inflater.inflate(R.layout.login, container, false);
+        ScrollView layout = (ScrollView) inflater.inflate(R.layout.login, container, false);
         loginButton = (Button) layout.findViewById(R.id.login_button);
         registesButton = (Button) layout.findViewById(R.id.register_button);
         loginField = (EditText) layout.findViewById(R.id.login_field);
         passwordField = (EditText) layout.findViewById(R.id.password_field);
+        loginFacebook = (Button) layout.findViewById(R.id.login_facebook);
+        loginTwitter = (Button) layout.findViewById(R.id.login_twitter);
+        loginVk = (Button) layout.findViewById(R.id.login_vk);
 
 
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -74,17 +82,88 @@ public class LoginFragment extends Fragment {
             }
         });
 
+        loginTwitter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new TwitterAuthenticateTask().execute();
+            }
+        });
+
+        loginFacebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Session.openActiveSession(getActivity(), LoginFragment.this, true, new Session.StatusCallback() {
+//                    @Override
+//                    public void call(final Session session, SessionState state, Exception exception) {
+//                        Log.d("MyShows", "Facebook session is opened =  " +  session.isOpened() + " session is closed = " + session.isClosed());
+//                        Log.d("MyShows", "Facebook access token = " +  session.getAccessToken());
+//                        Log.d("MyShows", "Facebook access token exp date = " + session.getExpirationDate());
+//
+//                        if (session.isOpened()) {
+//                            // Request user data and show the results
+//                            Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
+//                                @Override
+//                                public void onCompleted(GraphUser user, Response response) {
+//                                    if (user != null) {
+//                                        Log.d("MyShows", "Facebook access user id= " + user.getId());
+//
+//                                    }
+//                                }
+//                            });
+//                        }
+//                    }
+//                });
+
+                Intent intent = new Intent(getActivity(), OAuthActivity.class);
+                intent.putExtra("type", OAuthActivity.OAUTH_FACEBOOK);
+                startActivity(intent);
+            }
+        });
+
+
+        loginVk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), OAuthActivity.class);
+                intent.putExtra("type", OAuthActivity.OAUTH_VK);
+                startActivity(intent);
+            }
+        });
+
         return layout;
 
     }
 
+
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        Session.getActiveSession().onActivityResult(getActivity(), requestCode, resultCode, data);
+//    }
+
+
+
+    class TwitterAuthenticateTask extends AsyncTask<String, String, RequestToken> {
+
+        @Override
+        protected void onPostExecute(RequestToken requestToken) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(requestToken.getAuthenticationURL()));
+            startActivity(intent);
+        }
+
+        @Override
+        protected RequestToken doInBackground(String... params) {
+            return TwitterUtil.getInstance().getRequestToken();
+        }
+    }
 
     private void loginResult(Boolean result, String login, String password) {
         if (result) {
             Settings.setString(Settings.KEY_LOGIN, login);
             Settings.setString(Settings.KEY_PASSWORD, password);
             Settings.setBoolean(Settings.KEY_LOGGED_IN, true);
-            getActivity().finish();
+            if (isAdded())
+                getActivity().finish();
             startActivity(new Intent(getActivity(), MainActivity.class));
         } else {
             showError();

@@ -1,29 +1,20 @@
 package ru.myshows.fragments;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.view.ActionMode;
+import android.view.*;
 import android.widget.*;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
 import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
-import ru.myshows.api.MyShowsApi;
 import ru.myshows.domain.*;
-import ru.myshows.tasks.*;
+import ru.myshows.tasks.BaseTask;
+import ru.myshows.tasks.GetNewEpisodesTask;
 import ru.myshows.util.EpisodeComparator;
 import ru.myshows.util.Settings;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -35,7 +26,7 @@ import java.util.*;
  * Time: 1:44
  * To change this template use File | Settings | File Templates.
  */
-public class EpisodesFragment extends SherlockFragment {
+public class EpisodesFragment extends Fragment {
 
     private Show show;
     private LayoutInflater inflater;
@@ -44,12 +35,6 @@ public class EpisodesFragment extends SherlockFragment {
     private DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
     private ActionMode mMode;
 
-    public EpisodesFragment(Show show) {
-        this.show = show;
-    }
-
-    public EpisodesFragment() {
-    }
 
     public void refresh(Show show) {
         Collection<Episode> episodes = show.getEpisodes();
@@ -62,6 +47,7 @@ public class EpisodesFragment extends SherlockFragment {
         Episode o = (Episode) Collections.max(episodes, new EpisodeComparator());
         adapter = new MyExpandableListAdapter(episodes, o.getSeasonNumber());
         episodesList.setAdapter(adapter);
+
     }
 
 
@@ -81,7 +67,11 @@ public class EpisodesFragment extends SherlockFragment {
             show = (Show) savedInstanceState.getSerializable("show");
             refresh(show);
         } else {
-            refresh(show);
+            Serializable s = getArguments().getSerializable("show");
+            if (s instanceof Show) {
+                show = (Show) s;
+                refresh(show);
+            }
         }
     }
 
@@ -168,18 +158,9 @@ public class EpisodesFragment extends SherlockFragment {
             if (eps == null || eps.isEmpty())
                 return;
 
-            String sort = Settings.getString(Settings.PREF_SEASONS_SORT);
-            if (sort == null) sort = "asc";
+            for (int i = 1; i <= totalSeasons; i++)
+                populateAdapter(eps, i, "asc");
 
-            if (sort.equals("asc")) {
-                for (int i = 1; i <= totalSeasons; i++) {
-                    populateAdapter(eps, i, sort);
-                }
-            } else {
-                for (int i = totalSeasons; i >= 1; i--) {
-                    populateAdapter(eps, i, sort);
-                }
-            }
 
         }
 
@@ -226,26 +207,17 @@ public class EpisodesFragment extends SherlockFragment {
         }
 
 
-        public void checkAll() {
+        public void checkUncheckAll(boolean state) {
             for (Season s : groups) {
-                s.setChecked(true);
+                s.setChecked(state);
             }
             for (Episode e : (List<Episode>) getAllChildrenAsList()) {
                 if (e.getAirDate() != null && e.getAirDate().before(new Date()))
-                    e.setChecked(true);
+                    e.setChecked(state);
             }
             adapter.notifyDataSetChanged();
         }
 
-        public void uncheckAll() {
-            for (Season s : groups) {
-                s.setChecked(false);
-            }
-            for (Episode e : (List<Episode>) getAllChildrenAsList()) {
-                e.setChecked(false);
-            }
-            adapter.notifyDataSetChanged();
-        }
 
         public boolean isAllChecked() {
             for (int i = 0; i < getGroupCount(); i++) {
@@ -298,9 +270,9 @@ public class EpisodesFragment extends SherlockFragment {
                             if (e.getAirDate() != null && e.getAirDate().before(new Date()))
                                 e.setChecked(isChecked);
                         }
-                        SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
+                        ActionBarActivity activity = (ActionBarActivity) getActivity();
                         if (mMode == null)
-                            mMode = activity.startActionMode(new SaveEpisodesActionMode());
+                            mMode = activity.startSupportActionMode(new SaveEpisodesActionMode());
                         adapter.notifyDataSetChanged();
                     }
                 });
@@ -373,9 +345,9 @@ public class EpisodesFragment extends SherlockFragment {
                 holder.checkBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
+                        ActionBarActivity activity = (ActionBarActivity) getActivity();
                         if (mMode == null)
-                            mMode = activity.startActionMode(new SaveEpisodesActionMode());
+                            mMode = activity.startSupportActionMode(new SaveEpisodesActionMode());
                     }
                 });
 
@@ -386,9 +358,9 @@ public class EpisodesFragment extends SherlockFragment {
                     @Override
                     public void onClick(View v) {
                         holder.checkBox.setChecked(!holder.checkBox.isChecked());
-                        SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
+                        ActionBarActivity activity = (ActionBarActivity) getActivity();
                         if (mMode == null)
-                            mMode = activity.startActionMode(new SaveEpisodesActionMode());
+                            mMode = activity.startSupportActionMode(new SaveEpisodesActionMode());
                     }
                 });
             } else {
@@ -426,9 +398,7 @@ public class EpisodesFragment extends SherlockFragment {
     private final class SaveEpisodesActionMode implements ActionMode.Callback {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            //Used to put dark icons on light action bar
-            menu.add(0, 1, 1, R.string.save).setIcon(R.drawable.ic_save).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
-            menu.add(0, 2, 2, R.string.menu_check_all).setIcon(R.drawable.ic_check_all).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            mode.getMenuInflater().inflate(R.menu.new_episodes, menu);
             return true;
         }
 
@@ -438,18 +408,29 @@ public class EpisodesFragment extends SherlockFragment {
         }
 
         @Override
-        public boolean onActionItemClicked(ActionMode mode, com.actionbarsherlock.view.MenuItem item) {
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
-                case 1:
+                case R.id.action_save:
                     new CheckEpisodesTask().execute();
                     mode.finish();
                     break;
-                case 2:
-                    if (adapter.isAllChecked())
-                        adapter.uncheckAll();
-                    else
-                        adapter.checkAll();
+
+                case R.id.action_rate:
+
+//                    Handler handler = new Handler() {
+//                        @Override
+//                        public void handleMessage(Message msg) {
+//                            int rating = msg.arg1;
+//                            new NewEpisodesFragment.ChangeEpisodesRateTask().execute(rating);
+//                        }
+//                    };
+//                    RatingDialog rate = new RatingDialog(getActivity(), handler);
+//                    rate.setTitle(R.string.episode_rating);
+//                    rate.show();
                     break;
+//                case R.id.action_check_all:
+//                    adapter.checkUncheckAll(!adapter.isAllChecked());
+//                    break;
             }
             return true;
         }

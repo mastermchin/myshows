@@ -6,23 +6,24 @@ import android.preference.PreferenceManager;
 import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
 
-/**
- * Created by IntelliJ IDEA.
- * User: GGobozov
- * Date: 09.06.2011
- * Time: 15:03:23
- * To change this template use File | Settings | File Templates.
- */
+
 public class Settings {
 
     public static final String KEY_LOGIN = "login";
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_LOGGED_IN = "loggedIn";
-    public static final String PREF_SHOW_NEWS = "show_news_key";
-    public static final String PREF_SHOW_NEXT = "show_next_key";
-    public static final String PREF_SHOW_PROFILE = "show_profile_key";
-    public static final String PREF_SHOW_SORT = "shows_sort_key";
-    public static final String PREF_SEASONS_SORT = "seasons_sort_key";
+
+    public static final String TWITTER_CONSUMER_KEY = "LnjZiH7g5XzmmiYwOwrg";
+    public static final String TWITTER_CONSUMER_SECRET = "iVW8PHRYkkTcvqscL6yjwcoDwJxR3esNaThnxHmU";
+    public static final String TWITTER_CALLBACK_URL = "oauth://ru.myshows.activity.Twitter_oAuth";
+    public static final String TWITTER_OAUTH_VERIFIER = "oauth_verifier";
+    public static final String TWITTER_OAUTH_TOKEN ="TWITTER_OAUTH_TOKEN";
+    public static final String TWITTER_OAUTH_TOKEN_SECRET ="TWITTER_OAUTH_TOKEN_SECRET";
+    public static final String TWITTER_IS_LOGGED_IN ="TWITTER_IS_LOGGED_IN";
+
+
+    public static final String FACEBOOK_IS_LOGGED_IN ="FACEBOOK_IS_LOGGED_IN";
+
 
 
     public static SharedPreferences getPreferences() {

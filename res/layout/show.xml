@@ -137,7 +137,6 @@
                         android:text="@string/status_watching"
                         android:padding="1dp"
                         android:layout_weight="0.25"
-                        android:onClick="changeShowStatus"
                         style="@style/DarkStatusButtonInactive"/>
 
                 <Button android:id="@+id/button_will_watch"
@@ -145,7 +144,6 @@
                         android:layout_height="wrap_content"
                         android:text="@string/status_will_watch"
                         android:layout_weight="0.25"
-                        android:onClick="changeShowStatus"
                         style="@style/DarkStatusButtonInactive"/>
 
                 <Button android:id="@+id/button_cancelled"
@@ -153,7 +151,6 @@
                         android:layout_height="wrap_content"
                         android:text="@string/status_cancelled"
                         android:layout_weight="0.25"
-                        android:onClick="changeShowStatus"
                         style="@style/DarkStatusButtonInactive"/>
 
                 <Button android:id="@+id/button_remove"
@@ -161,7 +158,6 @@
                         android:layout_height="wrap_content"
                         android:text="@string/status_remove"
                         android:layout_weight="0.25"
-                        android:onClick="changeShowStatus"
                         style="@style/DarkStatusButtonInactive"/>
 
 

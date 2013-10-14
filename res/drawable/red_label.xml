@@ -5,8 +5,7 @@
             <solid
                 android:color="@color/dark_red" />
 
-            <corners
-                android:radius="2dp" />
+
             <padding
                 android:left="3dp"
                 android:top="3dp"
@@ -21,8 +20,7 @@
                 android:endColor="@color/dark_red"
                 android:angle="270" />
 
-            <corners
-                android:radius="2dp" />
+
             <padding
                  android:left="3dp"
                 android:top="3dp"

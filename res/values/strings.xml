@@ -105,7 +105,7 @@
     <string name="pref_sort_alph">By alphabet</string>
 
 
-     <string name="request_exit">Are you want to exit?</string>
+     <string name="request_exit">Are you sure?</string>
      <string name="yes">Yes</string>
      <string name="no">No</string>
      <string name="asc">Asc</string>
@@ -155,17 +155,40 @@
     </string-array>
 
     <string-array name="left_menu">
-        <item>New Episodes</item>
-        <item>Soon</item>
+        <item>Episodes</item>
         <item>Profile</item>
         <item>Friends News</item>
-        <item>Rating</item>
-        <item>Settings</item>
+        <item>Shows Rating</item>
         <item>Logout</item>
     </string-array>
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 
+
+    <string-array name="episodes_titles">
+        <item>New Episodes</item>
+        <item>Soon</item>
+    </string-array>
+
+    <string-array name="profile_titles">
+        <item>Shows</item>
+        <item>Stats</item>
+    </string-array>
+
+    <string-array name="stats_titles">
+        <item>Stats</item>
+    </string-array>
+
+    <string-array name="show_titles">
+        <item>Show</item>
+        <item>Episodes</item>
+    </string-array>
+
+    <string-array name="login">
+        <item>Login</item>
+    </string-array>
+
+    <string name="app_id">568473939831654</string>
 
 </resources>

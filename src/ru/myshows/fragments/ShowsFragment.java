@@ -51,15 +51,7 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
     private int action;
     private ListView list;
     private ProgressBar progress;
-    private boolean isTaskExecuted = false;
     private SectionedAdapter adapter;
-
-    public ShowsFragment() {
-    }
-
-    public ShowsFragment(int action) {
-        this.action = action;
-    }
 
 
     public void setAction(int action) {
@@ -90,7 +82,6 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
         progress.setVisibility(View.GONE);
         progress.setIndeterminate(false);
         list.setVisibility(View.VISIBLE);
-        isTaskExecuted = true;
         MyShows.isUserShowsChanged = false;
     }
 
@@ -117,18 +108,19 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
 
     @Override
     public void executeTask() {
-        if (isTaskExecuted) {
-            adapter.notifyDataSetChanged();
-            return;
-        }
-        GetShowsTask task = new GetShowsTask(getActivity(), GetShowsTask.SHOWS_USER);
+        action = getArguments().getInt("action");
+        String search = getArguments().getString("search");
+        GetShowsTask task = new GetShowsTask(getActivity(), action );
         task.setTaskListener(this);
-        task.execute();
+        if (search != null)
+            task.execute(search);
+        else
+            task.execute();
     }
 
     @Override
     public void executeUpdateTask() {
-        GetShowsTask task = new GetShowsTask(getActivity(), true, GetShowsTask.SHOWS_USER);
+        GetShowsTask task = new GetShowsTask(getActivity(), true, action);
         task.setTaskListener(this);
         list.setVisibility(View.GONE);
         progress.setVisibility(View.VISIBLE);
@@ -214,7 +206,6 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
             protected TextView title;
             protected RatingBar rating;
             protected TextView unwatched;
-            boolean isAnimated;
         }
 
         public List<IShow> getShows() {
@@ -261,7 +252,7 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
             case SHOWS_USER:
                 ShowsComparator sc = new ShowsComparator("title");
 
-                if (Settings.getString(Settings.PREF_SHOW_SORT).equals("status")) {
+
 
                     String watching = res.getString(R.string.status_watching);
                     List<IShow> watchingShows = getByWatchStatus(shows, MyShowsApi.STATUS.watching);
@@ -289,10 +280,7 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
                     if (finishedShows.size() > 0)
                         sectionList.add(new SectionedAdapter.Section(remove + " (" + finishedShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, finishedShows)));
                     break;
-                } else {
-                    Collections.sort(shows, sc);
-                    sectionList.add(new SectionedAdapter.Section(res.getString(R.string.tab_shows_title) + " (" + shows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, shows)));
-                }
+
 
 
         }

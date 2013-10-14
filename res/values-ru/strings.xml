@@ -97,7 +97,7 @@
     <string name="pref_sort_alph">По алфавиту</string>
 
 
-    <string name="request_exit">Хотите выйти?</string>
+    <string name="request_exit">Вы уверены?</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="asc">По возрастанию</string>
@@ -137,12 +137,10 @@
     </string-array>
 
     <string-array name="left_menu">
-        <item>Новые</item>
-        <item>Скоро</item>
+        <item>Эпизоды</item>
         <item>Профиль</item>
         <item>Новости</item>
-        <item>Рейтинг</item>
-        <item>Настройки</item>
+        <item>Рейтинг Сериалов</item>
         <item>Выйти</item>
     </string-array>
 
@@ -150,5 +148,28 @@
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+
+    <string-array name="episodes_titles">
+        <item>Новые</item>
+        <item>Скоро</item>
+    </string-array>
+
+    <string-array name="profile_titles">
+        <item>Сериалы</item>
+        <item>Статистика</item>
+    </string-array>
+
+    <string-array name="stats_titles">
+        <item>Статистика</item>
+    </string-array>
+
+    <string-array name="show_titles">
+        <item>Сериал</item>
+        <item>Эпизоды</item>
+    </string-array>
+
+    <string-array name="login">
+        <item>Вход</item>
+    </string-array>
 
 </resources>

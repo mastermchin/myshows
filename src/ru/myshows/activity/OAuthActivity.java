@@ -2,7 +2,6 @@ package ru.myshows.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -10,12 +9,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import ru.myshows.util.Settings;
-import ru.myshows.util.TwitterUtil;
+import org.json.JSONException;
+import org.json.JSONObject;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
+import twitter4j.conf.Configuration;
+import twitter4j.conf.ConfigurationBuilder;
 
 import java.net.URLEncoder;
 import java.util.regex.Matcher;
@@ -27,13 +29,33 @@ import java.util.regex.Pattern;
  */
 public class OAuthActivity extends Activity {
 
-
     public static final int OAUTH_TWITTER = 1;
     public static final int OAUTH_FACEBOOK = 2;
     public static final int OAUTH_VK = 3;
 
+    public static final String FACEBOOK_APP_ID = "568473939831654";
+    public static final String FACEBOOK_SECRET = "cb0262c6051d38e11674871822be646f";
+    public static final String FACEBOOK_REDIRECT_URL = "https://www.facebook.com/connect/login_success.html";
+    public static final String FACEBOOK_LOGIN_URL = "https://www.facebook.com/dialog/oauth?client_id=%1$s&redirect_uri=%2$s&response_type=token";
+
+    public static final String VK_APP_ID = "2155950";
+    public static final String VK_REDIRECT_URL = "https://oauth.vk.com/blank.html";
+    public static final String VK_LOGIN_URl = "https://oauth.vk.com/authorize?client_id=%1$s&display=mobile&scope=&redirect_uri=%2$s&response_type=token&v=5.2";
+
+
+    public static final String TWITTER_APP_ID = "LnjZiH7g5XzmmiYwOwrg";
+    public static final String TWITTER_SECRET = "iVW8PHRYkkTcvqscL6yjwcoDwJxR3esNaThnxHmU";
+    public static final String TWITTER_CALLBACK_URL = "oauth://ru.myshows.activity.Twitter_oAuth";
+    public static final String TWITTER_OAUTH_VERIFIER = "oauth_verifier";
+
+    public static final String KEY_TOKEN = "token";
+    public static final String KEY_USER_ID = "user_id";
+    public static final String KEY_SECRET = "secret";
+
+
 
     private WebView webView;
+    private static Twitter twitter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +63,11 @@ public class OAuthActivity extends Activity {
         setContentView(R.layout.oauth);
 
         int type = getIntent().getIntExtra("type", -1);
-
-
         Uri uri = getIntent().getData();
-        if (uri != null && uri.toString().startsWith(Settings.TWITTER_CALLBACK_URL)){
 
-            String arg = uri.getQueryParameter(Settings.TWITTER_OAUTH_VERIFIER);
+        // check if twitter oAuth response
+        if (uri != null && uri.toString().startsWith(TWITTER_CALLBACK_URL)) {
+            String arg = uri.getQueryParameter(TWITTER_OAUTH_VERIFIER);
             new TwitterGetAccessTokenTask().execute(arg);
 
         }
@@ -59,90 +80,73 @@ public class OAuthActivity extends Activity {
         switch (type) {
             case OAUTH_VK:
 
-                String api_id = "2155950";
-                final String redirect_url = "https://oauth.vk.com/blank.html";
-                String settings = "";
-                String url = "https://oauth.vk.com/authorize?client_id=" + api_id + "&display=mobile&scope=" + settings + "&redirect_uri=" + URLEncoder.encode(redirect_url) + "&response_type=token&v=5.2";
-
+                String vkUrl = String.format(VK_LOGIN_URl, VK_APP_ID, URLEncoder.encode(VK_REDIRECT_URL));
                 webView.setWebViewClient(new WebViewClient() {
                     @Override
                     public void onPageStarted(WebView view, String url, Bitmap favicon) {
                         super.onPageStarted(view, url, favicon);
-                        parseUrl(url, redirect_url);
+                        Log.i("MyShows", "url=" + url);
+
+                        if (!isEmptyString(url) && url.startsWith(VK_REDIRECT_URL)){
+                            if (!url.contains("error=")){
+                                String accessToken = extractPattern(url, "access_token=(.*?)&");
+                                String userId = extractPattern(url, "user_id=(\\d*)");
+                                Intent intent = new Intent();
+                                intent.putExtra(KEY_TOKEN,accessToken);
+                                intent.putExtra(KEY_USER_ID, userId);
+                                setResult(Activity.RESULT_OK, intent);
+                                finish();
+                            }else
+                                Log.i("MyShows", "ERROR url=" + url);
+                        }
                     }
                 });
-
-
-                webView.loadUrl(url);
+                webView.loadUrl(vkUrl);
                 break;
 
             case OAUTH_FACEBOOK:
-                String app_id = "568473939831654";
-                String secret = "cb0262c6051d38e11674871822be646f";
-                final String redirectUrl = "https://www.facebook.com/connect/login_success.html";
 
-                String facebookUrl = "https://www.facebook.com/dialog/oauth?client_id=" + app_id  + /*"&client_secret=" + secret +*/ "&redirect_uri=" + URLEncoder.encode(redirectUrl) + "&response_type=token";
-
+                String facebookUrl = String.format(FACEBOOK_LOGIN_URL, FACEBOOK_APP_ID, URLEncoder.encode(FACEBOOK_REDIRECT_URL));
                 webView.setWebViewClient(new WebViewClient() {
                     @Override
                     public void onPageStarted(WebView view, String url, Bitmap favicon) {
                         super.onPageStarted(view, url, favicon);
-                        parseUrl(url, redirectUrl);
+
+                        if (!isEmptyString(url) && url.startsWith(FACEBOOK_REDIRECT_URL)){
+                            if (!url.contains("error=")){
+                                String accessToken = extractPattern(url, "access_token=(.*?)&");
+                                new FacebookGetUserIdTask().execute(accessToken);
+                            }else
+                                Log.i("MyShows", "ERROR url=" + url);
+                        }
                     }
                 });
 
                 webView.loadUrl(facebookUrl);
-
-                // to get user_id
-                // http://stackoverflow.com/questions/3546677/how-to-get-the-facebook-user-id-using-the-access-token
                 break;
 
 
-
-
             case OAUTH_TWITTER:
-
                 new TwitterAuthenticateTask().execute();
-
+                break;
         }
 
     }
 
-    private void parseUrl(String url, String urlParseTo) {
-        try {
-            if (url == null)
-                return;
-            Log.i("MyShows", "url=" + url);
-            //if (url.startsWith("https://oauth.vk.com/blank.html")) {
-            if (url.startsWith(urlParseTo)) {
-                if (!url.contains("error=")) {
-                    String[] auth = parseRedirectUrl(url);
-                    Intent intent = new Intent();
-                    Log.i("MyShows", "vk token =" + auth[0]);
-                    Log.i("MyShows", "vk user_id =" + auth[1]);
-                    intent.putExtra("token", auth[0]);
-                    intent.putExtra("user_id", Long.parseLong(auth[1]));
-                    setResult(Activity.RESULT_OK, intent);
-                } else {
-                    Log.i("MyShows", "ERROR url=" + url);
-                }
-                finish();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public static String[] parseRedirectUrl(String url) throws Exception {
         //url is something like http://api.vkontakte.ru/blank.html#access_token=66e8f7a266af0dd477fcd3916366b17436e66af77ac352aeb270be99df7deeb&expires_in=0&user_id=7657164
-        String access_token = extractPattern(url, "access_token=(.*?)&");
-        Log.i("MyShows", "access_token=" + access_token);
-        String user_id = extractPattern(url, "user_id=(\\d*)");
-        Log.i("MyShows", "user_id=" + user_id);
-        if (user_id == null || user_id.length() == 0 || access_token == null || access_token.length() == 0)
+        String accessToken = extractPattern(url, "access_token=(.*?)&");
+        String userId = extractPattern(url, "user_id=(\\d*)");
+        if (isEmptyString(accessToken) || isEmptyString(userId))
             throw new Exception("Failed to parse redirect url " + url);
-        return new String[]{access_token, user_id};
+        return new String[]{accessToken, userId};
     }
+
+    private static boolean isEmptyString(String s) {
+        return s == null || s.length() == 0;
+    }
+
 
     public static String extractPattern(String string, String pattern) {
         Pattern p = Pattern.compile(pattern);
@@ -162,52 +166,93 @@ public class OAuthActivity extends Activity {
 
         @Override
         protected RequestToken doInBackground(String... params) {
-            return TwitterUtil.getInstance().getRequestToken();
+
+            if (twitter == null) {
+                ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+                configurationBuilder.setOAuthConsumerKey(TWITTER_APP_ID);
+                configurationBuilder.setOAuthConsumerSecret(TWITTER_SECRET);
+                Configuration configuration = configurationBuilder.build();
+                TwitterFactory twitterFactory = new TwitterFactory(configuration);
+                twitter = twitterFactory.getInstance();
+            }
+
+            try {
+                return twitter.getOAuthRequestToken(TWITTER_CALLBACK_URL);
+            } catch (TwitterException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
     }
 
     class TwitterGetAccessTokenTask extends AsyncTask<String, String, AccessToken> {
 
         @Override
-        protected void onPostExecute(AccessToken accessToken) {
-            Log.d("MyShows", "access twitter token = " + accessToken.getToken());
-            Log.d("MyShows", "access twitter secret = " + accessToken.getTokenSecret());
-            Log.d("MyShows", "access twitter login = " + accessToken.getScreenName());
+        protected AccessToken doInBackground(String... params) {
 
+            RequestToken requestToken = null;
+            try {
+                requestToken = twitter.getOAuthRequestToken(TWITTER_CALLBACK_URL);
+                if (params[0] != null) {
+                    return twitter.getOAuthAccessToken(requestToken, params[0]);
+                }
+            } catch (TwitterException e) {
+                e.printStackTrace();
+            }
 
+            return null;
         }
 
         @Override
-        protected AccessToken doInBackground(String... params) {
+        protected void onPostExecute(AccessToken accessToken) {
+            if (accessToken != null) {
 
-            Twitter twitter = TwitterUtil.getInstance().getTwitter();
-            RequestToken requestToken = TwitterUtil.getInstance().getRequestToken();
-           // SharedPreferences sharedPreferences = Settings.getPreferences();
+                Log.d("MyShows", "access twitter token = " + accessToken.getToken());
+                Log.d("MyShows", "access twitter secret = " + accessToken.getTokenSecret());
+                Log.d("MyShows", "access twitter login = " + accessToken.getScreenName());
 
-            if (params[0] != null) {
-                try {
-                    AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, params[0]);
-//                    SharedPreferences.Editor editor = sharedPreferences.edit();
-//                    editor.putString(Settings.TWITTER_OAUTH_TOKEN, accessToken.getToken());
-//                    editor.putString(Settings.TWITTER_OAUTH_TOKEN_SECRET, accessToken.getTokenSecret());
-//                    editor.putBoolean(Settings.TWITTER_IS_LOGGED_IN, true);
-//                    editor.commit();
-                    return accessToken;
-                } catch (TwitterException e) {
-                    e.printStackTrace();
-                }
-//            } else {
-//                String accessTokenString = sharedPreferences.getString(Settings.TWITTER_OAUTH_TOKEN, "");
-//                String accessTokenSecret = sharedPreferences.getString(Settings.TWITTER_OAUTH_TOKEN_SECRET, "");
-//                AccessToken accessToken = new AccessToken(accessTokenString, accessTokenSecret);
-//                return accessToken;
+                Intent intent = new Intent();
+                intent.putExtra(KEY_TOKEN, accessToken.getToken());
+                intent.putExtra(KEY_SECRET, accessToken.getTokenSecret());
+                intent.putExtra(KEY_USER_ID, accessToken.getScreenName());
+                setResult(Activity.RESULT_OK, intent);
+                finish();
             }
-
-            return null;  //To change body of implemented methods use File | Settings | File Templates.
         }
     }
 
 
+    class FacebookGetUserIdTask extends AsyncTask<String, String, String> {
+
+        private String token;
+
+        @Override
+        protected String doInBackground(String... strings) {
+            //https://graph.facebook.com/me?fields=id&access_token="xxxxx"
+            token = strings[0];
+            String url = "https://graph.facebook.com/me?fields=id&access_token=" + token;
+            JSONObject object = MyShows.client.executeExternalWithJson(url);
+            if (object != null)
+                try {
+                    return object.getString("id");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(String id) {
+            Intent intent = new Intent();
+            Log.i("MyShows", "facebook token 2 token =" + token);
+            Log.i("MyShows", "facebook user_id 2 =" + id);
+            intent.putExtra(KEY_TOKEN, token);
+            intent.putExtra(KEY_USER_ID, id);
+            setResult(Activity.RESULT_OK, intent);
+            finish();
+        }
+    }
 
 
 }

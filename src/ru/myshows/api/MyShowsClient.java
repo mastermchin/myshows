@@ -167,4 +167,8 @@ public class MyShowsClient {
         return api.getImage(url);
     }
 
+    public JSONObject executeExternalWithJson(String url){
+        return api.executeExternalWithJson(url);
+    }
+
 }

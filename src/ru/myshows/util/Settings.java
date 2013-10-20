@@ -21,8 +21,10 @@ public class Settings {
     public static final String TWITTER_OAUTH_TOKEN_SECRET ="TWITTER_OAUTH_TOKEN_SECRET";
     public static final String TWITTER_IS_LOGGED_IN ="TWITTER_IS_LOGGED_IN";
 
-
     public static final String FACEBOOK_IS_LOGGED_IN ="FACEBOOK_IS_LOGGED_IN";
+
+
+    public static final String VK_IS_LOGGED_IN ="FACEBOOK_IS_LOGGED_IN";
 
 
 

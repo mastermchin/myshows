@@ -17,6 +17,8 @@ public interface MyShowsApi {
 
     public boolean login(String login, String password);
 
+    public boolean loginSocial(int socialLoginType, String token, String userId, String secret);
+
     public boolean register(String login, String password, String email, GENDER gender);
 
     public JSONObject getShows();
@@ -73,10 +75,7 @@ public interface MyShowsApi {
 
     public InputStream getImage(String url);
 
-    public static enum ACTION {
-        add,
-        remove
-    }
+    public JSONObject executeExternalWithJson(String url);
 
     public static enum STATUS {
         finished,
@@ -127,9 +126,18 @@ public interface MyShowsApi {
         }
     }
 
+    public static interface OAUTH_TYPE {
+        public static final int OAUTH_TWITTER = 1;
+        public static final int OAUTH_FACEBOOK = 2;
+        public static final int OAUTH_VK = 3;
+    }
+
     public static interface URL {
         public static final String URL_HOST = "http://api.myshows.ru";
         public static final String URL_LOGIN = "http://api.myshows.ru/profile/login?login=%1$s&password=%2$s";
+        public static final String URL_LOGIN_TWITTER = "http://api.myshows.ru/profile/login/tw?token=%1$s&userId=%2$s&secret=%3$s";
+        public static final String URL_LOGIN_FACEBOOK = "http://api.myshows.ru/profile/login/fb?token=%1$s&userId=%2$s";
+        public static final String URL_LOGIN_VK = "http://api.myshows.ru/profile/login/vk?token=%1$s&userId=%2$s";
         public static final String URL_GET_SHOWS = "http://api.myshows.ru/profile/shows/";
         public static final String URL_GET_SEEN_EPISODES = "http://api.myshows.ru/profile/shows/%1$d/";
         public static final String URL_GET_UNWATCHED_EPISODES = "http://api.myshows.ru/profile/episodes/unwatched/";

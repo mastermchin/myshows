@@ -1,14 +1,11 @@
 package ru.myshows.activity;
 
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import ru.myshows.adapters.FragmentAdapter;
@@ -17,11 +14,6 @@ import ru.myshows.fragments.NewEpisodesFragment;
 import ru.myshows.fragments.NextEpisodesFragment;
 import ru.myshows.tasks.Taskable;
 import ru.myshows.util.Settings;
-import ru.myshows.util.TwitterUtil;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.auth.AccessToken;
-import twitter4j.auth.RequestToken;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -49,27 +41,6 @@ public class MainActivity extends MenuActivity {
         pager.setOffscreenPageLimit(2);
         pagerTabStrip = (PagerTabStrip) findViewById(R.id.pagerTabStrip);
         pagerTabStrip.setTabIndicatorColorResource(R.color.light_red);
-
-        Uri uri = getIntent().getData();
-
-        boolean twitterIsLoggedIn = Settings.getBoolean(Settings.TWITTER_IS_LOGGED_IN);
-        boolean facebookIsLoggedIn = Settings.getBoolean(Settings.FACEBOOK_IS_LOGGED_IN);
-
-//       // twitter oauth
-//        if (uri != null && uri.toString().startsWith(Settings.TWITTER_CALLBACK_URL) || twitterIsLoggedIn ) {
-//
-//            String arg = twitterIsLoggedIn ? null :  uri.getQueryParameter(Settings.TWITTER_OAUTH_VERIFIER);
-//            new TwitterGetAccessTokenTask().execute(arg);
-//
-//         // facebook oauth
-//        }else if (facebookIsLoggedIn){
-//
-//
-//
-//
-//        }else {
-//            new LoginTask().execute();
-//        }
 
         new LoginTask().execute();
 

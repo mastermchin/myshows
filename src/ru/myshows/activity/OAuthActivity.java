@@ -84,8 +84,11 @@ public class OAuthActivity extends Activity {
                                 String accessToken = extractPattern(url, "access_token=(.*?)&");
                                 String userId = extractPattern(url, "user_id=(\\d*)");
 
-                                if (oAuthListener != null)
-                                    oAuthListener.onVKLogin(accessToken, userId);
+                                if (oAuthListener != null){
+                                    oAuthListener.onLogin(OAUTH_VK, accessToken, userId, null);
+                                    finish();
+                                }
+
                             }else
                                 Log.i("MyShows", "ERROR url=" + url);
                         }
@@ -139,12 +142,12 @@ public class OAuthActivity extends Activity {
 
     }
 
-    private static boolean isEmptyString(String s) {
+    private boolean isEmptyString(String s) {
         return s == null || s.length() == 0;
     }
 
 
-    public static String extractPattern(String string, String pattern) {
+    public String extractPattern(String string, String pattern) {
         Pattern p = Pattern.compile(pattern);
         Matcher m = p.matcher(string);
         if (!m.find())
@@ -202,8 +205,10 @@ public class OAuthActivity extends Activity {
         protected void onPostExecute(AccessToken accessToken) {
             if (accessToken != null) {
 
-                if (oAuthListener != null)
-                    oAuthListener.onTwitterLogin(accessToken.getToken(), accessToken.getTokenSecret(), accessToken.getUserId() + "");
+                if (oAuthListener != null){
+                    oAuthListener.onLogin(OAUTH_TWITTER, accessToken.getToken(), accessToken.getUserId() + "", accessToken.getTokenSecret());
+                    finish();
+                }
 
             }
         }
@@ -232,16 +237,16 @@ public class OAuthActivity extends Activity {
 
         @Override
         protected void onPostExecute(String id) {
-            if (oAuthListener != null)
-                oAuthListener.onFacebookLogin(token, id);
+            if (oAuthListener != null){
+                oAuthListener.onLogin(OAUTH_FACEBOOK, token, id, null);
+                finish();
+            }
         }
     }
 
     public static interface OAuthListener{
 
-        public void onFacebookLogin(String token, String userId);
-        public void onVKLogin(String token, String userId);
-        public void onTwitterLogin(String token, String secret, String userId);
+        public void onLogin(int oAuthType, String token, String userId, String secret);
         public void onError();
 
     }

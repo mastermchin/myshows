@@ -209,6 +209,20 @@ public abstract class MenuActivity extends ActionBarActivity {
                                                 Settings.setString(Settings.KEY_LOGIN, null);
                                                 Settings.setString(Settings.KEY_PASSWORD, null);
                                                 Settings.setBoolean(Settings.KEY_LOGGED_IN, false);
+
+                                                Settings.setBoolean(Settings.TWITTER_IS_LOGGED_IN, false);
+                                                Settings.setBoolean(Settings.TWITTER_TOKEN, false);
+                                                Settings.setBoolean(Settings.TWITTER_USER_ID, false);
+                                                Settings.setBoolean(Settings.TWITTER_SECRET, false);
+
+                                                Settings.setBoolean(Settings.FACEBOOK_IS_LOGGED_IN, false);
+                                                Settings.setBoolean(Settings.FACEBOOK_TOKEN, false);
+                                                Settings.setBoolean(Settings.FACEBOOK_USER_ID, false);
+
+                                                Settings.setBoolean(Settings.VK_IS_LOGGED_IN, false);
+                                                Settings.setBoolean(Settings.VK_TOKEN, false);
+                                                Settings.setBoolean(Settings.VK_USER_ID, false);
+
                                                 MyShows.isLoggedIn = false;
                                                 MyShows.invalidateUserData();
                                                 finish();

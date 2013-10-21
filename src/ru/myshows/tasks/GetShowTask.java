@@ -27,9 +27,6 @@ public class GetShowTask extends BaseTask<Show> {
         super(context);
     }
 
-    public GetShowTask(Context context, boolean forceUpdate) {
-        super(context, forceUpdate);
-    }
 
     @Override
     public Show doWork(Object... objects) throws Exception {

@@ -13,19 +13,18 @@ public class Settings {
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_LOGGED_IN = "loggedIn";
 
-    public static final String TWITTER_CONSUMER_KEY = "LnjZiH7g5XzmmiYwOwrg";
-    public static final String TWITTER_CONSUMER_SECRET = "iVW8PHRYkkTcvqscL6yjwcoDwJxR3esNaThnxHmU";
-    public static final String TWITTER_CALLBACK_URL = "oauth://ru.myshows.activity.Twitter_oAuth";
-    public static final String TWITTER_OAUTH_VERIFIER = "oauth_verifier";
-    public static final String TWITTER_OAUTH_TOKEN ="TWITTER_OAUTH_TOKEN";
-    public static final String TWITTER_OAUTH_TOKEN_SECRET ="TWITTER_OAUTH_TOKEN_SECRET";
-    public static final String TWITTER_IS_LOGGED_IN ="TWITTER_IS_LOGGED_IN";
-
     public static final String FACEBOOK_IS_LOGGED_IN ="FACEBOOK_IS_LOGGED_IN";
+    public static final String FACEBOOK_TOKEN ="FACEBOOK_TOKEN";
+    public static final String FACEBOOK_USER_ID ="FACEBOOK_USER_ID";
 
+    public static final String TWITTER_IS_LOGGED_IN ="TWITTER_IS_LOGGED_IN";
+    public static final String TWITTER_TOKEN ="TWITTER_TOKEN";
+    public static final String TWITTER_SECRET ="TWITTER_SECRET";
+    public static final String TWITTER_USER_ID ="TWITTER_USER_ID";
 
     public static final String VK_IS_LOGGED_IN ="FACEBOOK_IS_LOGGED_IN";
-
+    public static final String VK_USER_ID ="VK_USER_ID";
+    public static final String VK_TOKEN ="VK_TOKEN";
 
 
     public static SharedPreferences getPreferences() {

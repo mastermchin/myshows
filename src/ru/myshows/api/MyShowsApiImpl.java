@@ -54,10 +54,6 @@ public class MyShowsApiImpl implements MyShowsApi {
             Log.d("MyShows", "Request = " + get.getRequestLine().toString());
             HttpResponse response = httpClient.execute(get);
 
-//            for (Header h : response.getAllHeaders()) {
-//                Log.d("MyShows", h.getName() + "=" + h.getValue());
-//            }
-
             int code = response.getStatusLine().getStatusCode();
             if (code == HttpURLConnection.HTTP_OK) {
                 InputStream stream = response.getEntity().getContent();
@@ -81,7 +77,10 @@ public class MyShowsApiImpl implements MyShowsApi {
         try {
             Log.d("MyShows", "Request = " + get.getRequestLine().toString());
             HttpResponse response = httpClient.execute(get);
-            return response.getStatusLine().getStatusCode();
+            int status = response.getStatusLine().getStatusCode();
+            String resp = convertStreamToString(response.getEntity().getContent());
+            Log.d("MyShows", "Resp = " + resp);
+            return status;
         } catch (IOException e) {
             e.printStackTrace();
         }

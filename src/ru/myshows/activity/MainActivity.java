@@ -8,6 +8,7 @@ import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import ru.myshows.adapters.FragmentAdapter;
 import ru.myshows.fragments.LoginFragment;
 import ru.myshows.fragments.NewEpisodesFragment;
@@ -27,6 +28,7 @@ public class MainActivity extends MenuActivity {
     private ViewPager pager;
     private PagerTabStrip pagerTabStrip;
     private FragmentAdapter adapter;
+    private ListView menu;
 
     @Override
     protected int getContentViewId() {
@@ -36,7 +38,7 @@ public class MainActivity extends MenuActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        menu = (ListView) findViewById(R.id.left_drawer);
         pager = (ViewPager) findViewById(R.id.pager);
         pager.setOffscreenPageLimit(2);
         pagerTabStrip = (PagerTabStrip) findViewById(R.id.pagerTabStrip);
@@ -80,6 +82,26 @@ public class MainActivity extends MenuActivity {
                 String pass = Settings.getString(Settings.KEY_PASSWORD);
                 return MyShows.client.login(login, pass);
             }
+
+            if (Settings.getBoolean(Settings.FACEBOOK_IS_LOGGED_IN)){
+                String token = Settings.getString(Settings.FACEBOOK_TOKEN);
+                String userId = Settings.getString(Settings.FACEBOOK_TOKEN);
+                return MyShows.client.loginSocial(OAuthActivity.OAUTH_FACEBOOK, token, userId, null);
+            }
+
+            if (Settings.getBoolean(Settings.VK_IS_LOGGED_IN)){
+                String token = Settings.getString(Settings.VK_TOKEN);
+                String userId = Settings.getString(Settings.VK_USER_ID);
+                return MyShows.client.loginSocial(OAuthActivity.OAUTH_VK, token, userId, null);
+            }
+
+            if (Settings.getBoolean(Settings.TWITTER_IS_LOGGED_IN)){
+                String token = Settings.getString(Settings.TWITTER_TOKEN);
+                String userId = Settings.getString(Settings.TWITTER_USER_ID);
+                String secret = Settings.getString(Settings.TWITTER_SECRET);
+                return MyShows.client.loginSocial(OAuthActivity.OAUTH_TWITTER, token, userId, secret);
+            }
+
             return false;
         }
 
@@ -97,6 +119,13 @@ public class MainActivity extends MenuActivity {
                 setupDrawer();
             } else {
                 pager.setVisibility(View.GONE);
+//                ImageView imageView = new ImageView(MainActivity.this);
+//                imageView.setBackgroundResource(R.drawable.heisenberg);
+//                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+
+                menu.setBackgroundResource(R.drawable.heisenberg);
+
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction().add(R.id.main, new LoginFragment()).commitAllowingStateLoss();
 

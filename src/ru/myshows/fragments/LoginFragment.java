@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.IntentCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -113,30 +114,11 @@ public class LoginFragment extends Fragment {
 
 
         OAuthActivity.OAuthListener oAuthListener = new OAuthActivity.OAuthListener() {
-            @Override
-            public void onFacebookLogin(String token, String userId) {
-                Log.d("MyShows", "Login Fragment token = " + token);
-                Log.d("MyShows", "Login Fragment userId = " + userId);
-                boolean result = MyShowsClient.getInstance().loginSocial(OAuthActivity.OAUTH_FACEBOOK, token, userId, null);
-                Log.d("MyShows", "Login result = " + result);
-            }
 
             @Override
-            public void onVKLogin(String token, String userId) {
-                Log.d("MyShows", "Login Fragment token = " + token);
-                Log.d("MyShows", "Login Fragment userId = " + userId);
-                boolean result = MyShowsClient.getInstance().loginSocial(OAuthActivity.OAUTH_VK, token, userId, null);
-                Log.d("MyShows", "Login result = " + result);
-            }
-
-            @Override
-            public void onTwitterLogin(String token, String secret, String userId) {
-                Log.d("MyShows", "Login Fragment token = " + token);
-                Log.d("MyShows", "Login Fragment secret = " + secret);
-                Log.d("MyShows", "Login Fragment userId = " + userId);
-
-                boolean result = MyShowsClient.getInstance().loginSocial(OAuthActivity.OAUTH_TWITTER, token, userId, secret);
-                Log.d("MyShows", "Login result = " + result);
+            public void onLogin(int oAuthType, String token, String userId, String secret) {
+                Log.d("MyShows", "Execute login social task...");
+                new LoginSocialTask(getActivity()).execute(oAuthType, token, userId, secret);
             }
 
             @Override
@@ -152,60 +134,6 @@ public class LoginFragment extends Fragment {
     }
 
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        Log.d("MyShows", "On activity result");
-//
-//        if ((requestCode == OAuthActivity.OAUTH_TWITTER  && resultCode == Activity.RESULT_OK && null != data)) {
-//            String token = data.getStringExtra("token");
-//            String secret = data.getStringExtra("secret");
-//            String userId = data.getStringExtra("user_id");
-//
-//            Log.d("MyShows", "Login Fragment token = " + token);
-//            Log.d("MyShows", "Login Fragment secret = " + secret);
-//            Log.d("MyShows", "Login Fragment userId = " + userId);
-//        }
-//
-//        if ((requestCode == OAuthActivity.OAUTH_FACEBOOK  && resultCode == Activity.RESULT_OK && null != data)) {
-//            String token = data.getStringExtra("token");
-//            String userId = data.getStringExtra("user_id");
-//
-//            Log.d("MyShows", "Login Fragment token = " + token);
-//            Log.d("MyShows", "Login Fragment userId = " + userId);
-//        }
-//
-//        if ((requestCode == OAuthActivity.OAUTH_VK  && resultCode == Activity.RESULT_OK && null != data)) {
-//            String token = data.getStringExtra("token");
-//            String userId = data.getStringExtra("user_id");
-//
-//            Log.d("MyShows", "Login Fragment token = " + token);
-//            Log.d("MyShows", "Login Fragment userId = " + userId);
-//        }
-//
-//
-//    }
-
-
-    private void loginResult(Boolean result, String login, String password) {
-        if (result) {
-            Settings.setString(Settings.KEY_LOGIN, login);
-            Settings.setString(Settings.KEY_PASSWORD, password);
-            Settings.setBoolean(Settings.KEY_LOGGED_IN, true);
-            if (isAdded())
-                getActivity().finish();
-            startActivity(new Intent(getActivity(), MainActivity.class));
-        } else {
-            showError();
-        }
-    }
-
-    private void showError() {
-        if (isAdded())
-            Toast.makeText(getActivity(), R.string.wrong_login_or_password, Toast.LENGTH_SHORT).show();
-    }
-
     private class LoginTask extends AsyncTask<Object, Void, Boolean> {
         private ProgressDialog dialog;
         private String login;
@@ -217,8 +145,8 @@ public class LoginFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
-            this.dialog.setMessage(getResources().getString(R.string.loading));
-            this.dialog.show();
+            dialog.setMessage(getResources().getString(R.string.loading));
+            dialog.show();
 
         }
 
@@ -232,11 +160,100 @@ public class LoginFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Boolean result) {
-            if (this.dialog.isShowing())
-                this.dialog.dismiss();
-            loginResult(result, login, pass);
+            if (dialog.isShowing())
+                dialog.dismiss();
+            if (result) {
+                Settings.setString(Settings.KEY_LOGIN, login);
+                Settings.setString(Settings.KEY_PASSWORD, pass);
+                Settings.setBoolean(Settings.KEY_LOGGED_IN, true);
+                if (isAdded())
+                    getActivity().finish();
+                startActivity(new Intent(getActivity(), MainActivity.class));
+            } else {
+                if (isAdded())
+                    Toast.makeText(getActivity(), R.string.wrong_login_or_password, Toast.LENGTH_SHORT).show();
+            }
         }
 
     }
+
+    private class LoginSocialTask extends AsyncTask<Object, Void, Boolean> {
+        private ProgressDialog dialog;
+        private Integer oAuthType;
+        private String token;
+        private String userId;
+        private String secret;
+
+        private LoginSocialTask(Context context) {
+            this.dialog = new ProgressDialog(context);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            dialog.setMessage(getResources().getString(R.string.loading));
+            dialog.show();
+
+        }
+
+        @Override
+        protected Boolean doInBackground(Object... objects) {
+            oAuthType = (Integer) objects[0];
+            token = (String) objects[1];
+            userId = (String) objects[2];
+
+            if (oAuthType == OAuthActivity.OAUTH_TWITTER)
+                secret = (String) objects[3];
+
+            return client.loginSocial(oAuthType, token, userId, secret);
+
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (this.dialog.isShowing())
+                this.dialog.dismiss();
+            if (result) {
+
+
+                String isLoggedInKey = null;
+                String tokenKey = null;
+                String userIdKey = null;
+
+                switch (oAuthType) {
+                    case OAuthActivity.OAUTH_FACEBOOK:
+                        isLoggedInKey = Settings.FACEBOOK_IS_LOGGED_IN;
+                        token = Settings.FACEBOOK_TOKEN;
+                        userIdKey = Settings.FACEBOOK_USER_ID;
+                        break;
+                    case OAuthActivity.OAUTH_VK:
+                        isLoggedInKey = Settings.VK_IS_LOGGED_IN;
+                        tokenKey = Settings.VK_TOKEN;
+                        userIdKey = Settings.VK_USER_ID;
+                        break;
+                    case OAuthActivity.OAUTH_TWITTER:
+                        isLoggedInKey = Settings.TWITTER_IS_LOGGED_IN;
+                        tokenKey = Settings.TWITTER_TOKEN;
+                        userIdKey = Settings.TWITTER_USER_ID;
+                        break;
+                }
+
+
+                Settings.setBoolean(isLoggedInKey, true);
+                Settings.setString(tokenKey, token);
+                Settings.setString(userIdKey, userId);
+                if (oAuthType == OAuthActivity.OAUTH_TWITTER)
+                    Settings.setString(Settings.TWITTER_SECRET, secret);
+
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+
+            } else {
+
+            }
+        }
+
+    }
+
 
 }

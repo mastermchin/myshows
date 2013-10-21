@@ -24,7 +24,6 @@ import ru.myshows.api.MyShowsClient;
 import ru.myshows.util.Settings;
 
 
-
 /**
  * Created by IntelliJ IDEA.
  * User: gb
@@ -33,10 +32,6 @@ import ru.myshows.util.Settings;
  * To change this template use File | Settings | File Templates.
  */
 public class LoginFragment extends Fragment {
-
-    public static final int OAUTH_TWITTER = 1;
-    public static final int OAUTH_FACEBOOK = 2;
-    public static final int OAUTH_VK = 3;
 
     private Button loginButton;
     private Button registesButton;
@@ -87,12 +82,13 @@ public class LoginFragment extends Fragment {
             }
         });
 
+
         loginTwitter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), OAuthActivity.class);
                 intent.putExtra("type", OAuthActivity.OAUTH_TWITTER);
-                startActivityForResult(intent, OAUTH_TWITTER);
+                startActivityForResult(intent, OAuthActivity.OAUTH_TWITTER);
             }
         });
 
@@ -101,7 +97,7 @@ public class LoginFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), OAuthActivity.class);
                 intent.putExtra("type", OAuthActivity.OAUTH_FACEBOOK);
-                startActivityForResult(intent, OAUTH_FACEBOOK);
+                startActivityForResult(intent, OAuthActivity.OAUTH_FACEBOOK);
             }
         });
 
@@ -111,49 +107,85 @@ public class LoginFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), OAuthActivity.class);
                 intent.putExtra("type", OAuthActivity.OAUTH_VK);
-                startActivityForResult(intent, OAUTH_VK);
+                startActivityForResult(intent, OAuthActivity.OAUTH_VK);
             }
         });
+
+
+        OAuthActivity.OAuthListener oAuthListener = new OAuthActivity.OAuthListener() {
+            @Override
+            public void onFacebookLogin(String token, String userId) {
+                Log.d("MyShows", "Login Fragment token = " + token);
+                Log.d("MyShows", "Login Fragment userId = " + userId);
+                boolean result = MyShowsClient.getInstance().loginSocial(OAuthActivity.OAUTH_FACEBOOK, token, userId, null);
+                Log.d("MyShows", "Login result = " + result);
+            }
+
+            @Override
+            public void onVKLogin(String token, String userId) {
+                Log.d("MyShows", "Login Fragment token = " + token);
+                Log.d("MyShows", "Login Fragment userId = " + userId);
+                boolean result = MyShowsClient.getInstance().loginSocial(OAuthActivity.OAUTH_VK, token, userId, null);
+                Log.d("MyShows", "Login result = " + result);
+            }
+
+            @Override
+            public void onTwitterLogin(String token, String secret, String userId) {
+                Log.d("MyShows", "Login Fragment token = " + token);
+                Log.d("MyShows", "Login Fragment secret = " + secret);
+                Log.d("MyShows", "Login Fragment userId = " + userId);
+
+                boolean result = MyShowsClient.getInstance().loginSocial(OAuthActivity.OAUTH_TWITTER, token, userId, secret);
+                Log.d("MyShows", "Login result = " + result);
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        };
+
+        OAuthActivity.oAuthListener = oAuthListener;
 
         return layout;
 
     }
 
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if ((requestCode == OAUTH_TWITTER  && resultCode == Activity.RESULT_OK && null != data)) {
-            String token = data.getStringExtra("token");
-            String secret = data.getStringExtra("secret");
-            String userId = data.getStringExtra("user_id");
-
-            Log.d("MyShows", "Login Fragment token = " + token);
-            Log.d("MyShows", "Login Fragment secret = " + secret);
-            Log.d("MyShows", "Login Fragment userId = " + userId);
-        }
-
-        if ((requestCode == OAUTH_FACEBOOK  && resultCode == Activity.RESULT_OK && null != data)) {
-            String token = data.getStringExtra("token");
-            String userId = data.getStringExtra("user_id");
-
-            Log.d("MyShows", "Login Fragment token = " + token);
-            Log.d("MyShows", "Login Fragment userId = " + userId);
-        }
-
-        if ((requestCode == OAUTH_VK  && resultCode == Activity.RESULT_OK && null != data)) {
-            String token = data.getStringExtra("token");
-            String userId = data.getStringExtra("user_id");
-
-            Log.d("MyShows", "Login Fragment token = " + token);
-            Log.d("MyShows", "Login Fragment userId = " + userId);
-        }
-
-
-    }
-
-
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        Log.d("MyShows", "On activity result");
+//
+//        if ((requestCode == OAuthActivity.OAUTH_TWITTER  && resultCode == Activity.RESULT_OK && null != data)) {
+//            String token = data.getStringExtra("token");
+//            String secret = data.getStringExtra("secret");
+//            String userId = data.getStringExtra("user_id");
+//
+//            Log.d("MyShows", "Login Fragment token = " + token);
+//            Log.d("MyShows", "Login Fragment secret = " + secret);
+//            Log.d("MyShows", "Login Fragment userId = " + userId);
+//        }
+//
+//        if ((requestCode == OAuthActivity.OAUTH_FACEBOOK  && resultCode == Activity.RESULT_OK && null != data)) {
+//            String token = data.getStringExtra("token");
+//            String userId = data.getStringExtra("user_id");
+//
+//            Log.d("MyShows", "Login Fragment token = " + token);
+//            Log.d("MyShows", "Login Fragment userId = " + userId);
+//        }
+//
+//        if ((requestCode == OAuthActivity.OAUTH_VK  && resultCode == Activity.RESULT_OK && null != data)) {
+//            String token = data.getStringExtra("token");
+//            String userId = data.getStringExtra("user_id");
+//
+//            Log.d("MyShows", "Login Fragment token = " + token);
+//            Log.d("MyShows", "Login Fragment userId = " + userId);
+//        }
+//
+//
+//    }
 
 
     private void loginResult(Boolean result, String login, String password) {
@@ -194,7 +226,7 @@ public class LoginFragment extends Fragment {
         protected Boolean doInBackground(Object... objects) {
             this.login = (String) objects[0];
             this.pass = (String) objects[1];
-            return  client.login(login, pass);
+            return client.login(login, pass);
 
         }
 

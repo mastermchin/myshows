@@ -48,14 +48,14 @@ public class OAuthActivity extends Activity {
     public static final String TWITTER_CALLBACK_URL = "oauth://ru.myshows.activity.Twitter_oAuth";
     public static final String TWITTER_OAUTH_VERIFIER = "oauth_verifier";
 
-    public static final String KEY_TOKEN = "token";
-    public static final String KEY_USER_ID = "user_id";
-    public static final String KEY_SECRET = "secret";
-
-
 
     private WebView webView;
-    private static Twitter twitter;
+    private Twitter twitter;
+    private RequestToken requestToken;
+
+    public static OAuthListener oAuthListener;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,14 +63,6 @@ public class OAuthActivity extends Activity {
         setContentView(R.layout.oauth);
 
         int type = getIntent().getIntExtra("type", -1);
-        Uri uri = getIntent().getData();
-
-        // check if twitter oAuth response
-        if (uri != null && uri.toString().startsWith(TWITTER_CALLBACK_URL)) {
-            String arg = uri.getQueryParameter(TWITTER_OAUTH_VERIFIER);
-            new TwitterGetAccessTokenTask().execute(arg);
-
-        }
 
         webView = (WebView) findViewById(R.id.webview);
         webView.getSettings().setJavaScriptEnabled(true);
@@ -91,11 +83,9 @@ public class OAuthActivity extends Activity {
                             if (!url.contains("error=")){
                                 String accessToken = extractPattern(url, "access_token=(.*?)&");
                                 String userId = extractPattern(url, "user_id=(\\d*)");
-                                Intent intent = new Intent();
-                                intent.putExtra(KEY_TOKEN,accessToken);
-                                intent.putExtra(KEY_USER_ID, userId);
-                                setResult(Activity.RESULT_OK, intent);
-                                finish();
+
+                                if (oAuthListener != null)
+                                    oAuthListener.onVKLogin(accessToken, userId);
                             }else
                                 Log.i("MyShows", "ERROR url=" + url);
                         }
@@ -134,13 +124,19 @@ public class OAuthActivity extends Activity {
     }
 
 
-    public static String[] parseRedirectUrl(String url) throws Exception {
-        //url is something like http://api.vkontakte.ru/blank.html#access_token=66e8f7a266af0dd477fcd3916366b17436e66af77ac352aeb270be99df7deeb&expires_in=0&user_id=7657164
-        String accessToken = extractPattern(url, "access_token=(.*?)&");
-        String userId = extractPattern(url, "user_id=(\\d*)");
-        if (isEmptyString(accessToken) || isEmptyString(userId))
-            throw new Exception("Failed to parse redirect url " + url);
-        return new String[]{accessToken, userId};
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Uri uri = intent.getData();
+
+        // check if twitter oAuth response
+        if (uri != null && uri.toString().startsWith(TWITTER_CALLBACK_URL)) {
+            String arg = uri.getQueryParameter(TWITTER_OAUTH_VERIFIER);
+            new TwitterGetAccessTokenTask().execute(arg);
+
+        }
+
+
     }
 
     private static boolean isEmptyString(String s) {
@@ -177,7 +173,8 @@ public class OAuthActivity extends Activity {
             }
 
             try {
-                return twitter.getOAuthRequestToken(TWITTER_CALLBACK_URL);
+                requestToken = twitter.getOAuthRequestToken(TWITTER_CALLBACK_URL);
+                return requestToken;
             } catch (TwitterException e) {
                 e.printStackTrace();
             }
@@ -190,10 +187,8 @@ public class OAuthActivity extends Activity {
         @Override
         protected AccessToken doInBackground(String... params) {
 
-            RequestToken requestToken = null;
             try {
-                requestToken = twitter.getOAuthRequestToken(TWITTER_CALLBACK_URL);
-                if (params[0] != null) {
+                if (params[0] != null && requestToken != null) {
                     return twitter.getOAuthAccessToken(requestToken, params[0]);
                 }
             } catch (TwitterException e) {
@@ -207,16 +202,9 @@ public class OAuthActivity extends Activity {
         protected void onPostExecute(AccessToken accessToken) {
             if (accessToken != null) {
 
-                Log.d("MyShows", "access twitter token = " + accessToken.getToken());
-                Log.d("MyShows", "access twitter secret = " + accessToken.getTokenSecret());
-                Log.d("MyShows", "access twitter login = " + accessToken.getScreenName());
+                if (oAuthListener != null)
+                    oAuthListener.onTwitterLogin(accessToken.getToken(), accessToken.getTokenSecret(), accessToken.getUserId() + "");
 
-                Intent intent = new Intent();
-                intent.putExtra(KEY_TOKEN, accessToken.getToken());
-                intent.putExtra(KEY_SECRET, accessToken.getTokenSecret());
-                intent.putExtra(KEY_USER_ID, accessToken.getScreenName());
-                setResult(Activity.RESULT_OK, intent);
-                finish();
             }
         }
     }
@@ -244,15 +232,21 @@ public class OAuthActivity extends Activity {
 
         @Override
         protected void onPostExecute(String id) {
-            Intent intent = new Intent();
-            Log.i("MyShows", "facebook token 2 token =" + token);
-            Log.i("MyShows", "facebook user_id 2 =" + id);
-            intent.putExtra(KEY_TOKEN, token);
-            intent.putExtra(KEY_USER_ID, id);
-            setResult(Activity.RESULT_OK, intent);
-            finish();
+            if (oAuthListener != null)
+                oAuthListener.onFacebookLogin(token, id);
         }
     }
+
+    public static interface OAuthListener{
+
+        public void onFacebookLogin(String token, String userId);
+        public void onVKLogin(String token, String userId);
+        public void onTwitterLogin(String token, String secret, String userId);
+        public void onError();
+
+    }
+
+
 
 
 }

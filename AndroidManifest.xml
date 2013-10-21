@@ -27,7 +27,7 @@
         <activity android:name=".ShowsActivity"/>
         <activity android:name=".NewsActivity"/>
         <activity android:name=".ProfileActivity"/>
-        <activity android:name=".OAuthActivity">
+        <activity android:name=".OAuthActivity" android:launchMode="singleInstance">
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>

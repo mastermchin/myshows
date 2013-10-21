@@ -36,6 +36,10 @@ public class MyShowsClient {
         return api.login(login, password);
     }
 
+    public boolean loginSocial(int socialLoginType, String token, String userId, String secret) {
+        return api.loginSocial(socialLoginType, token, userId, secret);
+    }
+
     public boolean register(String login, String password, String email, MyShowsApi.GENDER gender) {
         return api.register(login, password, email, gender);
     }

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.IntentCompat;
@@ -222,7 +223,7 @@ public class LoginFragment extends Fragment {
                 switch (oAuthType) {
                     case OAuthActivity.OAUTH_FACEBOOK:
                         isLoggedInKey = Settings.FACEBOOK_IS_LOGGED_IN;
-                        token = Settings.FACEBOOK_TOKEN;
+                        tokenKey = Settings.FACEBOOK_TOKEN;
                         userIdKey = Settings.FACEBOOK_USER_ID;
                         break;
                     case OAuthActivity.OAUTH_VK:
@@ -245,7 +246,11 @@ public class LoginFragment extends Fragment {
                     Settings.setString(Settings.TWITTER_SECRET, secret);
 
                 Intent intent = new Intent(getActivity(), MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                else
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
 
             } else {

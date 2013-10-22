@@ -47,7 +47,6 @@ public abstract class MenuActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(getContentViewId());
         setContentView(getContentViewId());
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -206,22 +205,9 @@ public abstract class MenuActivity extends ActionBarActivity {
                                         .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                Settings.setString(Settings.KEY_LOGIN, null);
-                                                Settings.setString(Settings.KEY_PASSWORD, null);
-                                                Settings.setBoolean(Settings.KEY_LOGGED_IN, false);
 
-                                                Settings.setBoolean(Settings.TWITTER_IS_LOGGED_IN, false);
-                                                Settings.setBoolean(Settings.TWITTER_TOKEN, false);
-                                                Settings.setBoolean(Settings.TWITTER_USER_ID, false);
-                                                Settings.setBoolean(Settings.TWITTER_SECRET, false);
-
-                                                Settings.setBoolean(Settings.FACEBOOK_IS_LOGGED_IN, false);
-                                                Settings.setBoolean(Settings.FACEBOOK_TOKEN, false);
-                                                Settings.setBoolean(Settings.FACEBOOK_USER_ID, false);
-
-                                                Settings.setBoolean(Settings.VK_IS_LOGGED_IN, false);
-                                                Settings.setBoolean(Settings.VK_TOKEN, false);
-                                                Settings.setBoolean(Settings.VK_USER_ID, false);
+                                                // clear all preferences
+                                                Settings.getPreferences().edit().clear().commit();
 
                                                 MyShows.isLoggedIn = false;
                                                 MyShows.invalidateUserData();

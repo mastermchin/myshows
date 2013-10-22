@@ -85,7 +85,7 @@ public class MainActivity extends MenuActivity {
 
             if (Settings.getBoolean(Settings.FACEBOOK_IS_LOGGED_IN)){
                 String token = Settings.getString(Settings.FACEBOOK_TOKEN);
-                String userId = Settings.getString(Settings.FACEBOOK_TOKEN);
+                String userId = Settings.getString(Settings.FACEBOOK_USER_ID);
                 return MyShows.client.loginSocial(OAuthActivity.OAUTH_FACEBOOK, token, userId, null);
             }
 

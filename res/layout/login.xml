@@ -88,41 +88,30 @@
                       android:paddingTop="40dp"
                 >
 
-            <Button
+            <ImageView
                     android:id="@+id/login_facebook"
-                    android:layout_width="fill_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Login with facebook"
-                    android:background="@drawable/red_button"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
+                    android:src="@drawable/icon_katana"
                     android:layout_weight="0.33"
 
                     />
 
-            <Button
+            <ImageView
                     android:id="@+id/login_twitter"
-                    android:layout_width="fill_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Login with twitter"
-                    android:background="@drawable/red_button"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/ic_launcher_twitter"
                     android:layout_weight="0.33"
 
                     />
 
-            <Button
+            <ImageView
                     android:id="@+id/login_vk"
-                    android:layout_width="fill_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Login with vk.com"
-                    android:textSize="12sp"
-                    android:background="@drawable/red_button"
-                    android:textColor="@color/white"
+                    android:src="@drawable/icon_vk"
                     android:layout_weight="0.33"
-                    android:layout_marginLeft="5dp"
 
                     />
         </LinearLayout>

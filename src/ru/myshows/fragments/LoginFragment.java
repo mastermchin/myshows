@@ -15,10 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ScrollView;
-import android.widget.Toast;
+import android.widget.*;
 import ru.myshows.activity.MainActivity;
 import ru.myshows.activity.OAuthActivity;
 import ru.myshows.activity.R;
@@ -39,9 +36,9 @@ public class LoginFragment extends Fragment {
     private Button registesButton;
     private EditText loginField;
     private EditText passwordField;
-    private Button loginFacebook;
-    private Button loginTwitter;
-    private Button loginVk;
+    private ImageView loginFacebook;
+    private ImageView loginTwitter;
+    private ImageView loginVk;
     private MyShowsClient client = MyShowsClient.getInstance();
 
 
@@ -52,9 +49,9 @@ public class LoginFragment extends Fragment {
         registesButton = (Button) layout.findViewById(R.id.register_button);
         loginField = (EditText) layout.findViewById(R.id.login_field);
         passwordField = (EditText) layout.findViewById(R.id.password_field);
-        loginFacebook = (Button) layout.findViewById(R.id.login_facebook);
-        loginTwitter = (Button) layout.findViewById(R.id.login_twitter);
-        loginVk = (Button) layout.findViewById(R.id.login_vk);
+        loginFacebook = (ImageView) layout.findViewById(R.id.login_facebook);
+        loginTwitter = (ImageView) layout.findViewById(R.id.login_twitter);
+        loginVk = (ImageView) layout.findViewById(R.id.login_vk);
 
 
         loginButton.setOnClickListener(new View.OnClickListener() {

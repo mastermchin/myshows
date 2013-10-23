@@ -178,15 +178,6 @@ public class ShowActivity extends MenuActivity implements TaskListener<Show> {
         LinksAdapter linkAdapter = new LinksAdapter(this, R.layout.external_link, links);
 
 
-
-
-        //View customNav = LayoutInflater.from(this).inflate(R.layout.custom_show_action_bar, null);
-
-        //getSupportActionBar().setListNavigationCallbacks(linkAdapter, );
-
-        //Spinner spinner = (Spinner) customNav.findViewById(R.id.spinner);
-        //spinner.setAdapter(linkAdapter);
-
         getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         getSupportActionBar().setListNavigationCallbacks(linkAdapter, new ActionBar.OnNavigationListener() {
             @Override
@@ -196,9 +187,6 @@ public class ShowActivity extends MenuActivity implements TaskListener<Show> {
             }
         });
 
-
-        //getSupportActionBar().setCustomView(customNav, new ActionBar.LayoutParams(Gravity.RIGHT));
-        //getSupportActionBar().setDisplayShowCustomEnabled(true);
 
     }
 
@@ -277,27 +265,5 @@ public class ShowActivity extends MenuActivity implements TaskListener<Show> {
             return inflater.inflate(R.layout.icon, null);
         }
     }
-
-//    @Override
-//    protected void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        outState.putInt("showId", showId);
-//        if (adapter != null) {
-//            outState.putInt("tabsCount", adapter.getCount());
-//            //List<String> titles = adapter.getTitles();
-//            //outState.putStringArray("titles", titles.toArray(new String[titles.size()]));
-//        }
-//        if (pager != null)
-//            outState.putInt("currentTab", pager.getCurrentItem());
-//
-//    }
-//
-//    private Fragment getFragment(int position) {
-//        return savedInstanceState == null ? adapter.getItem(position) : getSupportFragmentManager().findFragmentByTag(getFragmentTag(position));
-//    }
-//
-//    private String getFragmentTag(int position) {
-//        return "android:switcher:" + R.id.pager + ":" + position;
-//    }
 
 }

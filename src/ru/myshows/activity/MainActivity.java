@@ -119,11 +119,8 @@ public class MainActivity extends MenuActivity {
                 setupDrawer();
             } else {
                 pager.setVisibility(View.GONE);
-//                ImageView imageView = new ImageView(MainActivity.this);
-//                imageView.setBackgroundResource(R.drawable.heisenberg);
-//                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
-
+                // some fun
                 menu.setBackgroundResource(R.drawable.heisenberg);
 
                 FragmentManager fragmentManager = getSupportFragmentManager();

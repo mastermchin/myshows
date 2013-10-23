@@ -56,7 +56,6 @@ public class OAuthActivity extends Activity {
     public static OAuthListener oAuthListener;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,20 +76,23 @@ public class OAuthActivity extends Activity {
                     @Override
                     public void onPageStarted(WebView view, String url, Bitmap favicon) {
                         super.onPageStarted(view, url, favicon);
-                        Log.i("MyShows", "url=" + url);
 
-                        if (!isEmptyString(url) && url.startsWith(VK_REDIRECT_URL)){
-                            if (!url.contains("error=")){
+                        if (!isEmptyString(url) && url.startsWith(VK_REDIRECT_URL)) {
+                            if (!url.contains("error=")) {
                                 String accessToken = extractPattern(url, "access_token=(.*?)&");
                                 String userId = extractPattern(url, "user_id=(\\d*)");
 
-                                if (oAuthListener != null){
+                                if (oAuthListener != null) {
                                     oAuthListener.onLogin(OAUTH_VK, accessToken, userId, null);
                                     finish();
                                 }
 
-                            }else
+                            } else {
+                                if (oAuthListener != null)
+                                    oAuthListener.onError();
                                 Log.i("MyShows", "ERROR url=" + url);
+                            }
+
                         }
                     }
                 });
@@ -105,12 +107,15 @@ public class OAuthActivity extends Activity {
                     public void onPageStarted(WebView view, String url, Bitmap favicon) {
                         super.onPageStarted(view, url, favicon);
 
-                        if (!isEmptyString(url) && url.startsWith(FACEBOOK_REDIRECT_URL)){
-                            if (!url.contains("error=")){
+                        if (!isEmptyString(url) && url.startsWith(FACEBOOK_REDIRECT_URL)) {
+                            if (!url.contains("error=")) {
                                 String accessToken = extractPattern(url, "access_token=(.*?)&");
                                 new FacebookGetUserIdTask().execute(accessToken);
-                            }else
+                            } else{
+                                if (oAuthListener != null)
+                                    oAuthListener.onError();
                                 Log.i("MyShows", "ERROR url=" + url);
+                            }
                         }
                     }
                 });
@@ -205,10 +210,15 @@ public class OAuthActivity extends Activity {
         protected void onPostExecute(AccessToken accessToken) {
             if (accessToken != null) {
 
-                if (oAuthListener != null){
+                if (oAuthListener != null) {
                     oAuthListener.onLogin(OAUTH_TWITTER, accessToken.getToken(), accessToken.getUserId() + "", accessToken.getTokenSecret());
                     finish();
                 }
+
+            }  else{
+
+                if (oAuthListener != null)
+                    oAuthListener.onError();
 
             }
         }
@@ -237,21 +247,28 @@ public class OAuthActivity extends Activity {
 
         @Override
         protected void onPostExecute(String id) {
-            if (oAuthListener != null){
+            if (oAuthListener != null && id != null) {
+
                 oAuthListener.onLogin(OAUTH_FACEBOOK, token, id, null);
                 finish();
+
+            } else {
+
+                if (oAuthListener != null)
+                    oAuthListener.onError();
+
             }
+
         }
     }
 
-    public static interface OAuthListener{
+    public static interface OAuthListener {
 
         public void onLogin(int oAuthType, String token, String userId, String secret);
+
         public void onError();
 
     }
-
-
 
 
 }

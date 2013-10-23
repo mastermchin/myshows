@@ -21,7 +21,6 @@ public class ProfileActivity extends MenuActivity {
     private ViewPager pager;
     private PagerTabStrip pagerTabStrip;
     private FragmentAdapter adapter;
-    //private SearchView search;
 
     @Override
     protected int getContentViewId() {

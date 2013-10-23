@@ -122,6 +122,9 @@ public class LoginFragment extends Fragment {
             @Override
             public void onError() {
 
+                  if (isAdded())
+                    Toast.makeText(getActivity(), "oAuth error, try again please...", Toast.LENGTH_SHORT).show();
+
             }
         };
 
@@ -251,7 +254,8 @@ public class LoginFragment extends Fragment {
                 startActivity(intent);
 
             } else {
-
+                if (isAdded())
+                    Toast.makeText(getActivity(), "oAuth error, try again please...", Toast.LENGTH_SHORT).show();
             }
         }
 

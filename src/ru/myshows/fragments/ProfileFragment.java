@@ -37,7 +37,6 @@ import java.util.List;
 public class ProfileFragment extends Fragment implements TaskListener<Profile>, Taskable {
 
 
-    private Button logoutButton;
     private ImageView avatar;
     private TextProgressBar episodesBar;
     private TextProgressBar hoursBar;
@@ -46,7 +45,7 @@ public class ProfileFragment extends Fragment implements TaskListener<Profile>, 
     private View mainView;
     private ProgressBar progress;
     private ScrollView scrollView;
-    private boolean isTaskExecuted = false;
+    private String login;
 
 
     @Override
@@ -73,7 +72,6 @@ public class ProfileFragment extends Fragment implements TaskListener<Profile>, 
         progress.setIndeterminate(false);
         progress.setVisibility(View.GONE);
         scrollView.setVisibility(View.VISIBLE);
-        isTaskExecuted = true;
     }
 
     @Override
@@ -99,7 +97,7 @@ public class ProfileFragment extends Fragment implements TaskListener<Profile>, 
 
     @Override
     public void executeTask() {
-        String login =  getArguments().getString("login");
+        login =  getArguments().getString("login");
         GetProfileTask profileTask = new GetProfileTask(getActivity());
         profileTask.setTaskListener(this);
         profileTask.execute(login);
@@ -107,11 +105,11 @@ public class ProfileFragment extends Fragment implements TaskListener<Profile>, 
 
     @Override
     public void executeUpdateTask() {
-        GetProfileTask profileTask = new GetProfileTask(getActivity(), true);
+        GetProfileTask profileTask = new GetProfileTask(getActivity());
         profileTask.setTaskListener(this);
         scrollView.setVisibility(View.GONE);
         progress.setVisibility(View.VISIBLE);
-        profileTask.execute(Settings.getString(Settings.KEY_LOGIN));
+        profileTask.execute(login);
     }
 
     private void populateUI(Profile profile) {

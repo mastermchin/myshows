@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import ru.myshows.adapters.FragmentAdapter;
+import ru.myshows.api.MyShowsClient;
 import ru.myshows.fragments.LoginFragment;
 import ru.myshows.fragments.NewEpisodesFragment;
 import ru.myshows.fragments.NextEpisodesFragment;
@@ -80,26 +81,26 @@ public class MainActivity extends MenuActivity {
             if (Settings.getBoolean(Settings.KEY_LOGGED_IN)) {
                 String login = Settings.getString(Settings.KEY_LOGIN);
                 String pass = Settings.getString(Settings.KEY_PASSWORD);
-                return MyShows.client.login(login, pass);
+                return MyShowsClient.getInstance().login(login, pass);
             }
 
             if (Settings.getBoolean(Settings.FACEBOOK_IS_LOGGED_IN)){
                 String token = Settings.getString(Settings.FACEBOOK_TOKEN);
                 String userId = Settings.getString(Settings.FACEBOOK_USER_ID);
-                return MyShows.client.loginSocial(OAuthActivity.OAUTH_FACEBOOK, token, userId, null);
+                return MyShowsClient.getInstance().loginSocial(OAuthActivity.OAUTH_FACEBOOK, token, userId, null);
             }
 
             if (Settings.getBoolean(Settings.VK_IS_LOGGED_IN)){
                 String token = Settings.getString(Settings.VK_TOKEN);
                 String userId = Settings.getString(Settings.VK_USER_ID);
-                return MyShows.client.loginSocial(OAuthActivity.OAUTH_VK, token, userId, null);
+                return MyShowsClient.getInstance().loginSocial(OAuthActivity.OAUTH_VK, token, userId, null);
             }
 
             if (Settings.getBoolean(Settings.TWITTER_IS_LOGGED_IN)){
                 String token = Settings.getString(Settings.TWITTER_TOKEN);
                 String userId = Settings.getString(Settings.TWITTER_USER_ID);
                 String secret = Settings.getString(Settings.TWITTER_SECRET);
-                return MyShows.client.loginSocial(OAuthActivity.OAUTH_TWITTER, token, userId, secret);
+                return MyShowsClient.getInstance().loginSocial(OAuthActivity.OAUTH_TWITTER, token, userId, secret);
             }
 
             return false;

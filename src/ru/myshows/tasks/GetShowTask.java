@@ -21,36 +21,24 @@ import java.util.Map;
  */
 public class GetShowTask extends BaseTask<Show> {
 
-    private TaskListener taskListener;
 
     public GetShowTask(Context context) {
         super(context);
     }
 
-
     @Override
-    public Show doWork(Object... objects) throws Exception {
+    public Show doInBackground(Object... objects) {
         int showId = (Integer) objects[0];
-        Show show = MyShows.client.getShowInfo(showId);
-        populateGenres(show, MyShows.client.getGenresListAsMap());
-        populateWatchedEpisodes(show, MyShows.client.getSeenEpisodes(showId));
+        Show show = client.getShowInfo(showId);
+        populateGenres(show, client.getGenresListAsMap());
+        populateWatchedEpisodes(show, client.getSeenEpisodes(showId));
 
         if (MyShows.userShows == null)
-            MyShows.userShows =  MyShows.client.getShows();
+            MyShows.userShows =  client.getShows();
 
         return show;
     }
 
-    @Override
-    public void onResult(Show result) {
-        taskListener.onTaskComplete(result);
-    }
-
-    @Override
-    public void onError(Exception e) {
-        e.printStackTrace();
-        taskListener.onTaskFailed(e);
-    }
 
 
 

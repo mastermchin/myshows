@@ -13,6 +13,7 @@ import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
 import ru.myshows.adapters.SectionedAdapter;
 import ru.myshows.api.MyShowsApi;
+import ru.myshows.api.MyShowsClient;
 import ru.myshows.domain.Episode;
 import ru.myshows.domain.Searchable;
 import ru.myshows.domain.UserShow;
@@ -151,7 +152,7 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
                     UserShow us = MyShows.getUserShow(episode.getShowId());
                     // it happens when show is not started yet but already added as watching
                     if (us == null)
-                        us = new UserShow(MyShows.client.getShowInfo(episode.getShowId()), MyShowsApi.STATUS.watching);
+                        us = new UserShow(MyShowsClient.getInstance().getShowInfo(episode.getShowId()), MyShowsApi.STATUS.watching);
                     holder.title.setText(us.getTitle());
                     holder.shortTitle.setText(episode.getShortName() != null ? episode.getShortName() : composeShortTitle(episode) + " " + episode.getTitle());
                     holder.airDate.setText(episode.getAirDate() != null ? df.format(episode.getAirDate()) : "unknown");

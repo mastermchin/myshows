@@ -82,7 +82,6 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
         progress.setVisibility(View.GONE);
         progress.setIndeterminate(false);
         list.setVisibility(View.VISIBLE);
-        MyShows.isUserShowsChanged = false;
     }
 
     @Override

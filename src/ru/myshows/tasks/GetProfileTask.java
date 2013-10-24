@@ -13,38 +13,16 @@ import ru.myshows.domain.Profile;
  */
 public class GetProfileTask extends BaseTask<Profile> {
 
-    private TaskListener taskListener;
 
     public GetProfileTask(Context context) {
         super(context);
     }
 
-    public GetProfileTask(Context context, boolean forceUpdate) {
-        super(context, forceUpdate);
-    }
 
     @Override
-    public Profile doWork(Object... objects) throws Exception {
+    public Profile doInBackground(Object... objects)  {
         String login = (String) objects[0];
-        if (isForceUpdate)
-            MyShows.profiles.put(login, null);
-        Profile profile = MyShows.profiles.get(login) != null ? MyShows.profiles.get(login) : MyShows.client.getProfile(login);
-        MyShows.profiles.put(login, profile);
-        return profile;
+        return client.getProfile(login);
     }
 
-    @Override
-    public void onResult(Profile result) {
-        taskListener.onTaskComplete(result);
-    }
-
-    @Override
-    public void onError(Exception e) {
-        e.printStackTrace();
-        taskListener.onTaskFailed(e);
-    }
-
-    public void setTaskListener(TaskListener taskListener) {
-        this.taskListener = taskListener;
-    }
 }

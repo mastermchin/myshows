@@ -12,6 +12,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
 import ru.myshows.api.MyShowsApi;
+import ru.myshows.api.MyShowsClient;
 import ru.myshows.domain.Show;
 import ru.myshows.domain.UserShow;
 import ru.myshows.tasks.BaseTask;
@@ -207,14 +208,14 @@ public class ShowFragment extends Fragment {
         }
 
         @Override
-        public Boolean doWork(Object... objects) throws Exception {
+        public Boolean doInBackground(Object... objects)  {
             rating = (Float) objects[0];
-            boolean result = MyShows.client.changeShowRatio(show.getShowId(), (int) rating.floatValue());
+            boolean result = MyShowsClient.getInstance().changeShowRatio(show.getShowId(), (int) rating.floatValue());
             return result;
         }
 
         @Override
-        public void onResult(Boolean result) {
+        public void onPostExecute(Boolean result) {
             if (isAdded())
                 Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
             if (result) {
@@ -225,10 +226,10 @@ public class ShowFragment extends Fragment {
 
         }
 
-        @Override
-        public void onError(Exception e) {
-            e.printStackTrace();
-        }
+//        @Override
+//        public void onError(Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     private void updateStatusButtons() {
@@ -283,20 +284,16 @@ public class ShowFragment extends Fragment {
             super(context);
         }
 
-        public ChangeShowStatusTask(Context context, boolean forceUpdate) {
-            super(context, forceUpdate);
-        }
-
         @Override
-        public Boolean doWork(Object... objects) throws Exception {
+        public Boolean doInBackground(Object... objects)  {
 
             int showId = (Integer) objects[0];
             MyShowsApi.STATUS status = (MyShowsApi.STATUS) objects[1];
-            return MyShows.client.changeShowStatus(showId, status);
+            return MyShowsClient.getInstance().changeShowStatus(showId, status);
         }
 
         @Override
-        public void onResult(Boolean result) {
+        public void onPostExecute(Boolean result) {
             if (isAdded())
                 Toast.makeText(context, result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
             if (result) {
@@ -314,17 +311,16 @@ public class ShowFragment extends Fragment {
                         MyShows.userShows.add(new UserShow(show, watchStatus));
                     }
                 }
-                MyShows.isUserShowsChanged = true;
                 yoursRatingBar.setIsIndicator(watchStatus.equals(MyShowsApi.STATUS.remove));
                 updateStatusButtons();
 
             }
         }
 
-        @Override
-        public void onError(Exception e) {
-            e.printStackTrace();
-        }
+//        @Override
+//        public void onError(Exception e) {
+//            e.printStackTrace();
+//        }
 
     }
 

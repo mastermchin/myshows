@@ -2,6 +2,7 @@ package ru.myshows.tasks;
 
 import android.content.Context;
 import ru.myshows.activity.MyShows;
+import ru.myshows.api.MyShowsClient;
 import ru.myshows.domain.Episode;
 
 import java.util.List;
@@ -15,7 +16,6 @@ import java.util.List;
  */
 public class GetNextEpisodesTask extends BaseTask<List<Episode>> {
 
-    private TaskListener taskListener;
 
     public GetNextEpisodesTask(Context context) {
         super(context);
@@ -26,28 +26,11 @@ public class GetNextEpisodesTask extends BaseTask<List<Episode>> {
     }
 
     @Override
-    public List<Episode> doWork(Object... objects) throws Exception {
-        if (isForceUpdate)
-            MyShows.nextEpisodes = null;
-        List<Episode> nextEpisodes = MyShows.nextEpisodes != null ? MyShows.nextEpisodes : MyShows.client.getNextEpisodes();
-        MyShows.nextEpisodes = nextEpisodes;
+    public List<Episode> doInBackground(Object... objects)  {
+        MyShows.nextEpisodes = (isForceUpdate || MyShows.nextEpisodes == null) ? client.getNextEpisodes() : MyShows.nextEpisodes;
         if (MyShows.userShows == null)
-            MyShows.userShows =  MyShows.client.getShows();
-        return nextEpisodes;
+            MyShows.userShows =  client.getShows();
+        return MyShows.nextEpisodes;
     }
 
-    @Override
-    public void onResult(List<Episode> result) {
-        taskListener.onTaskComplete(result);
-    }
-
-    @Override
-    public void onError(Exception e) {
-        e.printStackTrace();
-        taskListener.onTaskFailed(e);
-    }
-
-    public void setTaskListener(TaskListener taskListener) {
-        this.taskListener = taskListener;
-    }
 }

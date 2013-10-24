@@ -2,6 +2,7 @@ package ru.myshows.tasks;
 
 import android.content.Context;
 import ru.myshows.activity.MyShows;
+import ru.myshows.api.MyShowsClient;
 import ru.myshows.domain.UserNews;
 
 import java.util.List;
@@ -16,7 +17,6 @@ import java.util.Map;
  */
 public class GetNewsTask extends BaseTask<Map<String, List<UserNews>>> {
 
-    private TaskListener taskListener;
 
     public GetNewsTask(Context context) {
         super(context);
@@ -27,27 +27,9 @@ public class GetNewsTask extends BaseTask<Map<String, List<UserNews>>> {
     }
 
     @Override
-    public Map<String, List<UserNews>> doWork(Object... objects) throws Exception {
-        if (isForceUpdate)
-            MyShows.news = null;
-        Map<String, List<UserNews>> news = MyShows.news != null ? MyShows.news : MyShows.client.getNews();
-        MyShows.news = news;
-        return news;
+    public Map<String, List<UserNews>> doInBackground(Object... objects)  {
+        MyShows.news = (isForceUpdate || MyShows.news == null) ? client.getNews() : MyShows.news;
+        return MyShows.news;
     }
 
-    @Override
-    public void onResult(Map<String, List<UserNews>> result) {
-        taskListener.onTaskComplete(result);
-    }
-
-    @Override
-    public void onError(Exception e) {
-        e.printStackTrace();
-        taskListener.onTaskFailed(e);
-    }
-
-
-    public void setTaskListener(TaskListener taskListener) {
-        this.taskListener = taskListener;
-    }
 }

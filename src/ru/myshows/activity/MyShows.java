@@ -28,9 +28,8 @@ public class MyShows extends Application {
 
 
     public static Context context;
-    public static MyShowsClient client;
+    //public static MyShowsClient client;
     public static boolean isLoggedIn;
-    public static boolean isUserShowsChanged;
     public static Typeface font;
 
 
@@ -45,7 +44,7 @@ public class MyShows extends Application {
     public void onCreate() {
         super.onCreate();
         context = this;
-        client = MyShowsClient.getInstance();
+        //client = MyShowsClient.getInstance();
         font = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Light.ttf");
 
 

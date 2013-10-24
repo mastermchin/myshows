@@ -11,6 +11,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import org.json.JSONException;
 import org.json.JSONObject;
+import ru.myshows.api.MyShowsClient;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -234,7 +235,7 @@ public class OAuthActivity extends Activity {
             //https://graph.facebook.com/me?fields=id&access_token="xxxxx"
             token = strings[0];
             String url = "https://graph.facebook.com/me?fields=id&access_token=" + token;
-            JSONObject object = MyShows.client.executeExternalWithJson(url);
+            JSONObject object = MyShowsClient.getInstance().executeExternalWithJson(url);
             if (object != null)
                 try {
                     return object.getString("id");

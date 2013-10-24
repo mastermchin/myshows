@@ -23,14 +23,7 @@ public class GetShowsTask extends BaseTask<List<IShow>>  {
     public static final int SHOWS_USER = 3;
     public static final int SHOWS_ALL = 4;
 
-    private TaskListener taskListener;
     private int action;
-    private Context context;
-
-    public GetShowsTask(Context context) {
-        super(context);
-    }
-
 
     public GetShowsTask(Context context, int action) {
         super(context);
@@ -45,17 +38,17 @@ public class GetShowsTask extends BaseTask<List<IShow>>  {
 
 
     @Override
-    public List<IShow> doWork(Object... objects) throws Exception {
+    public List<IShow> doInBackground(Object... objects)  {
         List shows = null;
         switch (action) {
             case SHOWS_SEARCH:
                 String query = (String) objects[0];
-                shows = MyShows.client.search(query);
+                shows = client.search(query);
                 break;
             case SHOWS_TOP:
                 if (isForceUpdate)
                     MyShows.topShows = null;
-                shows = MyShows.topShows != null ? MyShows.topShows : MyShows.client.getTopShows(null);
+                shows = MyShows.topShows != null ? MyShows.topShows : client.getTopShows(null);
                 MyShows.topShows = shows;
                 Collections.sort(shows, new ShowsComparator());
                 break;
@@ -63,28 +56,18 @@ public class GetShowsTask extends BaseTask<List<IShow>>  {
             default:
                 if (isForceUpdate)
                     MyShows.userShows  = null;
-                shows = MyShows.userShows != null ? MyShows.userShows:  MyShows.client.getShows();
+                shows = MyShows.userShows != null ? MyShows.userShows:  client.getShows();
                 MyShows.userShows = shows;
 
                 // get unwatched episodes to make unwatched episodes seen in shows tab
-                MyShows.newEpisodes =  MyShows.client.getUnwatchedEpisodes();
+                MyShows.newEpisodes =  client.getUnwatchedEpisodes();
                 break;
 
         }
         return shows;
     }
 
-    @Override
-    public void onResult(List<IShow> shows) {
-        taskListener.onTaskComplete(shows);
 
-    }
-
-    @Override
-    public void onError(Exception e) {
-        e.printStackTrace();
-        taskListener.onTaskFailed(e);
-    }
 
     public void setTaskListener(TaskListener taskListener) {
         this.taskListener = taskListener;

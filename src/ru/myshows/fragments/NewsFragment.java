@@ -44,12 +44,10 @@ public class NewsFragment extends Fragment implements TaskListener<Map<String, L
     private SectionedAdapter adapter;
     private ListView list;
     private ProgressBar progress;
-    private LayoutInflater inflater;
     private boolean isTaskExecuted = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.inflater = inflater;
         View view = inflater.inflate(R.layout.news, container, false);
         list = (ListView) view.findViewById(R.id.news_list);
         progress = (ProgressBar) view.findViewById(R.id.progress_news);

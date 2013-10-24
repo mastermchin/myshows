@@ -309,7 +309,7 @@ public abstract class MenuActivity extends ActionBarActivity {
                         break;
                     // news
                     case 2:
-                        holder.image.setImageResource(R.drawable.ic_action_device_access_storage_1);
+                        holder.image.setImageResource(R.drawable.ic_action_social_group);
                         break;
                     // rating
                     case 3:

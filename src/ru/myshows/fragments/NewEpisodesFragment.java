@@ -12,6 +12,7 @@ import android.view.*;
 import android.widget.*;
 import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
+import ru.myshows.api.MyShowsClient;
 import ru.myshows.components.RatingDialog;
 import ru.myshows.domain.Episode;
 import ru.myshows.domain.UserShow;
@@ -73,7 +74,7 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
     @Override
     public void executeTask() {
         GetNewEpisodesTask episodesTask = new GetNewEpisodesTask(getActivity());
-        episodesTask.setTaskListener(NewEpisodesFragment.this);
+        episodesTask.setTaskListener(this);
         episodesTask.execute();
     }
 
@@ -366,7 +367,7 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
     private class CheckNewEpisodesTask extends BaseTask<Boolean> {
         // int j = 0;
         @Override
-        public Boolean doWork(Object... objects) throws Exception {
+        public Boolean doInBackground(Object... objects) {
             Map<Integer, String> paramsMap = new HashMap<Integer, String>();
             //Map<Integer, Episode> toRemove = new HashMap<Integer, Episode>();
             List<Episode> toRemove = new ArrayList<Episode>();
@@ -399,7 +400,7 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
                         //app.setUserShowsChanged(true);
                         //results[j] = MyShows.client.syncAllShowEpisodes(showId, episodesIds, null);
                         //Log.d("MyShows", "Result " + j + " = " + results[j]);
-                        MyShows.client.syncAllShowEpisodes(showId, episodesIds, null);
+                        MyShowsClient.getInstance().syncAllShowEpisodes(showId, episodesIds, null);
 
                     }
                 };
@@ -414,20 +415,7 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
             return true;
         }
 
-        @Override
-        public void onResult(Boolean result) {
-            if (isAdded()) {
-                Toast.makeText(getActivity(), exception == null ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
-                adapter.notifyDataSetChanged();
-            }
-            if (mMode != null)
-                mMode.finish();
-        }
 
-        @Override
-        public void onError(Exception e) {
-            e.printStackTrace();
-        }
     }
 
 
@@ -447,7 +435,24 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_save:
-                    new CheckNewEpisodesTask().execute();
+                    BaseTask task  =  new CheckNewEpisodesTask();
+                    task.setTaskListener(new TaskListener<Boolean>() {
+                        @Override
+                        public void onTaskComplete(Boolean result) {
+                            if (isAdded()) {
+                                Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
+                                adapter.notifyDataSetChanged();
+                            }
+                            if (mMode != null)
+                                mMode.finish();
+                        }
+
+                        @Override
+                        public void onTaskFailed(Exception e) {
+
+                        }
+                    });
+                    task.execute();
                     break;
                 case R.id.action_rate:
 
@@ -455,7 +460,22 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
                         @Override
                         public void handleMessage(Message msg) {
                             int rating = msg.arg1;
-                            new ChangeEpisodesRateTask().execute(rating);
+                            BaseTask task =  new ChangeEpisodesRateTask();
+                            task.setTaskListener(new TaskListener<Boolean>() {
+                                @Override
+                                public void onTaskComplete(Boolean result) {
+                                    if (isAdded())
+                                        Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
+                                    if (mMode != null)
+                                        mMode.finish();
+                                }
+
+                                @Override
+                                public void onTaskFailed(Exception e) {
+
+                                }
+                            });
+                            task.execute(rating);
                         }
                     };
                     RatingDialog rate = new RatingDialog(getActivity(), handler);
@@ -477,7 +497,7 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
         ArrayList<Episode> episodes = (ArrayList<Episode>) adapter.getAllChildrenAsList();
 
         @Override
-        public Boolean doWork(Object... objects) throws Exception {
+        public Boolean doInBackground(Object... objects)  {
 
             Integer ratio = (Integer) objects[0];
 
@@ -488,21 +508,9 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
 
             String checked = checkedIds.toString();
             if (checked.endsWith(",")) checked = checked.substring(0, checked.length() - 1);
-            return MyShows.client.changeEpisodesRatio(ratio, checked);
+            return MyShowsClient.getInstance().changeEpisodesRatio(ratio, checked);
         }
 
-        @Override
-        public void onResult(Boolean result) {
-            if (isAdded())
-                Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
-            if (mMode != null)
-                  mMode.finish();
-        }
-
-        @Override
-        public void onError(Exception e) {
-            e.printStackTrace();
-        }
     }
 
 

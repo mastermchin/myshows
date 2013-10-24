@@ -1,5 +1,6 @@
 package ru.myshows.fragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -8,9 +9,11 @@ import android.view.*;
 import android.widget.*;
 import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
+import ru.myshows.api.MyShowsClient;
 import ru.myshows.domain.*;
 import ru.myshows.tasks.BaseTask;
 import ru.myshows.tasks.GetNewEpisodesTask;
+import ru.myshows.tasks.TaskListener;
 import ru.myshows.util.EpisodeComparator;
 import ru.myshows.util.Settings;
 
@@ -96,7 +99,7 @@ public class EpisodesFragment extends Fragment {
         ArrayList<Episode> episodes = (ArrayList<Episode>) adapter.getAllChildrenAsList();
 
         @Override
-        public Boolean doWork(Object... objects) throws Exception {
+        public Boolean doInBackground(Object... objects)  {
 
             StringBuilder checkedIds = new StringBuilder();
             StringBuilder uncheckedIds = new StringBuilder();
@@ -112,7 +115,7 @@ public class EpisodesFragment extends Fragment {
             if (checked.endsWith(",")) checked = checked.substring(0, checked.length() - 1);
             String unchecked = uncheckedIds.toString();
             if (unchecked.endsWith(",")) unchecked = unchecked.substring(0, unchecked.length() - 1);
-            boolean result = MyShows.client.syncAllShowEpisodes(show.getShowId(), checked, unchecked);
+            boolean result = MyShowsClient.getInstance().syncAllShowEpisodes(show.getShowId(), checked, unchecked);
             if (result) {
                 // update watched episodes in cache
                 UserShow us = MyShows.getUserShow(show.getShowId());
@@ -123,21 +126,6 @@ public class EpisodesFragment extends Fragment {
             return result;
         }
 
-        @Override
-        public void onResult(Boolean result) {
-            if (isAdded()) {
-                Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
-                if (result) {
-                    new GetNewEpisodesTask(getActivity(), true).execute();
-                }
-            }
-
-        }
-
-        @Override
-        public void onError(Exception e) {
-            e.printStackTrace();
-        }
     }
 
 
@@ -206,34 +194,6 @@ public class EpisodesFragment extends Fragment {
             return children.get(groupPosition);
         }
 
-
-        public void checkUncheckAll(boolean state) {
-            for (Season s : groups) {
-                s.setChecked(state);
-            }
-            for (Episode e : (List<Episode>) getAllChildrenAsList()) {
-                if (e.getAirDate() != null && e.getAirDate().before(new Date()))
-                    e.setChecked(state);
-            }
-            adapter.notifyDataSetChanged();
-        }
-
-
-        public boolean isAllChecked() {
-            for (int i = 0; i < getGroupCount(); i++) {
-                Season s = (Season) getGroup(i);
-                if (!s.isChecked())
-                    return false;
-                for (int j = 0; j < getChildrenCount(i); j++) {
-                    Episode e = (Episode) getChild(i, j);
-                    if (e.getAirDate() != null && e.getAirDate().before(new Date()) && !e.isChecked())
-                        return false;
-//                    if (!e.isChecked())
-//                        return false;
-                }
-            }
-            return true;
-        }
 
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
             final int gp = groupPosition;
@@ -411,7 +371,24 @@ public class EpisodesFragment extends Fragment {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_save:
-                    new CheckEpisodesTask().execute();
+                    BaseTask task = new CheckEpisodesTask();
+                    task.setTaskListener(new TaskListener<Boolean>() {
+                        @Override
+                        public void onTaskComplete(Boolean result) {
+                            if (isAdded()) {
+                                Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
+                                if (result) {
+                                    new GetNewEpisodesTask(getActivity(), true).execute();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onTaskFailed(Exception e) {
+
+                        }
+                    });
+                    task.execute();
                     mode.finish();
                     break;
 
@@ -428,9 +405,6 @@ public class EpisodesFragment extends Fragment {
 //                    rate.setTitle(R.string.episode_rating);
 //                    rate.show();
                     break;
-//                case R.id.action_check_all:
-//                    adapter.checkUncheckAll(!adapter.isAllChecked());
-//                    break;
             }
             return true;
         }
@@ -441,7 +415,4 @@ public class EpisodesFragment extends Fragment {
         }
     }
 
-    public MyExpandableListAdapter getAdapter() {
-        return adapter;
-    }
 }

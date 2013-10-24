@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import ru.myshows.activity.R;
+import ru.myshows.api.MyShowsClient;
 import ru.myshows.util.Utils;
 
 /**
@@ -20,10 +21,11 @@ import ru.myshows.util.Utils;
  */
 public abstract class BaseTask<T> extends AsyncTask<Object, Void, T> {
 
-    public Context context;
-    public Exception exception;
-    public boolean isOnline = true;
-    public boolean isForceUpdate = false;
+    protected Context context;
+    protected Exception exception;
+    protected boolean isForceUpdate;
+    protected TaskListener taskListener;
+    protected MyShowsClient client = MyShowsClient.getInstance();
 
     protected BaseTask() {
     }
@@ -39,44 +41,27 @@ public abstract class BaseTask<T> extends AsyncTask<Object, Void, T> {
 
     @Override
     protected void onPreExecute() {
-        if (!Utils.isInternetAvailable(context))
-            isOnline = false;
-        if (!isOnline){
+        if (!Utils.isInternetAvailable(context)) {
             cancel(true);
-            onError(new Exception("No Internet available"));
+            taskListener.onTaskFailed(new Exception("No Internet available"));
         }
     }
 
-    @Override
-    protected T doInBackground(Object... objects) {
-        try {
-            return doWork(objects);
-        } catch (Exception e) {
-            e.printStackTrace();
-            exception = e;
-        }
-        return null;
-    }
 
     @Override
     protected void onPostExecute(T result) {
-        if (exception == null) {
-            onResult(result);
-        } else {
-            onError(exception);
-        }
+        if (exception == null)
+            taskListener.onTaskComplete(result);
+         else
+            taskListener.onTaskFailed(exception);
+
     }
 
-    @Override
-    protected void onCancelled(T t) {
-        super.onCancelled(t);
+    public void setTaskListener(TaskListener taskListener) {
+        this.taskListener = taskListener;
     }
 
-    public abstract T doWork(Object... objects) throws Exception;
 
-    public abstract void onResult(T result);
-
-    public abstract void onError(Exception e);
 
 
 }

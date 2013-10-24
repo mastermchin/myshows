@@ -43,6 +43,12 @@ public class LoginFragment extends Fragment {
 
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ScrollView layout = (ScrollView) inflater.inflate(R.layout.login, container, false);
         loginButton = (Button) layout.findViewById(R.id.login_button);
@@ -122,7 +128,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onError() {
 
-                  if (isAdded())
+                if (isAdded())
                     Toast.makeText(getActivity(), "oAuth error, try again please...", Toast.LENGTH_SHORT).show();
 
             }
@@ -139,15 +145,20 @@ public class LoginFragment extends Fragment {
         private ProgressDialog dialog;
         private String login;
         private String pass;
+        private Context context;
 
         private LoginTask(Context context) {
+            this.context = context;
             this.dialog = new ProgressDialog(context);
         }
 
         @Override
         protected void onPreExecute() {
-            dialog.setMessage(getResources().getString(R.string.loading));
-            dialog.show();
+            try {
+                dialog.setMessage(getResources().getString(R.string.loading));
+                dialog.show();
+            } catch (Exception e) {
+            }
 
         }
 
@@ -161,8 +172,13 @@ public class LoginFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Boolean result) {
-            if (dialog.isShowing())
-                dialog.dismiss();
+            // dirty hack
+            try {
+                if (dialog.isShowing())
+                    dialog.dismiss();
+            } catch (Exception e) {
+            }
+
             if (result) {
                 Settings.setString(Settings.KEY_LOGIN, login);
                 Settings.setString(Settings.KEY_PASSWORD, pass);

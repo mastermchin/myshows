@@ -92,6 +92,12 @@ public class ShowActivity extends MenuActivity implements TaskListener<Show> {
 
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("showId", showId);
+    }
+
+    @Override
     public void onTaskComplete(Show result) {
 
         UserShow us = MyShows.getUserShow(showId);

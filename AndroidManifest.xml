@@ -15,7 +15,7 @@
     <supports-screens android:anyDensity="true" />
 
     <application android:name="MyShows" android:icon="@drawable/ic_logo" android:label="MyShows" android:theme="@style/Theme.MyShows">
-        <activity android:name=".MainActivity" android:configChanges="keyboardHidden|orientation"
+        <activity android:name=".MainActivity" android:configChanges="keyboardHidden|orientation|screenLayout"
 
                   android:icon="@drawable/ic_logo">
             <intent-filter>
@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ShowActivity" android:configChanges="keyboardHidden|orientation"/>
-        <activity android:name=".ShowsActivity"/>
+        <activity android:name=".ShowsActivity" android:configChanges="keyboardHidden|orientation"/>
         <activity android:name=".NewsActivity"/>
         <activity android:name=".ProfileActivity"/>
         <activity android:name=".OAuthActivity" android:launchMode="singleInstance">

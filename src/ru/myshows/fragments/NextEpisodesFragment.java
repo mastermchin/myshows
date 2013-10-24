@@ -41,7 +41,6 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
     private ListView list;
     private ProgressBar progress;
     private static DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
-    private boolean isTaskExecuted = false;
 
     public NextEpisodesFragment() {
     }
@@ -64,8 +63,6 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
 
     @Override
     public void executeTask() {
-        if (isTaskExecuted)
-            return;
         GetNextEpisodesTask episodesTask = new GetNextEpisodesTask(getActivity());
         episodesTask.setTaskListener(this);
         episodesTask.execute();
@@ -87,7 +84,6 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
         progress.setVisibility(View.GONE);
         progress.setIndeterminate(false);
         list.setVisibility(View.VISIBLE);
-        isTaskExecuted = true;
     }
 
     @Override

@@ -62,6 +62,15 @@ public class EpisodesFragment extends Fragment {
         return view;
     }
 
+    // refresh adapter after show status was changed
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+    }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -359,6 +368,7 @@ public class EpisodesFragment extends Fragment {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mode.getMenuInflater().inflate(R.menu.new_episodes, menu);
+            menu.findItem(R.id.action_rate).setVisible(false);
             return true;
         }
 
@@ -392,19 +402,6 @@ public class EpisodesFragment extends Fragment {
                     mode.finish();
                     break;
 
-                case R.id.action_rate:
-
-//                    Handler handler = new Handler() {
-//                        @Override
-//                        public void handleMessage(Message msg) {
-//                            int rating = msg.arg1;
-//                            new NewEpisodesFragment.ChangeEpisodesRateTask().execute(rating);
-//                        }
-//                    };
-//                    RatingDialog rate = new RatingDialog(getActivity(), handler);
-//                    rate.setTitle(R.string.episode_rating);
-//                    rate.show();
-                    break;
             }
             return true;
         }

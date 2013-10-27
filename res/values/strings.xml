@@ -168,7 +168,7 @@
 
     <string-array name="episodes_titles">
         <item>New Episodes</item>
-        <item>Soon</item>
+        <item>Coming Soon</item>
     </string-array>
 
     <string-array name="profile_titles">
@@ -189,6 +189,6 @@
         <item>Login</item>
     </string-array>
 
-    <string name="app_id">568473939831654</string>
+    <string name="add_new">Add show</string>
 
 </resources>

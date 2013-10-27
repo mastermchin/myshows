@@ -74,8 +74,9 @@ public class ProfileActivity extends MenuActivity {
             Fragment currentFragment = getFragment(position);
             if (currentFragment != null)
                 ((Taskable) currentFragment).executeUpdateTask();
+            return true;
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     private Fragment getFragment(int position) {

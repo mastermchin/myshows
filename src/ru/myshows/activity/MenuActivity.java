@@ -10,7 +10,6 @@ import android.content.res.Configuration;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -301,7 +300,7 @@ public abstract class MenuActivity extends ActionBarActivity {
 
                 switch (position) {
                     case 0:
-                        holder.image.setImageResource(R.drawable.ic_action_film2);
+                        holder.image.setImageResource(R.drawable.ic_action_film);
                         break;
                     // profile
                     case 1:

@@ -172,4 +172,6 @@
         <item>Вход</item>
     </string-array>
 
+    <string name="add_new">Добавить сериал</string>
+
 </resources>

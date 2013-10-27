@@ -21,7 +21,6 @@ public class GetShowsTask extends BaseTask<List<IShow>>  {
     public static final int SHOWS_SEARCH = 1;
     public static final int SHOWS_TOP = 2;
     public static final int SHOWS_USER = 3;
-    public static final int SHOWS_ALL = 4;
 
     private int action;
 
@@ -45,19 +44,16 @@ public class GetShowsTask extends BaseTask<List<IShow>>  {
                 String query = (String) objects[0];
                 shows = client.search(query);
                 break;
+
             case SHOWS_TOP:
-                if (isForceUpdate)
-                    MyShows.topShows = null;
-                shows = MyShows.topShows != null ? MyShows.topShows : client.getTopShows(null);
-                MyShows.topShows = shows;
+                MyShows.topShows = (isForceUpdate || MyShows.topShows == null) ? client.getTopShows(null) : MyShows.topShows;
+                shows = MyShows.topShows;
                 Collections.sort(shows, new ShowsComparator());
                 break;
             case SHOWS_USER:
             default:
-                if (isForceUpdate)
-                    MyShows.userShows  = null;
-                shows = MyShows.userShows != null ? MyShows.userShows:  client.getShows();
-                MyShows.userShows = shows;
+                MyShows.userShows = (isForceUpdate || MyShows.userShows == null) ? client.getShows() : MyShows.userShows;
+                shows = MyShows.userShows;
 
                 // get unwatched episodes to make unwatched episodes seen in shows tab
                 MyShows.newEpisodes =  client.getUnwatchedEpisodes();

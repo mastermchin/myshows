@@ -7,9 +7,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
@@ -19,6 +17,7 @@ import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
 import ru.myshows.activity.ShowActivity;
+import ru.myshows.activity.ShowsActivity;
 import ru.myshows.adapters.SectionedAdapter;
 import ru.myshows.api.MyShowsApi;
 import ru.myshows.domain.Episode;
@@ -73,7 +72,31 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         executeTask();
+        setHasOptionsMenu(true);
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        //super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.my_shows, menu);
+        menu.findItem(R.id.action_add_show).setVisible(action == SHOWS_USER);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.action_add_show:
+                Intent intent = new Intent(getActivity(), ShowsActivity.class);
+                intent.putExtra("action", ShowsFragment.SHOWS_TOP);
+                startActivity(intent);
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
 
     @Override
     public void onTaskComplete(List<IShow> result) {

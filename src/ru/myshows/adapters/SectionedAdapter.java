@@ -1,11 +1,16 @@
 package ru.myshows.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
+import ru.myshows.activity.ShowActivity;
+import ru.myshows.api.MyShowsApi;
 import ru.myshows.domain.*;
 import ru.myshows.domain.Filterable;
 import ru.myshows.fragments.NewsFragment;
@@ -14,7 +19,9 @@ import ru.myshows.fragments.ShowsFragment;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SectionedAdapter extends ArrayAdapter implements Serializable {
 
@@ -63,14 +70,14 @@ public class SectionedAdapter extends ArrayAdapter implements Serializable {
 
                     if (!foundedObjects.isEmpty()) {
                         // shows and search
-                        if (s.adapter instanceof ShowsFragment.ShowsAdapter)
-                            founded.add(new Section(s.caption, new ShowsFragment.ShowsAdapter(context, R.layout.show_item, (List<IShow>) foundedObjects)));
-                        // news
-                        if (s.adapter instanceof NewsFragment.NewsAdapter)
-                            founded.add(new Section(s.caption, new NewsFragment.NewsAdapter(context, R.layout.show_item, (List<UserNews>) foundedObjects)));
-                        // next episodes
-                        if (s.adapter instanceof NextEpisodesFragment.EpisodesAdapter)
-                            founded.add(new Section(s.caption, new NextEpisodesFragment.EpisodesAdapter(context, R.layout.show_item, (List<Episode>) foundedObjects)));
+                        if (s.adapter instanceof ArrayAdapter)
+                            founded.add(new Section(s.caption, new ShowsAdapter(context, R.layout.show_item, (List<IShow>) foundedObjects)));
+//                        // news
+//                        if (s.adapter instanceof NewsFragment.NewsAdapter)
+//                            founded.add(new Section(s.caption, new NewsFragment.NewsAdapter(context, R.layout.show_item, (List<UserNews>) foundedObjects)));
+//                        // next episodes
+//                        if (s.adapter instanceof NextEpisodesFragment.EpisodesAdapter)
+//                            founded.add(new Section(s.caption, new NextEpisodesFragment.EpisodesAdapter(context, R.layout.show_item, (List<Episode>) foundedObjects)));
 
                     }
 
@@ -224,6 +231,10 @@ public class SectionedAdapter extends ArrayAdapter implements Serializable {
             this.caption = caption;
             this.adapter = adapter;
         }
+
+        public ArrayAdapter getAdapter() {
+            return adapter;
+        }
     }
 
     public List<Section> getSections() {
@@ -247,5 +258,106 @@ public class SectionedAdapter extends ArrayAdapter implements Serializable {
         }
     }
 
+
+    public  class ShowsAdapter extends ArrayAdapter<IShow> {
+
+        private List<? extends IShow> shows;
+        private Context context;
+
+        public ShowsAdapter(Context context, int textViewResourceId, List shows) {
+            super(context, textViewResourceId, shows);
+            this.context = context;
+            this.shows = shows;
+        }
+
+        @Override
+        public int getCount() {
+            if (shows == null || shows.isEmpty()) return 0;
+            return shows.size();
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            final int pos = position;
+            final ShowsFragment.ViewHolder holder;
+            if (convertView == null) {
+                LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = vi.inflate(R.layout.show_item, null);
+                holder = new ShowsFragment.ViewHolder();
+                holder.logo = (ImageView) convertView.findViewById(R.id.show_logo);
+                holder.title = (TextView) convertView.findViewById(R.id.show_name);
+                holder.rating = (RatingBar) convertView.findViewById(R.id.show_rating);
+                holder.unwatched = (TextView) convertView.findViewById(R.id.unwatched_episodes);
+                convertView.setTag(holder);
+            } else {
+                holder = (ShowsFragment.ViewHolder) convertView.getTag();
+            }
+
+            IShow show = shows.get(position);
+            if (show != null) {
+
+                ImageLoader.getInstance().displayImage(show.getImageUrl(), holder.logo);
+
+                holder.title.setText(show.getTitle());
+                // UserShow userShow = MyShows.getUserShow(show.getShowId());
+                holder.rating.setRating(/*userShow != null ? userShow.getRating().floatValue() : */show.getRating().floatValue());
+
+                if (show instanceof UserShow) {
+
+                    if (show.getWatchStatus().equals(MyShowsApi.STATUS.watching)) {
+                        int unwatched = getUnwatchedEpisodesCount(show.getShowId());
+                        if (unwatched > 0)
+                            holder.unwatched.setText(unwatched + "");
+                    }
+                }
+
+            }
+
+
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    //IShow show = adapter.getItem(pos, section);
+                    IShow show = getItem(pos);
+                    Intent intent = new Intent();
+                    intent.putExtra("showId", show.getShowId());
+                    intent.putExtra("title", show.getTitle());
+                    intent.putExtra("watchStatus", show.getWatchStatus());
+                    intent.putExtra("yoursRating", show.getYoursRating());
+                    intent.setClass(context, ShowActivity.class);
+                    context.startActivity(intent);
+
+                }
+            });
+
+            return convertView;
+        }
+
+//        protected class ViewHolder {
+//            protected ImageView logo;
+//            protected TextView title;
+//            protected RatingBar rating;
+//            protected TextView unwatched;
+//        }
+
+        public List<? extends IShow> getShows() {
+            return shows;
+        }
+
+        private int getUnwatchedEpisodesCount(Integer showId) {
+            if (MyShows.newEpisodes == null) return 0;
+            Map<Integer, List<Episode>> episodesByShows = new HashMap<Integer, List<Episode>>();
+            int count = 0;
+            for (Episode e : MyShows.newEpisodes) {
+                // exclude special episodes
+                if (e.getEpisodeNumber() == 0)
+                    continue;
+                if (e.getShowId().equals(showId))
+                    count++;
+            }
+            return count;
+        }
+    }
 
 }

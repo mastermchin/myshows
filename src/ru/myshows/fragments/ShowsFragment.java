@@ -1,5 +1,6 @@
 package ru.myshows.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,12 +9,8 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.*;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.*;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import ru.myshows.activity.MyShows;
 import ru.myshows.activity.R;
 import ru.myshows.activity.ShowActivity;
@@ -57,6 +54,14 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
         this.action = action;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == Activity.RESULT_CANCELED && action == SHOWS_USER) {
+            list.setAdapter(populateAdapter(action, MyShows.userShows));
+        }
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -97,7 +102,6 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
     }
 
 
-
     @Override
     public void onTaskComplete(List<IShow> result) {
         if (isAdded())
@@ -132,7 +136,7 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
     public void executeTask() {
         action = getArguments().getInt("action");
         String search = getArguments().getString("search");
-        GetShowsTask task = new GetShowsTask(getActivity(), action );
+        GetShowsTask task = new GetShowsTask(getActivity(), action);
         task.setTaskListener(this);
         if (search != null)
             task.execute(search);
@@ -149,12 +153,12 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
         task.execute();
     }
 
-    public static class ShowsAdapter extends ArrayAdapter<IShow> {
+    public class ShowsAdapter extends ArrayAdapter<IShow> {
 
-        private List<IShow> shows;
+        private List<? extends IShow> shows;
         private Context context;
 
-        public ShowsAdapter(Context context, int textViewResourceId, List<IShow> shows) {
+        public ShowsAdapter(Context context, int textViewResourceId, List shows) {
             super(context, textViewResourceId, shows);
             this.context = context;
             this.shows = shows;
@@ -216,21 +220,16 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
                     intent.putExtra("watchStatus", show.getWatchStatus());
                     intent.putExtra("yoursRating", show.getYoursRating());
                     intent.setClass(context, ShowActivity.class);
-                    context.startActivity(intent);
+                    //context.startActivity(intent);
+                    ShowsFragment.this.startActivityForResult(intent, 1);
                 }
             });
 
             return convertView;
         }
 
-        protected class ViewHolder {
-            protected ImageView logo;
-            protected TextView title;
-            protected RatingBar rating;
-            protected TextView unwatched;
-        }
 
-        public List<IShow> getShows() {
+        public List<? extends IShow> getShows() {
             return shows;
         }
 
@@ -250,7 +249,14 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
     }
 
 
-    public SectionedAdapter populateAdapter(int action, List<IShow> shows) {
+    public static class ViewHolder {
+        public ImageView logo;
+        public TextView title;
+        public RatingBar rating;
+        public TextView unwatched;
+    }
+
+    public SectionedAdapter populateAdapter(int action, List<? extends IShow> shows) {
         //adapter = new SectionedAdapter(getActivity(), R.layout.header, null);
 
         List<SectionedAdapter.Section> sectionList = new ArrayList<SectionedAdapter.Section>();
@@ -272,37 +278,36 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
                 sectionList.add(new SectionedAdapter.Section(all, new ShowsAdapter(getActivity(), R.layout.show_item, shows)));
                 break;
             case SHOWS_USER:
+              //  shows = MyShows.userShows != null ? MyShows.userShows : shows;
                 ShowsComparator sc = new ShowsComparator("title");
 
 
+                String watching = res.getString(R.string.status_watching);
+                List<IShow> watchingShows = getByWatchStatus(shows, MyShowsApi.STATUS.watching);
+                Collections.sort(watchingShows, sc);
+                if (watchingShows.size() > 0)
+                    sectionList.add(new SectionedAdapter.Section(watching + " (" + watchingShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, watchingShows)));
 
-                    String watching = res.getString(R.string.status_watching);
-                    List<IShow> watchingShows = getByWatchStatus(shows, MyShowsApi.STATUS.watching);
-                    Collections.sort(watchingShows, sc);
-                    if (watchingShows.size() > 0)
-                        sectionList.add(new SectionedAdapter.Section(watching + " (" + watchingShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, watchingShows)));
-
-                    String willWatch = res.getString(R.string.status_will_watch);
-                    List<IShow> willWatchShows = getByWatchStatus(shows, MyShowsApi.STATUS.later);
-                    Collections.sort(willWatchShows, sc);
-                    if (willWatchShows.size() > 0)
-                        sectionList.add(new SectionedAdapter.Section(willWatch + " (" + willWatchShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, willWatchShows)));
-
-
-                    String cancelled = res.getString(R.string.status_cancelled);
-                    List<IShow> cancelledShows = getByWatchStatus(shows, MyShowsApi.STATUS.cancelled);
-                    Collections.sort(cancelledShows, sc);
-                    if (cancelledShows.size() > 0)
-                        sectionList.add(new SectionedAdapter.Section(cancelled + " (" + cancelledShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, cancelledShows)));
+                String willWatch = res.getString(R.string.status_will_watch);
+                List<IShow> willWatchShows = getByWatchStatus(shows, MyShowsApi.STATUS.later);
+                Collections.sort(willWatchShows, sc);
+                if (willWatchShows.size() > 0)
+                    sectionList.add(new SectionedAdapter.Section(willWatch + " (" + willWatchShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, willWatchShows)));
 
 
-                    String remove = res.getString(R.string.status_finished);
-                    List<IShow> finishedShows = getByWatchStatus(shows, MyShowsApi.STATUS.finished);
-                    Collections.sort(finishedShows, sc);
-                    if (finishedShows.size() > 0)
-                        sectionList.add(new SectionedAdapter.Section(remove + " (" + finishedShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, finishedShows)));
-                    break;
+                String cancelled = res.getString(R.string.status_cancelled);
+                List<IShow> cancelledShows = getByWatchStatus(shows, MyShowsApi.STATUS.cancelled);
+                Collections.sort(cancelledShows, sc);
+                if (cancelledShows.size() > 0)
+                    sectionList.add(new SectionedAdapter.Section(cancelled + " (" + cancelledShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, cancelledShows)));
 
+
+                String remove = res.getString(R.string.status_finished);
+                List<IShow> finishedShows = getByWatchStatus(shows, MyShowsApi.STATUS.finished);
+                Collections.sort(finishedShows, sc);
+                if (finishedShows.size() > 0)
+                    sectionList.add(new SectionedAdapter.Section(remove + " (" + finishedShows.size() + ")", new ShowsAdapter(getActivity(), R.layout.show_item, finishedShows)));
+                break;
 
 
         }
@@ -312,7 +317,7 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
     }
 
 
-    public static List<IShow> getByWatchStatus(List<IShow> shows, MyShowsApi.STATUS status) {
+    public static List<IShow> getByWatchStatus(List<? extends IShow> shows, MyShowsApi.STATUS status) {
         List<IShow> list = new ArrayList<IShow>();
         if (shows == null) return list;
         for (IShow show : shows) {

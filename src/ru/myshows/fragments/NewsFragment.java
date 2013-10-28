@@ -18,7 +18,6 @@ import ru.myshows.activity.ProfileActivity;
 import ru.myshows.activity.R;
 import ru.myshows.activity.ShowActivity;
 import ru.myshows.adapters.SectionedAdapter;
-import ru.myshows.domain.Searchable;
 import ru.myshows.domain.UserNews;
 import ru.myshows.domain.UserShow;
 import ru.myshows.tasks.GetNewsTask;
@@ -38,7 +37,7 @@ import java.util.TreeMap;
  * Time: 15:19:10
  * To change this template use File | Settings | File Templates.
  */
-public class NewsFragment extends Fragment implements TaskListener<Map<String, List<UserNews>>>, Taskable, Searchable {
+public class NewsFragment extends Fragment implements TaskListener<Map<String, List<UserNews>>>, Taskable{
 
 
     private SectionedAdapter adapter;
@@ -229,10 +228,5 @@ public class NewsFragment extends Fragment implements TaskListener<Map<String, L
         return adapter;
     }
 
-
-    @Override
-    public ArrayAdapter getAdapter() {
-        return adapter;
-    }
 
 }

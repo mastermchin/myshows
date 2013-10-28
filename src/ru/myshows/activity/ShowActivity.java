@@ -1,5 +1,6 @@
 package ru.myshows.activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -168,8 +169,12 @@ public class ShowActivity extends MenuActivity implements TaskListener<Show> {
         return intent.getExtras().get(key);
     }
 
-
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setResult(Activity.RESULT_CANCELED);
+        finish();
+    }
 
     private void populateExternalLinkActions(Show show) {
 

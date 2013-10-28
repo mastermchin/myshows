@@ -15,7 +15,6 @@ import ru.myshows.adapters.SectionedAdapter;
 import ru.myshows.api.MyShowsApi;
 import ru.myshows.api.MyShowsClient;
 import ru.myshows.domain.Episode;
-import ru.myshows.domain.Searchable;
 import ru.myshows.domain.UserShow;
 import ru.myshows.tasks.GetNextEpisodesTask;
 import ru.myshows.tasks.TaskListener;
@@ -34,7 +33,7 @@ import java.util.*;
  * Time: 1:10
  * To change this template use File | Settings | File Templates.
  */
-public class NextEpisodesFragment extends Fragment implements TaskListener<List<Episode>>, Taskable, Searchable {
+public class NextEpisodesFragment extends Fragment implements TaskListener<List<Episode>>, Taskable {
 
     private SectionedAdapter adapter;
     private RelativeLayout rootView;
@@ -250,11 +249,6 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
 
     }
 
-
-    @Override
-    public ArrayAdapter getAdapter() {
-        return adapter;
-    }
 
     public String getMonth(int month) {
         return new DateFormatSymbols().getMonths()[month-1];

@@ -41,7 +41,7 @@ public class OAuthActivity extends Activity {
 
     public static final String VK_APP_ID = "2155950";
     public static final String VK_REDIRECT_URL = "https://oauth.vk.com/blank.html";
-    public static final String VK_LOGIN_URl = "https://oauth.vk.com/authorize?client_id=%1$s&display=mobile&scope=&redirect_uri=%2$s&response_type=token&v=5.2";
+    public static final String VK_LOGIN_URl = "https://oauth.vk.com/authorize?client_id=%1$s&display=mobile&scope=offline&redirect_uri=%2$s&response_type=token&v=5.2";
 
 
     public static final String TWITTER_APP_ID = "LnjZiH7g5XzmmiYwOwrg";

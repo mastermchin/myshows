@@ -161,64 +161,65 @@ public abstract class MenuActivity extends ActionBarActivity {
                 public void run() {
                     Context context = MenuActivity.this;
                     Intent intent;
-                        switch (position) {
-                            // Episodes
-                            case 0:
-                                if (!(MenuActivity.this instanceof MainActivity)) {
-                                    if (getActivityDepth() == 2) {
-                                        finish();
-                                    } else {
-                                        intent = new Intent(context, MainActivity.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                        startActivity(intent);
-                                    }
+                    switch (position) {
+                        // Episodes
+                        case 0:
+                            if (!(MenuActivity.this instanceof MainActivity)) {
+                                if (getActivityDepth() == 2) {
+                                    finish();
+                                } else {
+                                    intent = new Intent(context, MainActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivity(intent);
                                 }
-                                break;
-                            //profile
-                            case 1:
+                            }
+                            break;
+                        //profile
+                        case 1:
                                 intent = new Intent(context, ProfileActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
-
-                                break;
-                            //News
-                            case 2:
+                            break;
+                        //News
+                        case 2:
+                            if (!(MenuActivity.this instanceof NewsActivity)) {
                                 intent = new Intent(context, NewsActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
 
-                                break;
-                            //Shows Rating
-                            case 3:
-                                intent = new Intent(context, ShowsActivity.class);
-                                intent.putExtra("action", ShowsFragment.SHOWS_TOP);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivity(intent);
-                                break;
-                            //Favourites
+                            }
+                            break;
+                        //Shows Rating
+                        case 3:
+                            intent = new Intent(context, ShowsActivity.class);
+                            intent.putExtra("action", ShowsFragment.SHOWS_TOP);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                            break;
+                        //Favourites
 
-                            case 4:
-                                final AlertDialog alert;
-                                AlertDialog.Builder builder = new AlertDialog.Builder(MenuActivity.this)
-                                        .setTitle(R.string.request_exit)
-                                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
+                        case 4:
+                            final AlertDialog alert;
+                            AlertDialog.Builder builder = new AlertDialog.Builder(MenuActivity.this)
+                                    .setTitle(R.string.request_exit)
+                                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
 
-                                                // clear all preferences
-                                                Settings.getPreferences().edit().clear().commit();
+                                            // clear all preferences
+                                            Settings.getPreferences().edit().clear().commit();
 
-                                                MyShows.isLoggedIn = false;
-                                                MyShows.invalidateUserData();
-                                                finish();
-                                                startActivity(new Intent(MenuActivity.this, MainActivity.class));
-                                            }
-                                        })
-                                        .setNegativeButton(R.string.no, null);
-                                alert = builder.create();
-                                alert.show();
-                                break;
-                        }
+                                            MyShows.isLoggedIn = false;
+                                            MyShows.invalidateUserData();
+                                            finish();
+                                            startActivity(new Intent(MenuActivity.this, MainActivity.class));
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.no, null);
+                            alert = builder.create();
+                            alert.show();
+                            break;
+                    }
 
 
                 }
@@ -297,28 +298,27 @@ public abstract class MenuActivity extends ActionBarActivity {
             }
 
 
-
-                switch (position) {
-                    case 0:
-                        holder.image.setImageResource(R.drawable.ic_action_film);
-                        break;
-                    // profile
-                    case 1:
-                        holder.image.setImageResource(R.drawable.ic_action_social_person);
-                        break;
-                    // news
-                    case 2:
-                        holder.image.setImageResource(R.drawable.ic_action_social_group);
-                        break;
-                    // rating
-                    case 3:
-                        holder.image.setImageResource(R.drawable.ic_rating_important);
-                        break;
-                    //logout
-                    case 4:
-                        holder.image.setImageResource(R.drawable.ic_action_gnome_session_logout);
-                        break;
-                }
+            switch (position) {
+                case 0:
+                    holder.image.setImageResource(R.drawable.ic_action_film);
+                    break;
+                // profile
+                case 1:
+                    holder.image.setImageResource(R.drawable.ic_action_social_person);
+                    break;
+                // news
+                case 2:
+                    holder.image.setImageResource(R.drawable.ic_action_social_group);
+                    break;
+                // rating
+                case 3:
+                    holder.image.setImageResource(R.drawable.ic_rating_important);
+                    break;
+                //logout
+                case 4:
+                    holder.image.setImageResource(R.drawable.ic_action_gnome_session_logout);
+                    break;
+            }
 
             holder.title.setText(getItem(position));
 
@@ -332,7 +332,6 @@ public abstract class MenuActivity extends ActionBarActivity {
             protected TextView count;
         }
     }
-
 
 
 }

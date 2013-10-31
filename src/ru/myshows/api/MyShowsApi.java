@@ -78,9 +78,9 @@ public interface MyShowsApi {
     public JSONObject executeExternalWithJson(String url);
 
     public static enum STATUS {
-        finished,
         watching,
         later,
+        finished,
         cancelled,
         remove;
 

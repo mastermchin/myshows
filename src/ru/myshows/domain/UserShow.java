@@ -33,6 +33,14 @@ public class UserShow extends JsonEvaluator implements IShow, JsonSerializable{
     }
 
 
+    public UserShow(IShow show, MyShowsApi.STATUS status) {
+        this.title = show.getTitle();
+        this.rating = show.getYoursRating();
+        this.showId = show.getShowId();
+        this.imageUrl = show.getImageUrl();
+        this.watchStatus = status;
+    }
+
     public UserShow(Show show, MyShowsApi.STATUS status) {
         this.title = show.getTitle();
         this.ruTitle = show.getRuTitle();

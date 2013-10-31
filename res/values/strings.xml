@@ -50,6 +50,13 @@
     <string name="status_cancelled">Cancelled</string>
     <string name="status_remove">Remove</string>
 
+    <array name="show_statuses">
+        <item>Watching</item>
+        <item>Will watch</item>
+        <item>Finished</item>
+        <item>Cancelled</item>
+        <item>Remove</item>
+    </array>
 
 
 
@@ -94,6 +101,8 @@
 
     <string name="on">On</string>
     <string name="off">Off</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
 
      <string name="pref_title">Settings</string>
      <string name="pref_show_news">Show friends news</string>

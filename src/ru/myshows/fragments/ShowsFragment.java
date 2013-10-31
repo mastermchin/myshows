@@ -17,10 +17,8 @@ import ru.myshows.activity.ShowActivity;
 import ru.myshows.activity.ShowsActivity;
 import ru.myshows.adapters.SectionedAdapter;
 import ru.myshows.api.MyShowsApi;
-import ru.myshows.domain.Episode;
-import ru.myshows.domain.IShow;
-import ru.myshows.domain.Searchable;
-import ru.myshows.domain.UserShow;
+import ru.myshows.domain.*;
+import ru.myshows.tasks.ChangeShowStatusTask;
 import ru.myshows.tasks.GetShowsTask;
 import ru.myshows.tasks.TaskListener;
 import ru.myshows.tasks.Taskable;
@@ -187,13 +185,12 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            IShow show = shows.get(position);
+           final IShow show = shows.get(position);
             if (show != null) {
 
                 ImageLoader.getInstance().displayImage(show.getImageUrl(), holder.logo);
 
                 holder.title.setText(show.getTitle());
-                // UserShow userShow = MyShows.getUserShow(show.getShowId());
                 holder.rating.setRating(/*userShow != null ? userShow.getRating().floatValue() : */show.getRating().floatValue());
 
                 if (show instanceof UserShow) {
@@ -203,6 +200,69 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
                         if (unwatched > 0)
                             holder.unwatched.setText(unwatched + "");
                     }
+                }
+
+                try {
+                    if (action == SHOWS_TOP) {
+
+                        final UserShow userShow = MyShows.getUserShow(show.getShowId());
+                        if (userShow != null)
+                            holder.unwatched.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.ic_eye_red), null);
+                        else
+                            holder.unwatched.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.ic_eye_gray), null);
+
+
+                        holder.unwatched.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                int selected = 4; // last status from statuses arrat = removed;
+                                if (userShow != null && userShow.getWatchStatus() != null){
+                                     selected = userShow.getWatchStatus().ordinal();
+                                }
+
+
+                                new AlertDialog.Builder(getActivity())
+                                        .setSingleChoiceItems(R.array.show_statuses, selected, null)
+                                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int whichButton) {
+                                                dialog.dismiss();
+                                                int selectedPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+                                                final MyShowsApi.STATUS selectedStatus =  MyShowsApi.STATUS.values()[selectedPosition];
+
+                                                ChangeShowStatusTask task = new ChangeShowStatusTask(getActivity());
+                                                task.setTaskListener(new TaskListener() {
+                                                    @Override
+                                                    public void onTaskComplete(Object result) {
+                                                        Toast.makeText(getActivity(), R.string.changes_saved, Toast.LENGTH_SHORT).show();
+
+                                                        if (userShow !=null){
+                                                            userShow.setWatchStatus(selectedStatus);
+                                                            if (selectedStatus == MyShowsApi.STATUS.remove)
+                                                                MyShows.userShows.remove(userShow);
+                                                        }else {
+                                                            MyShows.userShows.add(new UserShow(show, selectedStatus));
+                                                        }
+                                                        adapter.notifyDataSetChanged();
+                                                        adapter.getSections().get(0).adapter.notifyDataSetChanged();
+                                                    }
+
+                                                    @Override
+                                                    public void onTaskFailed(Exception e) {
+                                                        Toast.makeText(getActivity(), R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                                task.execute(show.getShowId(),selectedStatus);
+                                            }
+                                        })
+                                        .setNegativeButton(R.string.cancel, null)
+                                        .show();
+                            }
+                        });
+                    }
+
+                } catch (Exception e) {
+
                 }
 
             }
@@ -254,6 +314,7 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
         public TextView title;
         public RatingBar rating;
         public TextView unwatched;
+        public ImageView eye;
     }
 
     public SectionedAdapter populateAdapter(int action, List<? extends IShow> shows) {
@@ -278,7 +339,7 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
                 sectionList.add(new SectionedAdapter.Section(all, new ShowsAdapter(getActivity(), R.layout.show_item, shows)));
                 break;
             case SHOWS_USER:
-              //  shows = MyShows.userShows != null ? MyShows.userShows : shows;
+                //  shows = MyShows.userShows != null ? MyShows.userShows : shows;
                 ShowsComparator sc = new ShowsComparator("title");
 
 

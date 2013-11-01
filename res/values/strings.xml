@@ -200,4 +200,7 @@
 
     <string name="add_new">Add show</string>
 
+    <string name="empty_show_list">It seems you still do not have TV shows in your profile. In order to add TV shows follow to Shows Rating or click Add button at top-right corner.</string>
+    <string name="empty_search">No results found, try another search.</string>
+
 </resources>

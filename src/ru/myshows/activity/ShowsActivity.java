@@ -21,6 +21,7 @@ import ru.myshows.tasks.Taskable;
 public class ShowsActivity extends MenuActivity {
 
     private ViewPager pager;
+    private int action;
 
     @Override
     protected int getContentViewId() {
@@ -34,9 +35,9 @@ public class ShowsActivity extends MenuActivity {
         pager.setVisibility(View.GONE);
 
 
-
         Bundle args = new Bundle();
-        args.putInt("action", getIntent().getIntExtra("action", GetShowsTask.SHOWS_USER));
+        action = getIntent().getIntExtra("action", GetShowsTask.SHOWS_USER);
+        args.putInt("action", action);
         args.putString("search", getIntent().getStringExtra("search"));
 
         Fragment showsFragment = new ShowsFragment();
@@ -50,7 +51,6 @@ public class ShowsActivity extends MenuActivity {
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -58,24 +58,25 @@ public class ShowsActivity extends MenuActivity {
 
         switch (item.getItemId()) {
             case R.id.action_search:
-                search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String s) {
-                        // search here
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onQueryTextChange(String s) {
-                        Fragment fragment = getSupportFragmentManager().findFragmentByTag("shows");
-                        if (fragment instanceof Searchable) {
-                            ((Searchable) fragment).getAdapter().getFilter().filter(s);
+                if (action == ShowsFragment.SHOWS_TOP) {
+                    search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                        @Override
+                        public boolean onQueryTextSubmit(String s) {
+                            return false;
                         }
-                        return false;
-                    }
-                });
-                SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-                search.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+                        @Override
+                        public boolean onQueryTextChange(String s) {
+                            Fragment fragment = getSupportFragmentManager().findFragmentByTag("shows");
+                            if (fragment instanceof Searchable) {
+                                ((Searchable) fragment).getAdapter().getFilter().filter(s);
+                            }
+                            return false;
+                        }
+                    });
+                    SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+                    search.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+                }
                 break;
             case R.id.action_refresh:
                 Fragment currentFragment = getSupportFragmentManager().findFragmentByTag("shows");
@@ -85,13 +86,8 @@ public class ShowsActivity extends MenuActivity {
         }
 
 
-
         return true;
     }
-
-
-
-
 
 
 }

@@ -46,7 +46,7 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
     private ListView list;
     private ProgressBar progress;
     private SectionedAdapter adapter;
-
+    private TextView message;
 
     public void setAction(int action) {
         this.action = action;
@@ -66,6 +66,7 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
         View view = inflater.inflate(R.layout.shows, container, false);
         list = (ListView) view.findViewById(R.id.shows_list);
         progress = (ProgressBar) view.findViewById(R.id.progress_shows);
+        message = (TextView) view.findViewById(R.id.message);
         if (savedInstanceState != null)
             action = savedInstanceState.getInt("action");
         return view;
@@ -102,11 +103,21 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
 
     @Override
     public void onTaskComplete(List<IShow> result) {
-        if (isAdded())
-            list.setAdapter(populateAdapter(action, result));
-        progress.setVisibility(View.GONE);
-        progress.setIndeterminate(false);
-        list.setVisibility(View.VISIBLE);
+        if (isAdded()){
+            if (result != null && !result.isEmpty()){
+                list.setAdapter(populateAdapter(action, result));
+                message.setVisibility(View.GONE);
+            }else{
+                list.setVisibility(View.GONE);
+                message.setVisibility(View.VISIBLE);
+                message.setText(action == SHOWS_USER ? R.string.empty_show_list: R.string.empty_search);
+            }
+
+            progress.setVisibility(View.GONE);
+            progress.setIndeterminate(false);
+            list.setVisibility(View.VISIBLE);
+        }
+
     }
 
     @Override
@@ -147,6 +158,7 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
         GetShowsTask task = new GetShowsTask(getActivity(), true, action);
         task.setTaskListener(this);
         list.setVisibility(View.GONE);
+        message.setVisibility(View.GONE);
         progress.setVisibility(View.VISIBLE);
         task.execute();
     }
@@ -241,6 +253,8 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
                                                             if (selectedStatus == MyShowsApi.STATUS.remove)
                                                                 MyShows.userShows.remove(userShow);
                                                         }else {
+                                                            if (MyShows.userShows == null)
+                                                                MyShows.userShows = new ArrayList<UserShow>();
                                                             MyShows.userShows.add(new UserShow(show, selectedStatus));
                                                         }
                                                         adapter.notifyDataSetChanged();

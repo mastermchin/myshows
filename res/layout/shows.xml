@@ -22,4 +22,14 @@
               android:fastScrollEnabled="true"
             />
 
+    <ru.myshows.components.RobotoTextView
+                 android:id="@+id/message"
+                 android:padding="10dp"
+                 android:layout_width="fill_parent"
+                 android:layout_height="fill_parent"
+                 android:visibility="gone"
+                 android:gravity="center|left"
+                 android:text="@string/empty_show_list"
+            />
+
 </RelativeLayout>

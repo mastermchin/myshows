@@ -33,6 +33,7 @@ public abstract class MenuActivity extends ActionBarActivity {
 
     private DrawerLayout mDrawerLayout;
     protected ListView mDrawerList;
+    protected LinearLayout  mDrawerListWrapper;
     private ActionBarDrawerToggle mDrawerToggle;
 
     private String[] menu;
@@ -48,6 +49,7 @@ public abstract class MenuActivity extends ActionBarActivity {
         setContentView(getContentViewId());
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerListWrapper = (LinearLayout) findViewById(R.id.list_wrapper);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
         getSupportActionBar().setIcon(R.drawable.ic_list_logo);
@@ -155,7 +157,7 @@ public abstract class MenuActivity extends ActionBarActivity {
     protected class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-            mDrawerLayout.closeDrawer(mDrawerList);
+            mDrawerLayout.closeDrawer(mDrawerListWrapper);
             mDrawerLayout.postDelayed(new Runnable() {
                 @Override
                 public void run() {

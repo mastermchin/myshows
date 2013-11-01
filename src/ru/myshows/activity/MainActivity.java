@@ -8,6 +8,7 @@ import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import ru.myshows.adapters.FragmentAdapter;
 import ru.myshows.api.MyShowsClient;
@@ -30,6 +31,7 @@ public class MainActivity extends MenuActivity {
     private PagerTabStrip pagerTabStrip;
     private FragmentAdapter adapter;
     private ListView menu;
+    private ImageView heisenberg;
 
     @Override
     protected int getContentViewId() {
@@ -44,7 +46,7 @@ public class MainActivity extends MenuActivity {
         pager.setOffscreenPageLimit(2);
         pagerTabStrip = (PagerTabStrip) findViewById(R.id.pagerTabStrip);
         pagerTabStrip.setTabIndicatorColorResource(R.color.light_red);
-
+        heisenberg = (ImageView) findViewById(R.id.heisenberg);
         new LoginTask().execute();
 
     }
@@ -120,9 +122,9 @@ public class MainActivity extends MenuActivity {
                 setupDrawer();
             } else {
                 pager.setVisibility(View.GONE);
-
                 // some fun
-                menu.setBackgroundResource(R.drawable.heisenberg);
+                heisenberg.setVisibility(View.VISIBLE);
+                menu.setBackgroundColor(android.R.color.transparent);
 
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction().add(R.id.main, new LoginFragment()).commitAllowingStateLoss();

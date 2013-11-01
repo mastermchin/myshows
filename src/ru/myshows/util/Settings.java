@@ -22,7 +22,7 @@ public class Settings {
     public static final String TWITTER_SECRET ="TWITTER_SECRET";
     public static final String TWITTER_USER_ID ="TWITTER_USER_ID";
 
-    public static final String VK_IS_LOGGED_IN ="FACEBOOK_IS_LOGGED_IN";
+    public static final String VK_IS_LOGGED_IN ="VK_IS_LOGGED_IN";
     public static final String VK_USER_ID ="VK_USER_ID";
     public static final String VK_TOKEN ="VK_TOKEN";
 

@@ -230,7 +230,8 @@ public class LoginFragment extends Fragment {
             if (this.dialog.isShowing())
                 this.dialog.dismiss();
             if (result) {
-
+                // clear all preference to er
+                Settings.getPreferences().edit().clear().commit();
 
                 String isLoggedInKey = null;
                 String tokenKey = null;

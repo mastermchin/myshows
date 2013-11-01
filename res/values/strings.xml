@@ -63,6 +63,7 @@
 
     <string name="changes_saved">Changes has been saved</string>
     <string name="changes_not_saved">Changes not saved</string>
+    <string name="changes_not_all_saved">Not all changes not saved</string>
 
 
     <string name="register_title">Register</string>

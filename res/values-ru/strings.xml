@@ -60,6 +60,7 @@
     <string name="search_query">Введите запрос</string>
     <string name="changes_saved">Изменения сохранены</string>
     <string name="changes_not_saved">Изменения не сохранены</string>
+    <string name="changes_not_all_saved">Не все изменения сохранены</string>
 
     <string name="register_title">Регистрация</string>
     <string name="register_message">Для создания аккаунта перейдите на http://myshows.ru</string>

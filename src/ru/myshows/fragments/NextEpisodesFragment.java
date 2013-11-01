@@ -119,7 +119,7 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
 
         protected class ViewHolder {
             protected TextView title;
-            protected CheckBox checkBox;
+           // protected CheckBox checkBox;
             protected TextView shortTitle;
             private TextView airDate;
         }
@@ -132,10 +132,10 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
             if (episode != null) {
                 if (convertView == null) {
                     LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    convertView = inflater.inflate(R.layout.episode, null);
+                    convertView = inflater.inflate(R.layout.new_episode, null);
                     holder = new ViewHolder();
                     holder.title = (TextView) convertView.findViewById(R.id.episode_title);
-                    holder.checkBox = (CheckBox) convertView.findViewById(R.id.episode_check_box);
+                    //holder.checkBox = (CheckBox) convertView.findViewById(R.id.episode_check_box);
                     holder.shortTitle = (TextView) convertView.findViewById(R.id.episode_short_title);
                     holder.airDate = (TextView) convertView.findViewById(R.id.episode_air_date);
                     convertView.setTag(holder);
@@ -151,8 +151,9 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
                     holder.title.setText(us.getTitle());
                     holder.shortTitle.setText(episode.getShortName() != null ? episode.getShortName() : composeShortTitle(episode) + " " + episode.getTitle());
                     holder.airDate.setText(episode.getAirDate() != null ? df.format(episode.getAirDate()) : "unknown");
+
                 } catch (NullPointerException e) {}
-                holder.checkBox.setVisibility(View.GONE);
+               // holder.checkBox.setVisibility(View.GONE);
             }
             return convertView;
 
@@ -242,7 +243,7 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
             String[] array = dateString.split(":");
             int month = Integer.valueOf(array[0]);
             String m = getResources() != null ? getResources().getStringArray(R.array.months)[month] : getMonth(month);
-            sectionList.add(new SectionedAdapter.Section(m + " " + array[1], new EpisodesAdapter(getActivity(), R.layout.episode, episodes)));
+            sectionList.add(new SectionedAdapter.Section(m + " " + array[1], new EpisodesAdapter(getActivity(), R.layout.new_episode, episodes)));
         }
         adapter = new SectionedAdapter(getActivity(), R.layout.header, sectionList);
         return adapter;

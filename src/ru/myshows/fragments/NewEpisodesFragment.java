@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import ru.myshows.activity.MyShows;
@@ -180,19 +181,20 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
 
         public void removeChild(Episode child) {
             for (List<Episode> episodes : children) {
-
                 Iterator<Episode> episodeIterator = episodes.iterator();
                 while (episodeIterator.hasNext()) {
-                    if (episodeIterator.next().equals(child))
+                    Episode next = episodeIterator.next();
+                    if (next.equals(child)){
                         episodeIterator.remove();
+                    }
                 }
-
             }
-
             // remove empty groups
             for (int i = 0; i < adapter.getGroupCount(); i++) {
-                if (getChildrenCount(i) == 0)
+                if (getChildrenCount(i) == 0){
+                    children.remove(i);
                     shows.remove(i);
+                }
             }
 
         }
@@ -204,7 +206,6 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
         public List getGroupChildren(int groupPosition) {
             return children.get(groupPosition);
         }
-
 
 
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
@@ -364,13 +365,17 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
     }
 
 
-    private class CheckNewEpisodesTask extends BaseTask<Boolean> {
-        // int j = 0;
+    private class CheckNewEpisodesTask extends BaseTask<Map<Integer, Boolean>> {
+
+        List<Episode> toRemove = null;
+        int j = 0;
+
+
         @Override
-        public Boolean doInBackground(Object... objects) {
+        public  Map<Integer, Boolean> doInBackground(Object... objects) {
             Map<Integer, String> paramsMap = new HashMap<Integer, String>();
             //Map<Integer, Episode> toRemove = new HashMap<Integer, Episode>();
-            List<Episode> toRemove = new ArrayList<Episode>();
+            toRemove = new ArrayList<Episode>();
 
             for (int i = 0; i < adapter.getGroupCount(); i++) {
                 List<Episode> episodes = adapter.getGroupChildren(i);
@@ -387,37 +392,93 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
                 }
             }
 
-            //final boolean[] results = new boolean[paramsMap.size()];
+            //final Boolean[] results = new Boolean[paramsMap.size()];
 
+            final Map<Integer, Boolean> checkedShowsResults = new HashMap<Integer, Boolean>();
             for (Map.Entry<Integer, String> entry : paramsMap.entrySet()) {
-                final Integer showId = entry.getKey();
-                final String episodesIds = entry.getValue();
-                Thread t = new Thread() {
-                    public void run() {
-                        UserShow userShow = MyShows.getUserShow(showId);
-                        if (userShow != null)
-                            userShow.setWatchedEpisodes(userShow.getWatchedEpisodes() + episodesIds.split(",").length);
-                        //app.setUserShowsChanged(true);
-                        //results[j] = MyShows.client.syncAllShowEpisodes(showId, episodesIds, null);
-                        //Log.d("MyShows", "Result " + j + " = " + results[j]);
-                        MyShowsClient.getInstance().syncAllShowEpisodes(showId, episodesIds, null);
+                try {
+                    final Integer showId = entry.getKey();
+                    final String episodesIds = entry.getValue();
+                    Thread t = new Thread() {
+                        public void run() {
+                            UserShow userShow = MyShows.getUserShow(showId);
+                            if (userShow != null)
+                                userShow.setWatchedEpisodes(userShow.getWatchedEpisodes() + episodesIds.split(",").length);
 
-                    }
-                };
-                t.start();
-                //t.join();
-                //j++;
+                            //results[j] = MyShowsClient.getInstance().syncAllShowEpisodes(showId, episodesIds, null);
+                            //Log.d("MyShows", "Result " + j + " = " + results[j]);
+                            //MyShowsClient.getInstance().syncAllShowEpisodes(showId, episodesIds, null);
+
+                            boolean result = MyShowsClient.getInstance().syncAllShowEpisodes(showId, episodesIds, null);
+                            checkedShowsResults.put(showId, result);  // swap result and show id
+                        }
+                    };
+                    t.start();
+                    t.join();
+                    j++;
+                } catch (Exception e) {
+                    this.exception = e;
+                    e.printStackTrace();
+                }
+
             }
 
-            for (Episode episode : toRemove)
-                adapter.removeChild(episode);
-
-            return true;
+            //return results;
+            return checkedShowsResults;
         }
 
+        @Override
+        protected void onPostExecute(Map<Integer, Boolean> result) {
+            if (exception == null) {
 
+//                for (Episode episode : toRemove) {
+//                    adapter.removeChild(episode);
+//                }
+//                adapter.notifyDataSetChanged();
+
+                boolean isAllSuccess = true;
+                boolean isOneSuccess = false;
+
+                for (Map.Entry<Integer, Boolean> entry : result.entrySet()) {
+
+                    if (entry.getValue()) {
+                        isOneSuccess = true;
+                        for (Episode episode : getEpisodeByShowId(toRemove, entry.getKey())) {
+                            adapter.removeChild(episode);
+                        }
+                    }else {
+                        isAllSuccess = false;
+                    }
+
+                }
+
+                if (isAdded()) {
+
+                    int message = isAllSuccess ? R.string.changes_saved : R.string.changes_not_saved;
+                    if (isOneSuccess && !isAllSuccess)
+                        message =   R.string.changes_not_all_saved;
+                    Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+
+                    adapter.notifyDataSetChanged();
+                }
+
+                if (mMode != null)
+                    mMode.finish();
+
+
+            }
+        }
     }
 
+
+    private List<Episode> getEpisodeByShowId(List<Episode> allEpisodes, Integer showId) {
+        List<Episode> selected = new LinkedList<Episode>();
+        for (Episode episode : allEpisodes) {
+            if (episode.getShowId().equals(showId))
+                selected.add(episode);
+        }
+        return selected;
+    }
 
     private final class CheckNewEpisodesActionMode implements ActionMode.Callback {
         @Override
@@ -435,23 +496,7 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_save:
-                    BaseTask task  =  new CheckNewEpisodesTask();
-                    task.setTaskListener(new TaskListener<Boolean>() {
-                        @Override
-                        public void onTaskComplete(Boolean result) {
-                            if (isAdded()) {
-                                Toast.makeText(getActivity(), result ? R.string.changes_saved : R.string.changes_not_saved, Toast.LENGTH_SHORT).show();
-                                adapter.notifyDataSetChanged();
-                            }
-                            if (mMode != null)
-                                mMode.finish();
-                        }
-
-                        @Override
-                        public void onTaskFailed(Exception e) {
-
-                        }
-                    });
+                    BaseTask task = new CheckNewEpisodesTask();
                     task.execute();
                     break;
                 case R.id.action_rate:
@@ -460,7 +505,7 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
                         @Override
                         public void handleMessage(Message msg) {
                             int rating = msg.arg1;
-                            BaseTask task =  new ChangeEpisodesRateTask();
+                            BaseTask task = new ChangeEpisodesRateTask();
                             task.setTaskListener(new TaskListener<Boolean>() {
                                 @Override
                                 public void onTaskComplete(Boolean result) {
@@ -497,7 +542,7 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
         ArrayList<Episode> episodes = (ArrayList<Episode>) adapter.getAllChildrenAsList();
 
         @Override
-        public Boolean doInBackground(Object... objects)  {
+        public Boolean doInBackground(Object... objects) {
 
             Integer ratio = (Integer) objects[0];
 

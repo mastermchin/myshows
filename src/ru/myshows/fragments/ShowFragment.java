@@ -48,19 +48,6 @@ public class ShowFragment extends Fragment {
     private View view;
 
 
-    public ShowFragment() {
-    }
-
-    public ShowFragment(Show show, Double yoursRating) {
-        this.show = show;
-        this.watchStatus = show.getWatchStatus();
-        this.yoursRating = yoursRating;
-
-    }
-
-    public void refresh(Show show) {
-        populateUI(show);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -226,11 +213,7 @@ public class ShowFragment extends Fragment {
 
         }
 
-//        @Override
-//        public void onError(Exception e) {
-//            e.printStackTrace();
-//        }
-    }
+}
 
     private void updateStatusButtons() {
         if (isAdded()) {
@@ -247,35 +230,6 @@ public class ShowFragment extends Fragment {
             removeButton.setBackgroundDrawable(isRemove ? getResources().getDrawable(R.drawable.red_label) : null);
         }
     }
-
-
-
-
-
-    public void changeShowStatus(View v) {
-
-        switch (v.getId()) {
-            case R.id.button_watching:
-                watchStatus = MyShowsApi.STATUS.watching;
-                break;
-            case R.id.button_will_watch:
-                watchStatus = MyShowsApi.STATUS.later;
-                break;
-            case R.id.button_cancelled:
-                watchStatus = MyShowsApi.STATUS.cancelled;
-                break;
-            case R.id.button_remove:
-                watchStatus = MyShowsApi.STATUS.remove;
-                break;
-        }
-        if (!show.getWatchStatus().equals(watchStatus)) {
-            ChangeShowStatusTask task = new ChangeShowStatusTask(getActivity());
-            task.execute(show.getShowId(), watchStatus);
-        }
-
-
-    }
-
 
     public class ChangeShowStatusTask extends BaseTask<Boolean> {
 
@@ -317,10 +271,6 @@ public class ShowFragment extends Fragment {
             }
         }
 
-//        @Override
-//        public void onError(Exception e) {
-//            e.printStackTrace();
-//        }
 
     }
 

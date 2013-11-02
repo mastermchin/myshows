@@ -374,7 +374,8 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
         @Override
         public  Map<Integer, Boolean> doInBackground(Object... objects) {
             Map<Integer, String> paramsMap = new HashMap<Integer, String>();
-            //Map<Integer, Episode> toRemove = new HashMap<Integer, Episode>();
+
+            // episodes to remove from list
             toRemove = new ArrayList<Episode>();
 
             for (int i = 0; i < adapter.getGroupCount(); i++) {
@@ -387,14 +388,12 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
                         else
                             paramsMap.put(e.getShowId(), value += "," + e.getEpisodeId().toString());
                         toRemove.add(e);
-                        //toRemove.put(i, e);
                     }
                 }
             }
-
-            //final Boolean[] results = new Boolean[paramsMap.size()];
-
+            // showId - result map
             final Map<Integer, Boolean> checkedShowsResults = new HashMap<Integer, Boolean>();
+
             for (Map.Entry<Integer, String> entry : paramsMap.entrySet()) {
                 try {
                     final Integer showId = entry.getKey();
@@ -402,18 +401,16 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
                     Thread t = new Thread() {
                         public void run() {
                             UserShow userShow = MyShows.getUserShow(showId);
+                            // update user show watched episodes
                             if (userShow != null)
                                 userShow.setWatchedEpisodes(userShow.getWatchedEpisodes() + episodesIds.split(",").length);
-
-                            //results[j] = MyShowsClient.getInstance().syncAllShowEpisodes(showId, episodesIds, null);
-                            //Log.d("MyShows", "Result " + j + " = " + results[j]);
-                            //MyShowsClient.getInstance().syncAllShowEpisodes(showId, episodesIds, null);
-
+                            // push task in separate thread
                             boolean result = MyShowsClient.getInstance().syncAllShowEpisodes(showId, episodesIds, null);
-                            checkedShowsResults.put(showId, result);  // swap result and show id
+                            checkedShowsResults.put(showId, result);
                         }
                     };
                     t.start();
+                    // wait for threads
                     t.join();
                     j++;
                 } catch (Exception e) {
@@ -422,8 +419,6 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
                 }
 
             }
-
-            //return results;
             return checkedShowsResults;
         }
 
@@ -431,16 +426,11 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
         protected void onPostExecute(Map<Integer, Boolean> result) {
             if (exception == null) {
 
-//                for (Episode episode : toRemove) {
-//                    adapter.removeChild(episode);
-//                }
-//                adapter.notifyDataSetChanged();
-
                 boolean isAllSuccess = true;
                 boolean isOneSuccess = false;
 
                 for (Map.Entry<Integer, Boolean> entry : result.entrySet()) {
-
+                    // if check show episodes is success
                     if (entry.getValue()) {
                         isOneSuccess = true;
                         for (Episode episode : getEpisodeByShowId(toRemove, entry.getKey())) {
@@ -453,19 +443,14 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
                 }
 
                 if (isAdded()) {
-
                     int message = isAllSuccess ? R.string.changes_saved : R.string.changes_not_saved;
-                    if (isOneSuccess && !isAllSuccess)
-                        message =   R.string.changes_not_all_saved;
+                    message = (isOneSuccess && !isAllSuccess) ? R.string.changes_not_all_saved : message;
                     Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-
                     adapter.notifyDataSetChanged();
                 }
 
                 if (mMode != null)
                     mMode.finish();
-
-
             }
         }
     }

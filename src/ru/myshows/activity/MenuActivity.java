@@ -14,6 +14,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.ViewDragHelper;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -22,6 +23,7 @@ import android.widget.*;
 import ru.myshows.fragments.ShowsFragment;
 import ru.myshows.util.Settings;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 /**
@@ -33,14 +35,14 @@ public abstract class MenuActivity extends ActionBarActivity {
 
     private DrawerLayout mDrawerLayout;
     protected ListView mDrawerList;
-    protected LinearLayout  mDrawerListWrapper;
+    protected LinearLayout mDrawerListWrapper;
     private ActionBarDrawerToggle mDrawerToggle;
 
     private String[] menu;
     private MenuAdapter adapter;
     protected SearchView search;
 
-   protected abstract int getContentViewId();
+    protected abstract int getContentViewId();
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,20 @@ public abstract class MenuActivity extends ActionBarActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerListWrapper = (LinearLayout) findViewById(R.id.list_wrapper);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        try {
+            mDrawerLayout.setDrawerListener(mDrawerToggle);
+            Field mDragger = mDrawerLayout.getClass().getDeclaredField("mLeftDragger");//mRightDragger for right obviously
+            mDragger.setAccessible(true);
+            ViewDragHelper draggerObj = (ViewDragHelper) mDragger.get(mDrawerLayout);
+            Field mEdgeSize = draggerObj.getClass().getDeclaredField("mEdgeSize");
+            mEdgeSize.setAccessible(true);
+            int edge = mEdgeSize.getInt(draggerObj);
+            mEdgeSize.setInt(draggerObj, edge * 5);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         getSupportActionBar().setIcon(R.drawable.ic_list_logo);
 
@@ -178,9 +194,9 @@ public abstract class MenuActivity extends ActionBarActivity {
                             break;
                         //profile
                         case 1:
-                                intent = new Intent(context, ProfileActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivity(intent);
+                            intent = new Intent(context, ProfileActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
                             break;
                         //News
                         case 2:

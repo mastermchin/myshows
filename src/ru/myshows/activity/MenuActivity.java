@@ -62,7 +62,7 @@ public abstract class MenuActivity extends ActionBarActivity {
             Field mEdgeSize = draggerObj.getClass().getDeclaredField("mEdgeSize");
             mEdgeSize.setAccessible(true);
             int edge = mEdgeSize.getInt(draggerObj);
-            mEdgeSize.setInt(draggerObj, edge * 5);
+            mEdgeSize.setInt(draggerObj, edge * 2);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -15,6 +15,7 @@ import ru.myshows.adapters.SectionedAdapter;
 import ru.myshows.api.MyShowsApi;
 import ru.myshows.api.MyShowsClient;
 import ru.myshows.domain.Episode;
+import ru.myshows.domain.Show;
 import ru.myshows.domain.UserShow;
 import ru.myshows.tasks.GetNextEpisodesTask;
 import ru.myshows.tasks.TaskListener;
@@ -146,13 +147,25 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
                 try {
                     UserShow us = MyShows.getUserShow(episode.getShowId());
                     // it happens when show is not started yet but already added as watching
-                    if (us == null)
-                        us = new UserShow(MyShowsClient.getInstance().getShowInfo(episode.getShowId()), MyShowsApi.STATUS.watching);
+                    if (us == null){
+                        Show show = null;
+                        Thread t = new ShowThread(show){
+                            @Override
+                            public void run() {
+                                show = MyShowsClient.getInstance().getShowInfo(episode.getShowId());
+                            }
+                        };
+                        t.start();
+                        t.join();
+
+                        us = new UserShow(show, MyShowsApi.STATUS.watching);
+
+                    }
                     holder.title.setText(us.getTitle());
                     holder.shortTitle.setText(episode.getShortName() != null ? episode.getShortName() : composeShortTitle(episode) + " " + episode.getTitle());
                     holder.airDate.setText(episode.getAirDate() != null ? df.format(episode.getAirDate()) : "unknown");
 
-                } catch (NullPointerException e) {}
+                } catch (Exception e) {}
                // holder.checkBox.setVisibility(View.GONE);
             }
             return convertView;
@@ -163,6 +176,17 @@ public class NextEpisodesFragment extends Fragment implements TaskListener<List<
             int season = e.getSeasonNumber();
             int episode = e.getEpisodeNumber();
             return ("s" + String.format("%1$02d", season) + "e" + String.format("%1$02d", episode));
+        }
+
+
+        class ShowThread extends Thread{
+
+            Show show;
+
+            ShowThread (Show show){
+                this.show = show;
+            }
+
         }
 
     }

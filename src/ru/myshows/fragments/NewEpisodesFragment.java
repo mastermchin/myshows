@@ -276,7 +276,7 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
                 holder = (ViewHolder) convertView.getTag();
             }
             holder.title.setText(episode.getTitle());
-            holder.shortTitle.setText(episode.getShortName() != null ? episode.getShortName() : "");
+            holder.shortTitle.setText(episode.getShortName() != null ? episode.getShortName() : composeShortTitle(episode));
             holder.airDate.setText(episode.getAirDate() != null ? df.format(episode.getAirDate()) : "unknown");
 
             holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -338,6 +338,13 @@ public class NewEpisodesFragment extends Fragment implements TaskListener<List<E
             convertView.setOnCreateContextMenuListener(null);
 
             return convertView;
+        }
+
+
+        private String composeShortTitle(Episode e) {
+            int season = e.getSeasonNumber();
+            int episode = e.getEpisodeNumber();
+            return  ("s" + String.format("%1$02d", season) + "e" + String.format("%1$02d", episode));
         }
 
         public Object getGroup(int groupPosition) {

@@ -211,7 +211,10 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
                         int unwatched = getUnwatchedEpisodesCount(show.getShowId());
                         if (unwatched > 0)
                             holder.unwatched.setText(unwatched + "");
+                        else
+                            holder.unwatched.setText("");
                     }
+
                 }
 
                 try {

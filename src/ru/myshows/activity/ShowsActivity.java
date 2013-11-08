@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import ru.myshows.domain.Searchable;
 import ru.myshows.fragments.ShowsFragment;
 import ru.myshows.tasks.GetShowsTask;
@@ -69,7 +70,9 @@ public class ShowsActivity extends MenuActivity {
                         public boolean onQueryTextChange(String s) {
                             Fragment fragment = getSupportFragmentManager().findFragmentByTag("shows");
                             if (fragment instanceof Searchable) {
-                                ((Searchable) fragment).getAdapter().getFilter().filter(s);
+                                ArrayAdapter adapter =  ((Searchable) fragment).getAdapter();
+                                if (adapter != null)
+                                    adapter.getFilter().filter(s);
                             }
                             return false;
                         }

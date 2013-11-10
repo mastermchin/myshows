@@ -205,16 +205,19 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
                 holder.title.setText(show.getTitle());
                 holder.rating.setRating(/*userShow != null ? userShow.getRating().floatValue() : */show.getRating().floatValue());
 
-                if (show instanceof UserShow) {
 
-                    if (show.getWatchStatus().equals(MyShowsApi.STATUS.watching)) {
-                        int unwatched = getUnwatchedEpisodesCount(show.getShowId());
-                        if (unwatched > 0)
-                            holder.unwatched.setText(unwatched + "");
-                        else
+                try{
+                    if (show instanceof UserShow) {
+                        if (show.getWatchStatus().equals(MyShowsApi.STATUS.watching)) {
+                            int unwatched = getUnwatchedEpisodesCount(show.getShowId());
+                            holder.unwatched.setText(unwatched > 0 ? unwatched + "" : "");
+                        }else {
                             holder.unwatched.setText("");
-                    }
+                        }
 
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
 
                 try {

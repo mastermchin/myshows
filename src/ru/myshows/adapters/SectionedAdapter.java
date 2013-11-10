@@ -296,21 +296,20 @@ public class SectionedAdapter extends ArrayAdapter implements Serializable {
             IShow show = shows.get(position);
             if (show != null) {
 
+            try{
                 ImageLoader.getInstance().displayImage(show.getImageUrl(), holder.logo);
-
                 holder.title.setText(show.getTitle());
-                // UserShow userShow = MyShows.getUserShow(show.getShowId());
-                holder.rating.setRating(/*userShow != null ? userShow.getRating().floatValue() : */show.getRating().floatValue());
+                holder.rating.setRating(show.getRating().floatValue());
 
-                if (show instanceof UserShow) {
 
-                    if (show.getWatchStatus().equals(MyShowsApi.STATUS.watching)) {
-                        int unwatched = getUnwatchedEpisodesCount(show.getShowId());
-                        if (unwatched > 0)
-                            holder.unwatched.setText(unwatched + "");
-                    }
+                final UserShow userShow = MyShows.getUserShow(show.getShowId());
+                if (userShow != null)
+                    holder.unwatched.setCompoundDrawablesWithIntrinsicBounds(null, null, context.getResources().getDrawable(R.drawable.ic_eye_red), null);
+                else
+                    holder.unwatched.setCompoundDrawablesWithIntrinsicBounds(null, null, context.getResources().getDrawable(R.drawable.ic_eye_gray), null);
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
-
             }
 
 

@@ -47,6 +47,7 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
     private ProgressBar progress;
     private SectionedAdapter adapter;
     private TextView message;
+    private String search;
 
     public void setAction(int action) {
         this.action = action;
@@ -144,7 +145,7 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
     @Override
     public void executeTask() {
         action = getArguments().getInt("action");
-        String search = getArguments().getString("search");
+        search = getArguments().getString("search");
         GetShowsTask task = new GetShowsTask(getActivity(), action);
         task.setTaskListener(this);
         if (search != null)
@@ -160,7 +161,10 @@ public class ShowsFragment extends Fragment implements Taskable, Searchable, Tas
         list.setVisibility(View.GONE);
         message.setVisibility(View.GONE);
         progress.setVisibility(View.VISIBLE);
-        task.execute();
+        if (search != null)
+            task.execute(search);
+        else
+            task.execute();
     }
 
     public class ShowsAdapter extends ArrayAdapter<IShow> {

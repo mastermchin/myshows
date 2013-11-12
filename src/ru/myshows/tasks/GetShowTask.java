@@ -30,6 +30,10 @@ public class GetShowTask extends BaseTask<Show> {
     public Show doInBackground(Object... objects) {
         int showId = (Integer) objects[0];
         Show show = client.getShowInfo(showId);
+        // if show information unavailable
+        if (show == null)
+            return show;
+
         populateGenres(show, client.getGenresListAsMap());
         populateWatchedEpisodes(show, client.getSeenEpisodes(showId));
 

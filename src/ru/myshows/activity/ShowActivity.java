@@ -101,6 +101,13 @@ public class ShowActivity extends MenuActivity implements TaskListener<Show> {
     @Override
     public void onTaskComplete(Show result) {
 
+        if (result == null){
+            Toast.makeText(this, R.string.show_unavailable, Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
+
         UserShow us = MyShows.getUserShow(showId);
         if (us != null)
             watchStatus = us.getWatchStatus();
